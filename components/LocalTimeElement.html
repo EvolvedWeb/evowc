@@ -1,6 +1,9 @@
-<component tag="local-time" shadow="closed" :dog="array:[1,2,3,4]" :timestamp="date:Dec 25 1990" :locale="string:en-US" :format="object:{weekday:'long',year:'numeric',month:'long',day:'numeric'}" :#localetime>
+<component tag="local-time" shadow="closed" :dog="array:[1,2,3,4]"
+  :timestamp="date:Dec 25 1990" :locale="string:en-US"
+  :format="object:{weekday:'long',year:'numeric',month:'long',day:'numeric'}"
+  :#localetime :#classes>
   <template>
-    <span ::text="#localetime"></span>
+    <span ::text="#localetime" :style="locale" :class="#classes"></span>
     <button .click="#setLocale" data-locale="en">EN</button>
     <button .click="#setLocale" data-locale="fr">FR</button>
     <button .click="#setLocale" data-locale="ru">RU</button>
@@ -16,7 +19,6 @@
         const newStr = formatter.format(this.timestamp);
         if (this.#localetime !== newStr) {
           this.#localetime = newStr;
-          console.log(this.#localetime);
         }
       }
     }
