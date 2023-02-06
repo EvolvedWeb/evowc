@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test Comp1</title>
+</head>
+<body>
+  <portfolio-img text="July 26, 2016" title="Springville Main Street Lots"></portfolio-img>
+  <hr/>
+  <simple-address></simple-address>
+  <hr/>
+  <special-thing></special-thing>
+  <hr/>
+  <local-time id="one" timestamp="Jan 1, 2023"></local-time>
+
+  <script type="module">
+    import { PortfolioImgElement } from '/js/components/comp1.js';
+    import { SimpleAddressElement } from '/js/components/SimpleAddressElement.js';
+    import { SpecialThingElement } from '/js/components/SpecialThingElement.js';
+    import { LocalTimeElement } from '/js/components/LocalTimeElement.js';
+  </script>
+</body>
+</html>

@@ -1,0 +1,25 @@
+{
+  "name": "evowc",
+  "version": "0.0.1",
+  "description": "Evo-WC transpiler converts a template file based on HTML and XML into a raw JS custom Web Component.",
+  "main": "index.js",
+  "bin": {
+    "evowc": "bin/evowc.js"
+  },
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/intervalia/evowc.git"
+  },
+  "author": "Michael Collins <intervalia@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/intervalia/evowc/issues"
+  },
+  "homepage": "https://github.com/intervalia/evowc#readme"
+}

@@ -1,0 +1,18 @@
+<component tag="special-thing" :num="int:100"
+  :message="string:This 'is' a test:" :show="bool:true">
+  <template>
+    <p class="thing" :attr.show="show" :data-num="num" ::html="message"></p>
+    <p :if="show">You have <span ::text="num"></span> apples!</p>
+    <button .click="#newNum">Change</button>
+  </template>
+  <style>
+    .thing {
+      background-color: aliceblue;
+    }
+  </style>
+  <script>
+    #newNum() {
+      this.num = Math.abs(Math.random() * 100);
+    }
+  </script>
+</component>
