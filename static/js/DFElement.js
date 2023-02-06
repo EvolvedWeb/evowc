@@ -12,10 +12,11 @@ export function setAttr(el, attr, value) {
 
 export class DFElement extends HTMLElement {
   #propsLookup = {};
+  isConnected = false;
 
   constructor(template, styles, propsLookup = {}) {
     super();
-    this.connected = false;
+    this.isConnected = false;
     this.#propsLookup = propsLookup;
     this.attachShadow({ mode: "open" });
 
@@ -29,6 +30,12 @@ export class DFElement extends HTMLElement {
     templateEl.innerHTML = template;
     this.shadowRoot.appendChild(templateEl.content);
 
+    if (this.setupEventHandlers) {
+      setTimeout(() => {
+        this.setupEventHandlers();
+      }, 2);
+    }
+
     if(this.init) {
       // init needs to be called AFTER the parent constructor is finished.
       setTimeout(() => {
@@ -38,12 +45,12 @@ export class DFElement extends HTMLElement {
   }
 
   connectedCallback() {
-    this.connected = true;
+    this.isConnected = true;
     this.update && this.update();
     this.connected && this.connected();
   }
   disconnectedCallback() {
-    this.connected = false;
+    this.isConnected = false;
     this.disconnected && this.disconnected();
   }
 
