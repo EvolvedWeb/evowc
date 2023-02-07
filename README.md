@@ -168,6 +168,43 @@ Property variables can use pipes to alter or format data without affecting the o
   * All pipe methods take a `string` and return a `string`.<br/> 
     _<span style="color:red">This may need to take whatever type the var is and return anything</span>_
 
+### Conditionals: Do I use/automate CSS state?
+
+You can use `:if="variable"` or `:if="!variable"` to conditionaly hide and show sections of the html template.
+
+```html
+<component tag="if-one" :state="bool:true">
+  <template>
+    <div>this.state is currently set to <span ::text="state"></span></div>
+    <button .click="#toggleState">Toggle</button>
+    <div class="red" :if="state">TRUE - This shows if this.state is set to true.
+      <p>Go watcha fun movie!</p>
+    </div>
+    <div class="blue" :if="!state">FALSE - If this.state is set to false then this shows.
+      <p>Listen to an audio book.</p>
+    </div>
+  </template>
+  <style>
+    .red {
+      background-color: #F00;
+      margin: 20px;
+      padding: 20px;
+    }
+    .blue {
+      background-color: #00F;
+      color: #FFF;
+      margin: 20px;
+      padding: 20px;
+    }
+  </style>
+  <script>
+    #toggleState(event) {
+      this.state = !this.state;
+    }
+  </script>
+</component>
+```
+
 ## Other exports
 
 ### setAttr(el, attr, value)
@@ -179,8 +216,6 @@ setAttr(this, 'name', 'SomeValue');
 ```
 
 ## Notes of things that still need to be finished
-
-### Conditionals: Do I use/automate CSS state?
 
 ### Looping - _keys_, _limit DOM changes_
 
