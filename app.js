@@ -3,10 +3,10 @@ const express = require('express');
 const { allowedNodeEnvironmentFlags } = require('process');
 
 const app = express();
-app.use(express.static('public'));
-app.get('/', redir);
+app.use(express.static('static'));
+app.get('/', doRedir);
 
-function redir(req, res, next) {
+function doRedir(req, res, next) {
   res.redir('/index.html');
 }
 

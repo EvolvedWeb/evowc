@@ -7,7 +7,7 @@ async function run(args) {
   const options = {
     minify: {
       css: true,
-      html: true
+      html: false
     }
   }
   const outputScriptName = 'static/js/components';

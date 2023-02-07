@@ -25,6 +25,9 @@ Your HTML:
 <body>
   <h1>Example file</h1>
   <special-thing></special-thing>
+  <script type="module">
+    import { SpecialThingElement } from './js/components/SpecialThingElement.js';
+  </script>
 </body>
 </html>
 ```
@@ -58,7 +61,7 @@ The variable types that can be user are `'number'`, `'int'`, `'string'`, `'bool'
 </component>
 ```
 
-The property `age` is going to be a number. No matter what type of value you pass in, it will be converted into a number. So `component.age = '33'` will give it a numeric value of `33` and a string of `"33"`.
+The property `age` is going to be a number. No matter what type of value you pass in, it will be converted into a number. So `component.age = '33'` will give it a numeric value of `33` and not a string of `"33"`.
 
 > TODO: What other types do I need to support?
 

@@ -10,13 +10,31 @@ export function setAttr(el, attr, value) {
   }
 }
 
+export function handleCondition(el, condition, commentEl) {
+  if (el && commentEl) {
+    if (condition) {
+      if (!el.isConnected) {
+        const parent = commentEl.parentNode;
+        parent.insertBefore(el, commentEl);
+        commentEl.remove();
+      }
+    }
+    else {
+      if (el.isConnected) {
+        const parent = el.parentNode;
+        parent.insertBefore(commentEl, el);
+        el.remove();
+      }
+    }
+  }
+}
+
+
 export class DFElement extends HTMLElement {
   #propsLookup = {};
-  isConnected = false;
 
   constructor(template, styles, propsLookup = {}) {
     super();
-    this.isConnected = false;
     this.#propsLookup = propsLookup;
     this.attachShadow({ mode: "open" });
 
@@ -30,12 +48,6 @@ export class DFElement extends HTMLElement {
     templateEl.innerHTML = template;
     this.shadowRoot.appendChild(templateEl.content);
 
-    if (this.setupEventHandlers) {
-      setTimeout(() => {
-        this.setupEventHandlers();
-      }, 2);
-    }
-
     if(this.init) {
       // init needs to be called AFTER the parent constructor is finished.
       setTimeout(() => {
@@ -45,12 +57,10 @@ export class DFElement extends HTMLElement {
   }
 
   connectedCallback() {
-    this.isConnected = true;
     this.update && this.update();
     this.connected && this.connected();
   }
   disconnectedCallback() {
-    this.isConnected = false;
     this.disconnected && this.disconnected();
   }
 
