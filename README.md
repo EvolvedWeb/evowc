@@ -21,6 +21,7 @@ After you clone the repo:
 1. Try doing oddball things.
 1. Currently there is no way to loop through tags. So no auto generation of tables, list items, etc. That is coming.
 1. **Please make a Pull Request with your example components or bug fixes.**
+1. **Do not check into the master branch**
 
 ## Component Object
 
