@@ -1,0 +1,99 @@
+<component tag="wc-calendar" :value="date" :locale="string:en" :#showLast="bool:false" :#title>
+  <template>
+    <h5>
+      <button .click="#prevMonth">&amp;lt;</button>
+      <span ::text="#title"></span>
+      <button .click="#nextMonth">&amp;gt;</button>
+    </h5>
+    <table>
+      <tr><th>Sun</th><th>Mon</th><th>Tue</th><th>Wed</th><th>Thu</th><th>Fri</th><th>Sat</th></tr>
+      <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+      <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+      <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+      <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+      <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+      <tr :if="#showLast"><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+    </table>
+  </templat>
+  <style>
+    :host {
+      display: inline-block;
+      min-height: 150px;
+      min-width: 200px;
+    }
+    h5 {
+      background: #DDD;
+      border: 1px solid #999;
+      border-bottom: none;
+      margin: 0;
+      padding: 6px 0;
+      text-align: center;
+    }
+    table {
+      border-collapse: collapse;
+      height: 100%;
+      width: 100%;
+    }
+    th {
+      border: 1px solid #999;
+      height: 1rem;
+    }
+    td {
+      border: 1px solid #999;
+      height: 14%;
+      padding: 5px 5px 10px;
+      text-align: right;
+      vertical-align: top;
+      width: 14%;
+    }
+  </style>
+  <script>
+    init() {
+      this.value = new Date();
+      this.#setTitle();
+    }
+
+    update() {
+      this.#setTitle();
+    }
+
+    #prevMonth() {
+      const newDate = new Date(this.value);
+      newDate.setMonth(newDate.getMonth() - 1);
+      this.value = newDate;
+    }
+
+    #nextMonth() {
+      const newDate = new Date(this.value);
+      newDate.setMonth(newDate.getMonth() + 1);
+      this.value = newDate;
+    }
+
+    #setTitle() {
+      if (this.value) {
+        const format = { year: 'numeric', month: 'long' };
+        const formatter = new Intl.DateTimeFormat(this.locale, format);
+        this.#title = formatter.format(this.value);
+        const todaysDate = this.value.getDate();
+        const temp = new Date(this.value);
+        temp.setDate(1);
+        let dow = temp.getDay();
+        temp.setMonth(temp.getMonth()+1);
+        temp.setDate(0);
+        const lastDate = temp.getDate();
+        const tds = [...(this.shadowRoot.querySelectorAll('td'))];
+        let date = 1;
+        this.#showLast = ((dow === 5 && lastDate === 31) || (dow === 6 && lastDate === 30));
+        tds.forEach(td => {
+          if (dow === 0) {
+            td.textContent = (date > lastDate) ? '' : date++;
+          }
+          else {
+            td.textContent = '';
+            dow--;
+          }
+        });
+      }
+    }
+  </script>
+</component>

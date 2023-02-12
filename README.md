@@ -235,16 +235,52 @@ You can call `setAttr` from your own code. For example you can do the following 
 ```javascript
 setAttr(this, 'name', 'SomeValue');
 ```
+### handleCondition(el, condition, commentEl)
+`handleCondition` is a helper function that is used with conditional attributes `:if` and `:switch`.
+
+You pass in the element `el` that is conditionally to hide or show, the conditional value `condition` that is `true` or `false` and the comment element `commentEl` that will replace the element if the condition is `false`.
+
+`handleCondition` will place either the element or the comment element into the DOM based on the condition.
+
+> Normally this is not to be called by your code.
 
 ## Notes of things that still need to be finished
 
-### Looping - _keys_, _limit DOM changes_
+### Compine options
+* Debug Mode that adds lost of debug code.
+* Generates JSDOC comments
+* Provide a way to add doc info into the template
+* On compile error: set the output of the JS file to display the error message in the UI
+* Do I allow TypeScript in the code??
+* Map Files? Would they work? Of have the debug
 
-### Debug Mode that adds lost of debug code.
+### Transpiler problems
+* Html elements get converted into raw text for `&gt;` becomes `>`
+* Sometimes a portion of the provided `<script>` get's dropped.
 
-### Comments that generates JSDOC comments
+### Pipes
+* Regular pipes work.
+* Importable pipes? Is this just an import and then calling that import from a member function?
 
-### On error set the output of the JS file to display the error message in the UI
+### Conditional Attributes
+* Add docs that explain how to use the `state` attribute and CSS to improve performance
+* Conditionals should really only be used when large chunks of DOM are involved.
+* :if works
+* Add Looping (:for) - require _keys_, work to _limit DOM changes_
+* Only allow one conditional attribute per element
+* Should I add :switch
+* Should I add ony others??
+  * https://angular.io/api/common#directives
+
+### Other language version (increase tool usage)
+* .NET
+* Java
+* Python
+* Gulp
+* Grunt
+* Webpack
+* Babble
+* Rollup
 
 ### Properties that need to be renamed or changed to attributes: (List not complete)
 
