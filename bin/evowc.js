@@ -9,7 +9,7 @@ async function run(args) {
       css: true,
       html: true
     }
-  }
+  };
   const outputScriptName = 'static/js/components';
 
   if (args.length > 0) {

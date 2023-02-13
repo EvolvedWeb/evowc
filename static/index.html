@@ -20,9 +20,11 @@
   <some-face state="happy"></some-face><br>
   <if-one></if-one>
 -->
-  <wc-calendar></wc-calendar><br>
-  <round-progress value="10"></round-progress>
-  <round-progress value="35"></round-progress>
+  <wc-calendar></wc-calendar>
+  <div style="border:1px solid black;margin:10px 0;display:flex;flex-flow: wrap;justify-content: space-evenly;">
+    <round-progress value="97"></round-progress>
+    <round-progress value="65" decimals="1" line-color="red" style="color:white;background:#442299;"></round-progress>
+  </div>
 
   <script type="module">
     // import { PortfolioImgElement } from './js/components/PortfolioImgElement.js';
@@ -33,6 +35,24 @@
     // import { IfOneElement } from './js/components/IfOneElement.js';
     import { WcCalendarElement } from './js/components/WcCalendarElement.js';
     import { RoundProgressElement } from './js/components/RoundProgressElement.js';
+
+    const rpinc = [1, .5];
+    const rps = document.querySelectorAll('round-progress');
+    function updateTime() {
+      rps.forEach((rp, i) => {
+        rp.value+= rpinc[i];
+
+        if (rp.value >= 100 ) rp.value = 100;
+        if (rp.value <= 0) rp.value = 0
+
+        if (rp.value === 100 || rp.value === 0) {
+          rpinc[i] *= -1;
+        }
+      });
+      setTimeout(updateTime, 100);
+    }
+
+    updateTime();
   </script>
 </body>
 </html>

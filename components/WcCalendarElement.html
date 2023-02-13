@@ -1,9 +1,9 @@
 <component tag="wc-calendar" :value="date" :locale="string:en" :#showLast="bool:false" :#title>
   <template>
     <h5>
-      <button .click="#prevMonth">&amp;lt;</button>
+      <button .click="#prevMonth">&lt;</button>
       <span ::text="#title"></span>
-      <button .click="#nextMonth">&amp;gt;</button>
+      <button .click="#nextMonth">&gt;</button>
     </h5>
     <table>
       <tr><th>Sun</th><th>Mon</th><th>Tue</th><th>Wed</th><th>Thu</th><th>Fri</th><th>Sat</th></tr>
@@ -30,11 +30,13 @@
       text-align: center;
     }
     table {
+      background-color: #FFF;
       border-collapse: collapse;
       height: 100%;
       width: 100%;
     }
     th {
+      background: #DDD;
       border: 1px solid #999;
       height: 1rem;
     }

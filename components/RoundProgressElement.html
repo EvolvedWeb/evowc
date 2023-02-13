@@ -1,48 +1,91 @@
-<component tag="round-progress" :value="int:0" :#path>
+<component tag="round-progress" :value="number:0" :decimals="int:0" :line-color="string:#446688" :#range="string:0" :#moving :#colorStyle>
   <template>
-    <svg width="200" height="200">
-      <rect x="0" y="0" width="100" height="100" fill="white" />
-      <path fill="none" stroke="#446688" stroke-width="40" :attr.d="#path" />
-      <text style="stroke:none;fill:black;font:24px Tahoma" x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" ::text="value"></text>
-    </svg>
+    <section :attr.range="#range" :style="#colorStyle">
+      <div class="solid-part"></div>
+      <div class="moving-part" :style="#moving"></div>
+      <div class="cover"></div>
+      <div class="text" ::text="value|#toFixed">&amp;</div>
+    </section>
   </template>
   <style>
     :host {
-      border: 1px dahsed red;
       display: inline-block;
       height: var(--round-progress-height, 200px);
+      margin: 0;
       min-height: 100px;
       min-width: 100px;
+      padding: 10px;
       width: var(--round-progress-width, 200px);
+    }
+    section {
+      height: 100%;
+      position: relative;
+      width: 100%;
+    }
+    .solid-part, .moving-part, .cover {
+      border: 40px solid transparent;
+      border-radius: 50%;
+      box-sizing: border-box;
+      height: 100%;
+      left: 0;
+      position: absolute;
+      top: 0;
+      width: 100%;
+    }
+    .solid-part {
+      background-color: var(--round-progress-bgcolor, white);
+      border: 40px solid #EEE;
+    }
+    .moving-part {
+      border-bottom-color: var(--round-progress-color, #446688);
+    }
+    [range="1"] .solid-part {
+      border-left-color: var(--round-progress-color, #446688);
+    }
+    [range="2"] .solid-part {
+      border-top-color: var(--round-progress-color, #446688);
+      border-left-color: var(--round-progress-color, #446688);
+    }
+    .text {
+      font: 36px Tahoma;
+      left: 50%;
+      position: absolute;
+      top: 50%;
+      transform: translate(-50%, -50%);
+    }
+    .cover {
+      border-bottom: 45px solid var(--round-progress-bgcolor, white);
+      height: calc(100% + 1px);
+      width: calc(100% + 1px);
     }
   </style>
   <script>
-    #polarToCartesian(centerX, centerY, radius, angleInDegrees) {
-        var angleInRadians = (angleInDegrees - 90) * Math.PI / 180.0;
+    #toFixed(val) {
+      return (+val).toFixed(this.decimals);
+    }
 
-        return {
-          x: centerX + (radius * Math.cos(angleInRadians)),
-          y: centerY + (radius * Math.sin(angleInRadians))
-        };
+    #getHostBG(el) {
+      const styles = window.getComputedStyle(el);
+      let bgColor = styles.backgroundColor;
+      if (bgColor === 'rgba(0, 0, 0, 0)') {
+        const parent = el.parentNode;
+        if (parent !== document) {
+          bgColor = this.#getHostBG(parent);
+        }
+        else {
+          bgColor = 'white';
+        }
       }
 
-    #describeArc(x, y, radius, startAngle, endAngle) {
-        var start = this.#polarToCartesian(x, y, radius, endAngle);
-        var end = this.#polarToCartesian(x, y, radius, startAngle);
+      return bgColor;
+    }
 
-        var largeArcFlag = endAngle - startAngle &lt;= 180 ? "0" : "1";
-
-        var d = [
-          "M", Math.floor(start.x), Math.floor(start.y),
-          "A", radius, radius, 0, largeArcFlag, 0, Math.floor(end.x), Math.floor(end.y)
-        ].join(" ");
-
-        return d;
-      }
-
-      update() {
-        const end = (this.value * 3) + 202.5;
-        this.#path = this.#describeArc(100, 100, 70, 202.5, end);
-      }
+    update() {
+      const rot = this.value * 2.70;
+      this.#range = (rot > 180) ? 2 : (rot > 90) ? 1 : 0;
+      this.#moving = `transform:rotate(${rot}deg)`;
+      const bgColor = this.#getHostBG(this);
+      this.#colorStyle = `--round-progress-color:${this.lineColor};--round-progress-bgcolor:${bgColor}`;
+    }
   </script>
 </component>

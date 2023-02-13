@@ -17,8 +17,8 @@ After you clone the repo:
 1. To change which components are in the browser edit the file `static/index.html`
 1. Please use the bug reporting in the issues section of the repo.
 1. Any document suggestions should also be added to the issues section of the repo.
-1. Test the crap out of it.
-1. Try doing oddball things.
+1. Write several component and test Evo-WC for any errors in the transpiler.
+1. Try doing oddball things in your component, push the envelope.
 1. Currently there is no way to loop through tags. So no auto generation of tables, list items, etc. That is coming.
 1. **Please make a Pull Request with your example components or bug fixes.**
 1. **Do not check into the master branch**
