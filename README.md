@@ -12,7 +12,7 @@ After you clone the repo:
 
 1. To install the repo run `npm install`
 1. To launch the simple web server run `npm start` in one terminal
-1. To transpile the components run `node bin/evowc.js ./components/*.html` in another terminal
+1. To transpile the components run `npm run build` in another terminal
 1. To view the webpage browse to `http://localhost:5555`
 1. To change which components are in the browser edit the file `static/index.html`
 1. Please use the bug reporting in the issues section of the repo.
