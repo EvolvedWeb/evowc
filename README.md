@@ -1,6 +1,6 @@
 # Evo-WC
 
-Evo-WC is a web component transpiler that takes template file based on HTML and XML and created raw JavaScript Web Component .js files. These components rely on a single baseclass that is included. No other frameworks, libraries or code is needed.
+Evo-WC is a web component transpiler that takes template file based on HTML and XML and created raw JavaScript Web Component .js files. These components rely on the baseclass `DFElement` that is included. No other frameworks, libraries or code is needed.
 
 You can create one or more components in the template file. But you can only have components or comments in the template file. Any other top level element will result in a compile error.
 
@@ -66,11 +66,11 @@ You can define a set of properties that the component will use by adding attribu
 </component>
 ```
 
-The attribute `:message` in the `<component>` tag will create a property called 'message' on the class and the attribute 'message' will be observed. If you change the attribute it will also change the class property. Attributes that you place on the component in your HTML can be seen as the initial data for the component.
+The attribute `:message` in the `<component>` tag will create a property called `message` on the class and the attribute `message` will be observed. If you change the attribute it will also change the class property. Attributes that you place on the component in your HTML can be seen as the initial data for the component.
 
-When you create the Property definition attributes you can define the data type of the generated property as well as a possible default value.
+When you create a Property Definition attribute you can also define the data type of the generated property as well as a possible default value.
 
-The variable types that can be user are `'number'`, `'int'`, `'string'`, `'bool'`, `'object'`, `'array'`, `'date'` with  `'string'` being the default type.
+The variable types that can be user are `'number'`, `'int'`, `'string'`, `'bool'`, `'object'`, `'array'`, `'date'` with the default type being `'string'`.
 
 #### Example
 
@@ -82,15 +82,17 @@ The variable types that can be user are `'number'`, `'int'`, `'string'`, `'bool'
 </component>
 ```
 
-The property `age` is going to be a number. No matter what type of value you pass in, it will be converted into a number. So `component.age = '33'` will give it a numeric value of `33` and not a string of `"33"`.
+The property `age` is going to be a `number`. No matter what type of value you pass in, it will be converted into a number. So `component.age = '33'` will give it a numeric value of `33` and not a string of `"33"`.
 
 > TODO: What other types do I need to support?
 
-You can create private properties that are not accessable outside the component and are not settable by changing an attribute. These propertied are defined like this `:#propName` These properties can not be set outside of the generated class. But you can call the getter and setter for these properties by using `const a = this.#propName;` or `this.#propName = 'something';`
+You can create private properties that are not accessable outside the component and are not settable by changing an attribute. These propertied are defined like this `:#propName` These properties can not be set outside of the generated class. Your code can call the getter and setter for these properties by using `const a = this.#propName;` or `this.#propName = 'something';`
 
 #### INFO
 
-Be aware that when you set a class property it will not affect the associated attribute on the component. We treat attributes for a property as an input to the component and not for an output. If you want to change an attribute on the component then you must call `this.setAttribute` or `this.removeAttribute` in your own code.
+Be aware that when you set a class property it will not affect the associated attribute on the component. We treat attributes for a property as an input to the component and not for an output. If you want to change an attribute on the component then you must call the exported function `setAttr` in your own code.
+
+> _`setAttr` is exported from the file `DFElement.js`._
 
 #### Example:
 
@@ -129,6 +131,25 @@ In the above example there is a private class field called `#message` and both a
 #### dataset / data attributes
 We support `data` attributes through the `dataset` property. If you create an attribute like this `:data-dog-food="varName` then the property `element.dataset.dogFood` will be set every time the setter for `varName` is called.
 
+### File `DFElement.js`
+
+There are three things exported from the file `DFElement.js`.
+
+* The class `DFElement` - This is the base class for all of the generated Web Components.
+* The function `setAttr` - A helper function that calls either `setAttribute` or `removeAttribute` based on the value passed in.
+* The function `handleCondition` - A helper function that hides and shows a DOM element based on a value of the `condition` parameter.
+
+#### Exported class `DFElement`
+
+Do not override the member functions `connectedCallback`, `disconnectedCallback`, `adoptedCallback`, and `attributeChangedCallback`. Create your own funcitone `connected`, `disconnected`, `adopted`, and `attrChanged` instead.
+
+#### Exported function `setAttr(el, attr, value)`
+
+* `el` is the element to be affected.
+* `attr` is the attribute to be set or reset.
+* `value` is the value to set for the attribute.
+  * If `value` is `null` then the attribute will be removed from the element `el`
+  * Any other value will set the attribute to that value.
 
 ### Template tag
 ### Style tag
@@ -141,11 +162,11 @@ We support `data` attributes through the `dataset` property. If you create an at
 You can provide, in your script, lifecycle functions that will be called at specific times in the lifecycle of the component.
 
 * `init()` - Called at the end of the constructor. Follow all of the [requirements for custom element constructors and reactions](https://html.spec.whatwg.org/multipage/custom-elements.html#custom-element-conformance).
-* `update()` - Called every time any property is updated when the component is connected to the DOM. You can adjust any private properties in this function. If this componenet was previously disconnected from the DOM then this also is called when the component is reconnected.
+* `update(member)` - Called every time any property is updated when the component is connected to the DOM. You can adjust any private properties in this function. If this componenet was previously disconnected from the DOM then this also is called when the component is reconnected. The value for `member` is the name of the member variable that was updated just before calling this function.
 * `connected()` - Called when an attribute has changed. This is called by the base class `connectedCallback` function.
 * `disconnected()` - Called when an attribute has changed. This is called by the base class `disconnectedCallback` function.
 * `adopted()` - Called when an attribute has changed. This is called by the base class `adoptedCallback` function.
-* `attrChanged()` - Called when an attribute has changed. This is called by the base class `attributeChangedCallback` function.
+* `attrChanged(attr, oldVal, newval)` - Called when an attribute has changed. This is called by the base class `attributeChangedCallback` function.
 
 ## Bindings
 
@@ -160,7 +181,7 @@ If we have this image tag in the template: `<img :src="imageUrl" :alt="imageTitl
 
 * Every time that the component property `imageTitle` changes Evo-WC will set the `alt` property of the image tag like this: `img.alt = this.imageTitle`
 
-> _This does NOT call code like Angular. It only reads a property value._
+> _This does NOT call code like Angular. It only uses a property value._
 
 These attributes will be put into the property getter and setter functions.
 Attributes can be set like this:
@@ -185,9 +206,23 @@ and for the acctual function name. ([JavaScript private class fields](https://de
 
 ### Pipes
 Property variables can use pipes to alter or format data without affecting the original values. Use the bar character ( __|__ ) to searate pipes
-  * Like `:name="name|upperCase"` or  `:name="name|upperCase|reverse"`
+  * Like `:name="name|upperCase"` or  `:name="name|#upperCase|#reverse"`
   * All pipe methods take a `string` and return a `string`.<br/> 
     _<span style="color:red">This may need to take whatever type the var is and return anything</span>_
+
+#### Example pipes
+
+Pipes are very easy to write. You have only one incoming parameter and your pipe must return a string. Here are two example pipes:
+
+```javascript
+#upperCase(value) {
+  return value.toUpperCase();
+}
+
+#revserse(value) {
+  return [...value].reverse().join('');
+}
+```
 
 ### Conditionals: Do I use/automate CSS state?
 
@@ -254,10 +289,6 @@ You pass in the element `el` that is conditionally to hide or show, the conditio
 * Do I allow TypeScript in the code??
 * Map Files? Would they work? Of have the debug
 
-### Transpiler problems
-* Html elements get converted into raw text for `&gt;` becomes `>`
-* Sometimes a portion of the provided `<script>` get's dropped.
-
 ### Pipes
 * Regular pipes work.
 * Importable pipes? Is this just an import and then calling that import from a member function?
@@ -265,11 +296,11 @@ You pass in the element `el` that is conditionally to hide or show, the conditio
 ### Conditional Attributes
 * Add docs that explain how to use the `state` attribute and CSS to improve performance
 * Conditionals should really only be used when large chunks of DOM are involved.
-* :if works
-* Add Looping (:for) - require _keys_, work to _limit DOM changes_
+* `:if` works
+* Add Looping (`:for`) - require _keys_, work to _limit DOM changes_
 * Only allow one conditional attribute per element
-* Should I add :switch
-* Should I add ony others??
+* Should I add `:switch`
+* Should I add any others??
   * https://angular.io/api/common#directives
 
 ### Other language version (increase tool usage)

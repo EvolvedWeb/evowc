@@ -1,0 +1,45 @@
+<component tag="alert-message" :message :title :icon :state="string:alert">
+  <template>
+    <div class="frame" :attr.state="state">
+      <span :if="icon" :attr.icon="icon"></span>
+      <div :if="title" class="title" ::html="title"></div>
+      <div class="message" ::html="message"></div>
+    </div>
+  </template>
+    <style>
+      :host {
+        display: block;
+        height: fit-content;
+        margin: 2px 0;
+        vertical-align: middle;
+        --alert-box-bgcolor: #EFE;
+        --alert-box-bordercolor: #6D6;
+      }
+
+      .frame[state=info] {
+        --alert-box-bgcolor: #DDF;
+        --alert-box-bordercolor: #66D;
+      }
+
+      .frame[state=warn],.frame[state=warning] {
+        --alert-box-bgcolor: #FFD;
+        --alert-box-bordercolor: #DD6;
+      }
+
+      .frame[state=alert], .frame[state=error] {
+        --alert-box-bgcolor: #FDD;
+        --alert-box-bordercolor: #D66;
+      }
+
+      .frame {
+        background-color: var(--alert-box-bgcolor, #FFF);
+        border: 1px solid var(--alert-box-bordercolor, #000);
+        border-radius: 5px;
+        font: 16px var(--alert-box-font, Calibri, Candara, Segoe, "Segoe UI", Optima, Arial, sans-serif);
+        padding: 10px 25px 10px 10px;
+        position: relative;
+      }
+    </style>
+    <script>
+    </script>
+</component>

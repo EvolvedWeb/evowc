@@ -29,7 +29,6 @@ export function handleCondition(el, condition, commentEl) {
   }
 }
 
-
 export class DFElement extends HTMLElement {
   #propsLookup = {};
 
@@ -65,7 +64,6 @@ export class DFElement extends HTMLElement {
   }
 
   adoptedCallback() {
-    console.log(`adoptedCallback ${this.constructor.name}(${this.id})`);
     this.adopted && this.adopted();
   }
 

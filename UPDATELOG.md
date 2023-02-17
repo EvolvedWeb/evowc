@@ -1,5 +1,11 @@
 # Updates to EVO-WC
 
+## Version 0.1.2
+
+* The function `update` is now given the name of the propery that was changed just before calling `update`.
+* Updated README.md
+
+
 ## Version 0.1.1
 
 * Fixed #2 - Provide proper encoding of `<`, `>` and `&` in the template

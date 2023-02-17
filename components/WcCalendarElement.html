@@ -1,52 +1,78 @@
-<component tag="wc-calendar" :value="date" :locale="string:en" :#showLast="bool:false" :#title>
+<component tag="wc-calendar" :value="date" :locale="string" :#showLast="bool:false" :#title>
   <template>
-    <h5>
-      <button .click="#prevMonth">&lt;</button>
-      <span ::text="#title"></span>
-      <button .click="#nextMonth">&gt;</button>
-    </h5>
     <table>
-      <tr><th>Sun</th><th>Mon</th><th>Tue</th><th>Wed</th><th>Thu</th><th>Fri</th><th>Sat</th></tr>
-      <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-      <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-      <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-      <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-      <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-      <tr :if="#showLast"><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+      <thead>
+        <tr class="top"><th><button .click="#prevMonth">❮</button></th><th colspan="5"::text="#title"></th><th><button .click="#nextMonth">❯</button></th></tr>
+        <tr><th>Su</th><th>Mo</th><th>Tu</th><th>We</th><th>Th</th><th>Fr</th><th>Sa</th></tr>
+      </thead>
+      <tbody>
+        <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr :if="#showLast"><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+      </tbody>
     </table>
-  </templat>
+  </template>
   <style>
     :host {
+      background-color: #FFF;
+      border: 1px solid #888;
+      border-radius: 5px;
       display: inline-block;
-      min-height: 150px;
-      min-width: 200px;
-    }
-    h5 {
-      background: #DDD;
-      border: 1px solid #999;
-      border-bottom: none;
-      margin: 0;
-      padding: 6px 0;
-      text-align: center;
+      height: fit-content;
+      width: fit-content;
     }
     table {
-      background-color: #FFF;
       border-collapse: collapse;
+      font: 14px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
       height: 100%;
       width: 100%;
     }
-    th {
-      background: #DDD;
-      border: 1px solid #999;
-      height: 1rem;
+    th, td {
+      box-sizing: border-box;
+      height: 3em;
+      line-height: 1em;
+      max-height: 3em;
+      max-width: 3em;
+      min-height: 3em;
+      min-width: 3em;
+      padding: 4px;
+      width: 3em;
+    }
+    .top th {
+      border-bottom: 1px solid #999;
     }
     td {
-      border: 1px solid #999;
-      height: 14%;
-      padding: 5px 5px 10px;
-      text-align: right;
-      vertical-align: top;
-      width: 14%;
+      position: relative;
+      text-align: center;
+      vertical-align: middle;
+    }
+    td[selected] span {
+      background: #ccc;
+      border: 4px solid white;
+    }
+    button {
+      all: unset;
+      border: 1px solid transparent;
+    }
+    button,
+    td[selected] span {
+      align-items: center;
+      border-radius: 50%;
+      box-sizing: border-box;
+      display: flex;
+      height: 100%;
+      justify-content: center;
+      line-height: 1em;
+      width: 100%;
+    }
+    button:hover {
+      background: #ccc;
+    }
+    button::focus {
+      border-color: #bbb;
     }
   </style>
   <script>
@@ -73,11 +99,17 @@
 
     #setTitle() {
       if (this.value) {
+        const locale = this.locale || document.documentElement.lang || navigator.language;
         const format = { year: 'numeric', month: 'long' };
-        const formatter = new Intl.DateTimeFormat(this.locale, format);
+        const formatter = new Intl.DateTimeFormat(locale, format);
         this.#title = formatter.format(this.value);
-        const todaysDate = this.value.getDate();
+        const today = new Date();
+        const thisMonth = today.getMonth();
+        const thisYear = today.getFullYear();
+        const thisDate = today.getDate();
         const temp = new Date(this.value);
+        const showingMonth = temp.getMonth();
+        const showingYear = temp.getFullYear();
         temp.setDate(1);
         let dow = temp.getDay();
         temp.setMonth(temp.getMonth()+1);
@@ -87,8 +119,24 @@
         let date = 1;
         this.#showLast = ((dow === 5 && lastDate === 31) || (dow === 6 && lastDate === 30));
         tds.forEach(td => {
+          const isToday = showingYear === thisYear &&
+                          showingMonth === thisMonth &&
+                          date === thisDate;
+          if (isToday && dow === 0) {
+            td.setAttribute('selected', '');
+          }
+          else {
+            td.removeAttribute('selected');
+          }
+
           if (dow === 0) {
-            td.textContent = (date > lastDate) ? '' : date++;
+            if (isToday) {
+              td.innerHTML = `&lt;span&gt;${date}&lt;/span&gt;`;
+            }
+            else {
+              td.textContent = (date > lastDate) ? '' : date;
+            }
+            date++;
           }
           else {
             td.textContent = '';
