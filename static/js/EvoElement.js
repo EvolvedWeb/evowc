@@ -15,21 +15,25 @@ export function handleCondition(el, condition, commentEl) {
     if (condition) {
       if (!el.isConnected) {
         const parent = commentEl.parentNode;
-        parent.insertBefore(el, commentEl);
-        commentEl.remove();
+        if(parent) {
+          parent.insertBefore(el, commentEl);
+          commentEl.remove();
+        }
       }
     }
     else {
       if (el.isConnected) {
         const parent = el.parentNode;
-        parent.insertBefore(commentEl, el);
-        el.remove();
+        if (parent) {
+          parent.insertBefore(commentEl, el);
+          el.remove();
+        }
       }
     }
   }
 }
 
-export class DFElement extends HTMLElement {
+export class EvoElement extends HTMLElement {
   #propsLookup = {};
 
   constructor(template, styles, propsLookup = {}) {

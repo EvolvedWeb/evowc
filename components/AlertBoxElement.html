@@ -3,8 +3,8 @@
     <div class="frame" :attr.state="state" :attr.isPopup="popup">
       <button class="closer"></button>
       <span :if="icon" :attr.icon="icon"></span>
-      <div :if="title" class="title" ::html="title"></div>
-      <div class="message" ::html="message"></div>
+      <div :if="title" class="title" :html="title"></div>
+      <div class="message" :html="message"></div>
     </div>
   </template>
     <style>
