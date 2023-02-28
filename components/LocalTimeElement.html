@@ -138,3 +138,19 @@
     <p>Hello world</p>
   </template>
 </component>
+
+<component tag="has-switch" :dog="number:0">
+  <template>
+    <p :switch="dog:0">Hello world 0</p>
+    <p :switch="dog:1">Hello world 1</p>
+    <p :switch="dog:2">Hello world 2</p>
+    <button .click="#setDog" data-val="0">Zero</button>
+    <button .click="#setDog" data-val="1">One</button>
+    <button .click="#setDog" data-val="2">Two</button>
+  </template>
+  <script>
+    #setDog(event) {
+      this.dog = event.target.dataset.val;
+    }
+  </script>
+</component>

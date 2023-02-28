@@ -1,6 +1,6 @@
 # Evo-WC
 
-Evo-WC is a web component transpiler that takes template file based on HTML and XML and created raw JavaScript Web Component .js files. These components rely on the baseclass `EvoElement` that is included. No other frameworks, libraries or code is needed.
+Evo-WC is a web component transpiler that takes template file based on HTML and XML and created raw JavaScript Web Component files. These components rely solely on the baseclass `EvoElement` that is included. No other runtime frameworks, libraries or code is needed.
 
 You can create one or more components in the template file. But you can only have components or comments in the template file. Any other top level element will result in a compile error.
 
@@ -335,7 +335,7 @@ setAttr(this, 'name', 'SomeValue');
 ### Exported function `handleCondition(el, condition, commentEl)`
 `handleCondition` is a helper function that is used with conditional attributes `:if` and `:switch`.
 
-> 2023-02-27 - `:switch` is not yet supported.
+> 2023-02-27 - `:switch` is poorly supported.
 
 You pass in the element `el` that is conditionally to hide or show, the conditional value `condition` that is `true` or `false` and the comment element `commentEl` that will replace the element if the condition is `false`. It is important to have a unique comment element for each conditional.
 
