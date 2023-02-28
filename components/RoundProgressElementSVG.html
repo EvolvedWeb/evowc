@@ -3,7 +3,7 @@
     <svg width="200" height="200">
       <rect x="0" y="0" width="100" height="100" fill="white" />
       <path fill="none" :attr.stroke="color" stroke-width="40" :attr.d="#path" />
-      <text style="stroke:none;fill:black;font:24px Tahoma" x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" ::text="value|#toFixed"></text>
+      <text style="stroke:none;fill:black;font:24px Tahoma" x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" :text="value|#toFixed"></text>
     </svg>
   </template>
   <style>

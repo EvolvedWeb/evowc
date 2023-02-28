@@ -1,37 +1,39 @@
-<component tag="simple-address" :firstName="string:Michael" :lastName="string:Collins" :address="string:561 S 1020 W" :city="string:Orem" :state="string:UT" :zip="string:84058">
+<component tag="simple-address" :firstName="string:Han" :lastName="string:Solo"
+:address="string:Docking Bay 94" :city="string:Mos Eisley" :state="string:Tatooine"
+:zip="string:12345">
   <template>
     <div class="next-to">
       <div>
         <div>
           <label>First Name: </label><br/>
-          <input ::value="firstName" autofocus />
+          <input :value="firstName" autofocus />
         </div>
         <div>
           <label>Last Name: </label><br />
-          <input ::value="lastName" />
+          <input :value="lastName" />
         </div>
         <div>
           <label>Address: </label><br />
-          <input ::value="address" />
+          <input :value="address" />
         </div>
         <div>
           <label>City: </label><br />
-          <input ::value="city" />
+          <input :value="city" />
         </div>
         <div>
           <label>State: </label><br />
-          <input ::value="state" .input="#toUpper" />
+          <input :value="state" .input="#toUpper" />
         </div>
         <div>
           <label>Zip: </label><br />
-          <input ::value="zip" />
+          <input :value="zip" />
         </div>
         <div><button .click="#submit" js="btn">Submit</button></div>
       </div>
       <div>
-        <span ::text="firstName"></span> <span ::text="lastName"></span><br/>
-        <span ::text="address"></span><br/>
-        <span ::text="city"></span>. <span ::text="state"></span> <span ::text="zip"></span>
+        <span :text="firstName"></span> <span :text="lastName"></span><br/>
+        <span :text="address"></span><br/>
+        <span :text="city"></span>, <span :text="state"></span> <span :text="zip"></span>
       </div>
     </div>
   </template>

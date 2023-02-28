@@ -3,7 +3,7 @@
   :format="object:{weekday:'long',year:'numeric',month:'long',day:'numeric'}"
   :#localetime :#classes>
   <template>
-    <span ::text="#localetime" :style="locale" :class="#classes"></span>
+    <span :text="#localetime" :style="locale" :class="#classes"></span>
     <button .click="#setLocale" data-locale="en">EN</button>
     <button .click="#setLocale" data-locale="fr">FR</button>
     <button .click="#setLocale" data-locale="ru">RU</button>
@@ -104,7 +104,7 @@
 
 <component tag="if-one" :state="bool:true">
   <template>
-    <div>this.state is currently set to <span ::text="state"></span></div>
+    <div>this.state is currently set to <span :text="state"></span></div>
     <button .click="#toggleState">Toggle</button>
     <div class="red" :if="state">TRUE - This shows if this.state is set to true.
       <p>Go watcha fun movie!</p>
@@ -137,4 +137,20 @@
   <template>
     <p>Hello world</p>
   </template>
+</component>
+
+<component tag="has-switch" :dog="number:0">
+  <template>
+    <p :switch="dog:0">Hello world 0</p>
+    <p :switch="dog:1">Hello world 1</p>
+    <p :switch="dog:2">Hello world 2</p>
+    <button .click="#setDog" data-val="0">Zero</button>
+    <button .click="#setDog" data-val="1">One</button>
+    <button .click="#setDog" data-val="2">Two</button>
+  </template>
+  <script>
+    #setDog(event) {
+      this.dog = event.target.dataset.val;
+    }
+  </script>
 </component>

@@ -1,6 +1,6 @@
 {
   "name": "evowc",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "Evo-WC transpiler converts a template file based on HTML and XML into a raw JS custom Web Component.",
   "main": "index.js",
   "bin": {

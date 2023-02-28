@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test Comp1</title>
+</head>
+<body>
+  <!--
+  <portfolio-img text="July 26, 2016" title="Springville Main Street Lots"></portfolio-img>
+  <hr/>
+  <special-thing></special-thing>
+  <hr/>
+  <simple-address></simple-address>
+-->
+<has-switch dog="2"></has-switch>
+<hr/>
+<div style="display:flex;flex-direction:column;margin-bottom:10px;">
+    <div style="display:flex;margin-bottom:40px;gap:10px">
+      <wc-calendar></wc-calendar>
+      <if-one style="background:#FFE;border:1px solid black;padding:5px;"></if-one>
+      <some-face state="sad"></some-face>
+    </div>
+    <local-time id="one" timestamp="Jan 1, 2023"></local-time>
+    <div style="border:1px solid black;margin:10px 0;display:flex;flex-flow: wrap;justify-content: space-evenly;">
+      <round-progress value="97"></round-progress>
+      <round-progress value="65" decimals="1" line-color="red" style="color:white;background:#442299;"></round-progress>
+    </div>
+    <div>
+      Normal:&nbsp;<alert-box message="This is a non-types message" state=""></alert-box>
+      Info:&nbsp;<alert-box message="This is an info message" state="info"></alert-box>
+      Warn:&nbsp;<alert-box message="This is a warning message" title="WARNING!" state="warn"></alert-box>
+      Alert:&nbsp;<alert-box message="This is an error" state="alert" popup></alert-box>
+    </div>
+    <div>
+      Normal: <alert-message message="This is a non-types message" state=""></alert-message>
+      Info: <alert-message message="This is an info message" state="info"></alert-message>
+      Warn: <alert-message message="This is a warning message" title="WARNING!" state="warn"></alert-message>
+      Alert: <alert-message message="This is an error" state="alert"></alert-message>
+    </div>
+  </div>
+
+  <script type="module">
+    // import { PortfolioImgElement } from './js/components/PortfolioImgElement.js';
+    // import { SpecialThingElement } from './js/components/SpecialThingElement.js';
+    import { SimpleAddressElement } from './js/components/SimpleAddressElement.js';
+    import { HasSwitchElement } from './js/components/HasSwitchElement.js';
+    import { LocalTimeElement } from './js/components/LocalTimeElement.js';
+    import { SomeFaceElement } from './js/components/SomeFaceElement.js';
+    import { WcCalendarElement } from './js/components/WcCalendarElement.js';
+    import { RoundProgressElement } from './js/components/RoundProgressElement.js';
+    import { IfOneElement } from './js/components/IfOneElement.js';
+    import { AlertBoxElement } from './js/components/AlertBoxElement.js';
+    import { AlertMessageElement } from './js/components/AlertMessageElement.js';
+
+    const rpinc = [1, .5];
+    const rps = document.querySelectorAll('round-progress');
+    function updateTime() {
+      rps.forEach((rp, i) => {
+        rp.value+= rpinc[i];
+
+        if (rp.value >= 100 ) rp.value = 100;
+        if (rp.value <= 0) rp.value = 0
+
+        if (rp.value === 100 || rp.value === 0) {
+          rpinc[i] *= -1;
+        }
+      });
+      setTimeout(updateTime, 100);
+    }
+
+    updateTime();
+  </script>
+</body>
+</html>
