@@ -7,6 +7,7 @@ Normally I would update the major version for breaking changes, but I am not rea
 * For more cosistancy I converted `::text`, `::html`, and `::value` to `:text`, `:html`, and `:value` - **Breaking**
 * Renamed DFElement base class to EvoElement. = **Breaking**
 * Started the live creation page.
+* Basic `:switch` support.
 * Added other values in ATTRIBUTE_BASED_PROPS
 * Updated README.md
 
