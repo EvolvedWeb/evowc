@@ -4,8 +4,8 @@
 
 Normally I would update the major version for breaking changes, but I am not ready to release version 1.0.0 yet. Please check all your components for te breaking changes below.
 
-* For more cosistancy I converted `::text`, `::html`, and `::value` to `:text`, `:html`, and `:value` - **Breaking**
-* Renamed DFElement base class to EvoElement. = **Breaking**
+* For more consistency I converted `:: text`, `:: html`, and `:: value` to `: text`, `: html`, and `: value` <-- **Breaking**
+* Renamed DFElement base class to EvoElement. <-- **Breaking**
 * Started the live creation page.
 * Basic `:switch` support.
 * Added other values in ATTRIBUTE_BASED_PROPS
