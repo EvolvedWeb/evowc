@@ -14,9 +14,9 @@ There are sample components in the `components` folder. They are XML based files
 After you clone the repo:
 
 1. To install the repo run `npm install`
-1. To launch the simple web server run `npm start` in one terminal
-1. To transpile the components run `npm run build` in another terminal
-1. To view the webpage browse to `http://localhost:5555`
+1. To transpile the components run `npm run build` in one terminal
+1. To launch the simple web server run `npm start` in another terminal
+1. To view the webpage browse to `http://localhost:5555/test.html`
 1. To change which components are in the browser edit the file `static/test.html`
 1. Please use the __bug reporting in the issues section__ of the repo.
 1. Any __document suggestions__ should also be added to the issues section of the repo.
@@ -49,7 +49,7 @@ The minimal component is made up by using both the `<component>` and `<template>
 
 ## Component Element
 
-Each component is created by using the `<component></component>` element. Each component must have a `tag` attribute that names the element tag to be used in your HTML to access this component.
+Each component is created by using the `<component></component>` element. Each component must have a `tag` attribute that defines the element tag to be used in your HTML to access this component.
 
 Each component must also include a `<template></template>` that represents the HTML template for your component
 
@@ -109,16 +109,6 @@ The variable types that can be user are `'number'`, `'int'`, `'string'`, `'bool'
 
 In the example above the property `age` will be a number and will have a default value of `10` when the component is constructed. Any value passed into `component.age` will be converted into a number. So `component.age = '33'` will store a numeric value of `33` and not a string of `"33"`.
 
-You can create private properties that are not accessable outside the component and are not settable by changing an attribute. These propertied are defined like this `:#propName` These properties can not be set outside of the generated class. Your code can call the getter and setter for these properties by using `const a = this.#propName;` or `this.#propName = 'something';`
-
-#### INFO
-
-Be aware that when you set a class property it will not affect the associated component attribute. We treat attributes for a property as an input to the component and not for an output. If you want to change an attribute on the component then you must call the exported function `setAttr` in your own code.
-
-**_<span style="color:yellow">2023-02-27</span> - We are working on a way to indicate that a component attributemust be changed when the associated value is changed. Probably adding an explamation mark to the beginning of a PDA. Probably like this:_ '`:!show="boolean:false"`' or this '`:+show="boolean:false"`'**
-
-> _`setAttr` is exported from the file `EvoElement.js`._
-
 #### Example:
 
 Component definition:
@@ -154,7 +144,16 @@ Both before and after the user clicks on the button the message attribute for th
 
 In the above example there is a private class field called `#message` and both a getter and a setter called `message`. When the setter is called is when the magic of Evo-WC happens. The setters know everything in the UI that needs to be updated. And, when you call the setter it does update only the things that use this variable.
 
+#### Private properties
+
+You can create private properties that are not accessable outside the component and are not settable by changing an attribute. These propertied are defined with a `#` like this `:#propName` These properties can not be set outside of the generated class. The component code can call the private getter and setter for these properties like this `const a = this.#propName;` or `this.#propName = 'something';`
+
+#### Updating component attributes
+
+Sometimes you may want an attribute on the component to change when a property changes. This is a common need for CSS. If you want the property to also set the attribute on the component then your PDA needs to to include a `+` like this `:+show`. In this case, when you set the `show` property it will also set the attribute `show` on the component.
+
 #### dataset / data attributes
+
 We support setting the `data` attributes through the `dataset` property. If you create an attribute like this `:data-dog-food="varName"` then the property `element.dataset.dogFood` will be set every time the setter for `varName` is called.
 
 We recommend using dataset attributes for passing needed data to an event handler.
@@ -178,11 +177,13 @@ We recommend using dataset attributes for passing needed data to an event handle
 ```
 
 ### Style element
+
 Place all of your CSS for the component into this `<style>` element.
 
 > Possible future plans to allow importing external CSS files.
 
 ### Script element
+
 Place all of your JavaScript for the component into this `<script>` element. All of the code you place in here is inserted into the component class as class methods.
 
 <div style="background:#F00;color:#000;margin:0 20px 8px;padding:2px 8px;font-weight:bold;">Important: Do not use fat arrow functions for your class methods.</div>
@@ -194,10 +195,10 @@ You can provide, in your script, lifecycle functions that will be called at spec
 | Method | Description |
 | --- | --- |
 | `init()` | Called at the end of the constructor. Follow all of the [requirements for custom element constructors and reactions](https://html.spec.whatwg.org/multipage/custom-elements.html#custom-element-conformance). |
-| `update(member)` | Called every time any property is updated when the component is connected to the DOM. You can adjust any private properties in this function. If this componenet was previously disconnected from the DOM then this also is called when the component is reconnected. The value for `member` is the name of the member variable that was updated just before calling this function. |
-| `connected()` | Called when an attribute has changed. This is called by the base class `connectedCallback` function. |
-| `disconnected()` | Called when an attribute has changed. This is called by the base class `disconnectedCallback` function. |
-| `adopted()` | Called when an attribute has changed. This is called by the base class `adoptedCallback` function. |
+| `update(member, oldVal, newVal)` | Called every time any property is updated when the component is connected to the DOM. You can adjust any private properties in this function. If this componenet was previously disconnected from the DOM then this also is called when the component is reconnected. The value for `member` is the name of the member variable that was updated just before calling this function. |
+| `connected()` | This is called by the base class `connectedCallback` function. |
+| `disconnected()` | This is called by the base class `disconnectedCallback` function. |
+| `adopted()` | This is called by the base class `adoptedCallback` function. |
 | `attrChanged(attr, oldVal, newval)` | Called when an attribute has changed. This is called by the base class `attributeChangedCallback` function. |
 
 ### Import element
@@ -246,6 +247,24 @@ An attribute that starts with a period ( __`.`__ ) are event handlers:
 > You can use private member functions by starting the function name with `#` both here
 and for the acctual function name. ([JavaScript private class fields](https://devdocs.io/javascript/classes/private_class_fields))
 
+All event handlers receive one argument. That is the `event`. You can not pass any parameters into the event handler. Instead you add data attributes with anything you need to access in the event handler. For example you can have several buttons to change the component's locale and each has a different value for the attribute `data-locale` like this:
+
+
+``` xml
+<component tag="my-thing" :#locale>
+  <template>
+    <button .click="#setLocale" data-locale="en">EN</button>
+    <button .click="#setLocale" data-locale="fr">FR</button>
+    <button .click="#setLocale" data-locale="es">ES</button>
+  </template>
+  <script>
+    #setLocale(event) {
+      this.#local = event.target.dataset.locale;
+    }
+  </script>
+</component>
+```
+
 ### Pipes
 Property variables can use pipes to alter or format data without affecting the original values. Use the bar character ( __|__ ) to searate pipes
   * Like `:name="name|upperCase"` or  `:name="name|#upperCase|#reverse"`
@@ -269,17 +288,17 @@ Pipes are very easy to write. You have only one incoming parameter and your pipe
 
 ### Conditionals
 
-You can use `:if="variable"` or `:if="!variable"` to conditionaly hide and show sections of the html template.
+You can use `$if="variable"` or `$if="!variable"` to conditionaly hide and show sections of the html template.
 
 ```html
 <component tag="if-one" :state="bool:true">
   <template>
     <div>this.state is currently set to <span :text="state"></span></div>
     <button .click="#toggleState">Toggle</button>
-    <div class="red" :if="state">TRUE - This shows if this.state is set to true.
+    <div class="red" $if="state">TRUE - This shows if this.state is set to true.
       <p>Go watcha fun movie!</p>
     </div>
-    <div class="blue" :if="!state">FALSE - If this.state is set to false then this shows.
+    <div class="blue" $if="!state">FALSE - If this.state is set to false then this shows.
       <p>Listen to an audio book.</p>
     </div>
   </template>
@@ -329,13 +348,15 @@ In your component class you must not override the built in methods `connectedCal
 `setAttr` is a helper function that calls `el.removeAttribute(attr)` if you pass in `null` as the `value`. If the `value` is `true` then it calls `el.setAttribute(attr, '')`. For all other values it calls `el.setAttribute(attr, value)`.
 
 While it is not likely that you will need to, you can call `setAttr` from your own code. For example you can do the following to set the `name` attribute on your component:
+
 ```javascript
 setAttr(this, 'name', 'SomeValue');
 ```
 ### Exported function `handleCondition(el, condition, commentEl)`
-`handleCondition` is a helper function that is used with conditional attributes `:if` and `:switch`.
 
-> 2023-02-27 - `:switch` is poorly supported.
+`handleCondition` is a helper function that is used with conditional attributes `$if` and `$switch`.
+
+> 2023-02-27 - `$switch` works but is poorly designed and will be replaced.
 
 You pass in the element `el` that is conditionally to hide or show, the conditional value `condition` that is `true` or `false` and the comment element `commentEl` that will replace the element if the condition is `false`. It is important to have a unique comment element for each conditional.
 
@@ -347,14 +368,12 @@ You pass in the element `el` that is conditionally to hide or show, the conditio
 
 ## Notes of things that still need to be finished
 
-### PDAs
-* Provide a way to tie a component attribute to its property
-  * Maybe like this: `:!show` or this `:+show`
-
 ### Date Types
+
 * Support bigint
 
 ### Compile options
+
 * Debug Mode that adds lost of debug code.
 * Generates JSDOC comments
 * Provide a way to add doc info into the template
@@ -363,15 +382,19 @@ You pass in the element `el` that is conditionally to hide or show, the conditio
 * SourceMaps? Would they work?
 
 ### Pipes
+
 * Regular pipes work.
-* Importable pipes? Is this just an import and then calling that import from a member function?
+* Importable pipes?
+  * Is this just an import and then calling that import from a member function?
+  * Is there a special way to indicate an imported pipe?
 
 ### Conditional Attributes
+
 * Add docs that explain how to use the `state` attribute and CSS to improve performance
 * Conditionals should really only be used when large chunks of DOM are involved.
-* `:if` works
-* `:swich` is coming
-* Add Looping (`:for`)
+* `$if` works
+* `$swich` is coming
+* Add Looping (`$for`)
   * require a _key_ field.
   * Improve it to _limit DOM changes_ (Reuse DOM where possible)
 * Only allow one conditional attribute per element
@@ -413,6 +436,7 @@ Sometime in the near future we plan to release translpilers in different languag
 > 2023-02-27 - List not complete
 
 ## Reference
+
 * [Custom elements](https://html.spec.whatwg.org/multipage/custom-elements.html#custom-elements)
 * [JavaScript private class fields](https://devdocs.io/javascript/classes/private_class_fields)
 * [Web Components Can Now Be Native Form Elements

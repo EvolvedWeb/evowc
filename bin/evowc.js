@@ -1,9 +1,10 @@
 const evowc = require('../lib/evowc.js');
 const getFileArrayFromGlob = require('../lib/getFileArrayFromGlob.js');
-console.log(evowc);
+//console.log(evowc);
 
+const TOTAL_TIME = 'Total processing time';
 async function run(args) {
-  console.time('processing time');
+  console.time(TOTAL_TIME);
   const options = {
     minify: {
       css: true,
@@ -17,11 +18,18 @@ async function run(args) {
 
     for(let i=0; i < files.length; i++) {
       const componentFileName = files[i];
-      await evowc(componentFileName, outputScriptName, options);
+      try {
+        await evowc(componentFileName, outputScriptName, options);
+      }
+
+      catch(ex) {
+        console.log('\n'+ex.stack);
+      }
     }
   }
 
-  console.timeEnd('processing time');
+  console.log('\n');
+  console.timeEnd(TOTAL_TIME);
 }
 
 run(process.argv.slice(2));

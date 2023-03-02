@@ -1,10 +1,18 @@
 # Updates to EVO-WC
 
+## version 0.3.0 - 2023-01-?? - *** Breaking Changes ***
+
+* Changed the conditionals from `:if` and `:switch` to `$if` and `$switch` to allow `:if` and `:switch` to be used as bindings.
+* Added ability to set attributes on the component by addint a `+` to the property definition attribute like `:+show`
+* All property definition attribute must now be lower case or lower snake-case.
+* `$if` and `$switch` can now use either the property definition attribute name or the property name. Like `$if="#dog-food"` or `$if="#dogFood"`
+* Updated README.md to match changes
+
 ## version 0.2.0 - 2023-02-27 - *** Breaking Changes ***
 
-Normally I would update the major version for breaking changes, but I am not ready to release version 1.0.0 yet. Please check all your components for te breaking changes below.
+Normally I would update the major version for breaking changes, but I am not ready to release version 1.0.0 yet. Please check all your components for the breaking changes below.
 
-* For more consistency I converted `:: text`, `:: html`, and `:: value` to `: text`, `: html`, and `: value` <-- **Breaking**
+* For more consistency I converted `::text`, `::html`, and `::value` to `:text`, `:html`, and `:value` <-- **Breaking**
 * Renamed DFElement base class to EvoElement. <-- **Breaking**
 * Started the live creation page.
 * Basic `:switch` support.

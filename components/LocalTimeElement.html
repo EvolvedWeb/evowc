@@ -1,5 +1,5 @@
 <component tag="local-time" shadow="closed" :dog="array:[1,2,3,4]"
-  :timestamp="date:Dec 25 1990" :locale="string:en-US"
+  :timestamp="date" :locale="string"
   :format="object:{weekday:'long',year:'numeric',month:'long',day:'numeric'}"
   :#localetime :#classes>
   <template>
@@ -14,8 +14,9 @@
   <script>
     update() {
       if (this.format != null && this.timestamp != null) {
+        const locale = this.locale || document.documentElement.lang || navigator.language;
         const format = this.format || { month: '2-digit', day: '2-digit', year: 'numeric' };
-        const formatter = new Intl.DateTimeFormat(this.locale, format);
+        const formatter = new Intl.DateTimeFormat(locale, format);
         const newStr = formatter.format(this.timestamp);
         if (this.#localetime !== newStr) {
           this.#localetime = newStr;
@@ -106,10 +107,10 @@
   <template>
     <div>this.state is currently set to <span :text="state"></span></div>
     <button .click="#toggleState">Toggle</button>
-    <div class="red" :if="state">TRUE - This shows if this.state is set to true.
+    <div class="red" $if="state">TRUE - This shows if this.state is set to true.
       <p>Go watcha fun movie!</p>
     </div>
-    <div class="blue" :if="!state">FALSE - If this.state is set to false then this shows.
+    <div class="blue" $if="!state">FALSE - If this.state is set to false then this shows.
       <p>Listen to an audio book.</p>
     </div>
   </template>
@@ -139,18 +140,31 @@
   </template>
 </component>
 
-<component tag="has-switch" :dog="number:0">
+<component tag="has-switch" :+dog-food="number:0" :+catFood="number:0">
   <template>
-    <p :switch="dog:0">Hello world 0</p>
-    <p :switch="dog:1">Hello world 1</p>
-    <p :switch="dog:2">Hello world 2</p>
-    <button .click="#setDog" data-val="0">Zero</button>
-    <button .click="#setDog" data-val="1">One</button>
-    <button .click="#setDog" data-val="2">Two</button>
+    <button .click="#setDogFood" data-val="0">Zero</button>
+    <button .click="#setDogFood" data-val="1">One</button>
+    <button .click="#setDogFood" data-val="2">Two</button>
+    <hr>
+    <p $switch="dogFood:0">Hello world - This is ZERO</p>
+    <div $switch="dogFood:1">
+      <h1>This is number 1</h1>
+      <div>
+        <wc-calendar></wc-calendar>
+      </div>
+    </div>
+    <div $switch="dogFood:2">
+      <h2>Hello world 2</h2>
+      <p>This is a second element inside a switch.</p>
+    </div>
   </template>
+  <imports>
+    import { WcCalendarElement } from './WcCalendarElement.js';
+  </imports>
   <script>
-    #setDog(event) {
-      this.dog = event.target.dataset.val;
+    #setDogFood(event) {
+      this.dogFood = event.target.dataset.val;
+      this.catFood++;
     }
   </script>
 </component>

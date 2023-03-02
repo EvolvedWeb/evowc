@@ -11,7 +11,7 @@
         <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
         <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
         <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-        <tr :if="#showLast"><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr $if="#showLast"><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
       </tbody>
     </table>
   </template>
@@ -131,7 +131,7 @@
 
           if (dow === 0) {
             if (isToday) {
-              td.innerHTML = `&lt;span&gt;${date}&lt;/span&gt;`;
+              td.innerHTML = `<span>${date}</span>`;
             }
             else {
               td.textContent = (date > lastDate) ? '' : date;
