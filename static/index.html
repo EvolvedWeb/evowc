@@ -52,90 +52,122 @@
   </style>
 </head>
 <body class="container">
-  <div class="left">
-    <textarea></textarea>
+  <form class="left" js="form">
+    <textarea js="text"></textarea>
     <div class="button-bar">
-      <button id="button">Update</button>
+      <button>Submit</button>
     </div>
-  </div>
+  </form>
   <div class="right">
-    <iframe id="iframe"></iframe>
+    <iframe js="iFrame" src="/blank.html"></iframe>
   </div>
   <script type="module">
-    const iFrame = document.getElementById('iframe').contentWindow.document;
+    const els = [...document.querySelectorAll('[js]')]
+        .reduce((o, el) => (o[el.getAttribute('js')] = el, o), {});
     function updateRight(info) {
-      iFrame.open();
-      iFrame.write('');
-      iFrame.close();
+      els.iFrame.contentDocument.body.innerHTML = "";
+      /*
+      els.iFrame.open();
+      els.iFrame.write('');
+      els.iFrame.close();
+      */
 
       setTimeout(() => {
-        const html =
-  `<html>
-    <head>
-      <style>
-        body {
-          margin: 0;
-          padding: 0;
-        }
-        .fields {
-          background: #eee;
-          border-bottom: 1px solid black;
-          margin: 0;
-          padding: 5px;
-        }
-        th {
-          text-align: right;
-        }
+        const html = `
+<style>
+body {
+  margin: 0;
+  padding: 0;
+}
+.fields {
+  background: #eee;
+  border-bottom: 1px solid black;
+  margin: 0;
+  padding: 5px;
+}
+th {
+  text-align: right;
+}
 
-        .component {
-          border-bottom: 1px solid black;
-          margin-bottom: 5px;
-          padding: 5px;
-        }
-      </style>
-    </head>
-    <body>
-      <div class="fields">
-        <h2>Testing "${info.name}"</h2>
-        <form>
-          <table>
-          ${info.fields.map((field, i) => `<tr><th><label for="i${i}">${field.name}:</th><td><input id="i${i}" data-var-type="${field.type}" ${field.type==='boolean'?`type="checkbox" ${field.init?'checked':''}`:`value="${field.init}"`} name="${field.name}"/></td></tr>`).join('\n')}
-          </table>
-        </form>
-      </div>
-      <div class="component">
-      <${info.tag}></${info.tag}>
-      </div>
-      <script type="module">
-        import { ${info.name} } from '/js/components/${info.name}.js';
+.component {
+  border-bottom: 1px solid black;
+  margin-bottom: 5px;
+  padding: 5px;
+}
+</style>
+<div class="fields">
+  <h2>Testing "${info.name}"</h2>
+  <form>
+    <table>
+    ${info.fields.map((field, i) => `<tr><th><label for="i${i}">${field.name}:</th><td><input id="i${i}" data-var-type="${field.type}" ${field.type==='boolean'?`type="checkbox" ${field.init?'checked':''}`:`value="${field.init}"`} name="${field.name}"/></td></tr>`).join('\n')}
+    </table>
+  </form>
+</div>
+<div class="component">
+<${info.tag}></${info.tag}>
+</div>
+<script type="module">
+  import { ${info.name} } from '/js/components/${info.name}.js';
+  console.log('HERE!!');
 
-        const form = document.querySelector('form');
-        const testEl = document.querySelector('${info.tag}');
+  const form = document.querySelector('form');
+  const testEl = document.querySelector('${info.tag}');
 
-        form.addEventListener('input', (evt) => {
-          const el = evt.target;
-          const t = el.dataset.varType;
-          if (t === 'boolean') {
-            testEl[el.name] = el.checked;
-          }
-          else if (t === 'number') {
-            testEl[el.name] = Number(el.value);
-          }
-          else {
-            testEl[el.name] = el.value;
-          }
-        })
-      [/script>
-    </body>
-  </html>`;
-        iFrame.open();
-        iFrame.write(html.replace(/\[\/sc/g, '</sc'));
-        iFrame.close();
+  form.addEventListener('input', (evt) => {
+    const el = evt.target;
+    const t = el.dataset.varType;
+    console.log(el.value, t);
+    if (t === 'boolean') {
+      testEl[el.name] = el.checked;
+    }
+    else if (t === 'number') {
+      testEl[el.name] = Number(el.value);
+    }
+    else {
+      testEl[el.name] = el.value;
+    }
+  })
+</${'script'}>`;
+        els.iFrame.contentDocument.body.innerHTML = html;
+/*
+        els.iFrame.open();
+        els.iFrame.write(html.replace(/\[\/sc/g, '</sc'));
+        els.iFrame.close();
+*/
       }, 10);
     }
 
-    const button = document.getElementById('button');
-    button.addEventListener('click', () => {
+    els.text.value = `<component tag="local-time"
+  :timestamp="date"
+  :locale="string"
+  :format="object:{weekday:'long',year:'numeric',month:'long',day:'numeric'}"
+  :#localetime>
+  <template>
+    <span :text="#localetime" :style="locale"></span>
+  </template>
+  <script>
+  update() {
+    if (this.format != null && this.timestamp != null) {
+      const locale = this.locale || document.documentElement.lang || navigator.language;
+      const format = this.format || { month: '2-digit', day: '2-digit', year: 'numeric' };
+      const formatter = new Intl.DateTimeFormat(locale, format);
+      const newStr = formatter.format(this.timestamp);
+      if (this.#localetime !== newStr) {
+        this.#localetime = newStr;
+      }
+    }
+  }
+
+  toString() {
+    this.update();
+    return this.#localetime;
+  }
+  </${'script'}>
+</component>`;
+    els.form.addEventListener('submit', async (evt) => {
+      evt.preventDefault();
+      evt.stopPropagation();
+
       const today = (new Date()).toLocaleDateString();
       const info = {
         name: 'SpecialThingElement',
@@ -150,6 +182,28 @@
         code: null
       }
       updateRight(info);
+
+      const body = {
+        component: els.text.value
+      };
+
+      const url = `http://localhost:5555/api/process`;
+      const options = {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+      };
+
+      try {
+        const resp = await fetch(url, options);
+        const json = await resp.json();
+        console.log(json);
+      }
+
+      catch(ex) {
+        console.log(`ERROR`);
+        console.log(ex.stack);
+      }
     });
   </script>
 </body>

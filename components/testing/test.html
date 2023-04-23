@@ -10,8 +10,8 @@
       <span $if="icon" :attr.icon="icon"></span>
       <div $if="title" class="title" :html="title"></div>
       <input :value="#mine|#doSomething" />
-      <switch $on="message">
-        <div $case="one|two">ONE</div>
+      <switch _on="message">
+        <div $case="one,two">ONE</div>
         <div $case="two">TWO</div>
         <div $default>
           <h1>Default</h1>

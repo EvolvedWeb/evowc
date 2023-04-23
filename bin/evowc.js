@@ -1,6 +1,12 @@
+const fs = require('fs');
+const path = require('path');
+const fsp = fs.promises;
+
 const evowc = require('../lib/evowc.js');
 const getFileArrayFromGlob = require('../lib/getFileArrayFromGlob.js');
-//console.log(evowc);
+const FILE_OPTIONS = {
+  encoding: 'utf8'
+}
 
 const TOTAL_TIME = 'Total processing time';
 async function run(args) {
@@ -11,7 +17,8 @@ async function run(args) {
       html: true
     }
   };
-  const outputScriptName = 'static/js/components';
+  const outputScriptPath = 'static/js/components';
+  let errors = [];
 
   if (args.length > 0) {
     const files  = getFileArrayFromGlob(process.cwd(), args[0]);
@@ -19,17 +26,49 @@ async function run(args) {
     for(let i=0; i < files.length; i++) {
       const componentFileName = files[i];
       try {
-        await evowc(componentFileName, outputScriptName, options);
+        console.info(`\n\x1B[49m\x1B[36mProcessing Component file: "${componentFileName}"\x1B[39m`);
+        console.time('  time');
+        let source = fs.readFileSync(componentFileName, FILE_OPTIONS);
+
+        const components = await evowc(source, options);
+
+        for(let i = 0; i < components.length; i++) {
+          const component = components[i];
+          const outputScriptName = path.join(outputScriptPath, component.className+'.js');
+          console.info(`   * Saving "${component.tag}" as ${outputScriptName}`);
+          await fsp.writeFile(outputScriptName, component.html, FILE_OPTIONS)
+          /*
+          let scriptOutput = JSON.stringify(components,0,2);
+          await fsp.writeFile(outputScriptName + '.json', scriptOutput, FILE_OPTIONS)
+
+          scriptOutput = JSON.stringify(sourceObj, 0, 2);
+          await fsp.writeFile(outputScriptName + '.orig.json', scriptOutput, FILE_OPTIONS)
+          */
+        }
+
       }
 
       catch(ex) {
+        errors.push(`${componentFileName}: \x1B[91m${ex.message}\x1B[0m`);
         console.log('\n'+ex.stack);
+      }
+
+      finally {
+        console.timeEnd('  time');
       }
     }
   }
 
   console.log('\n');
   console.timeEnd(TOTAL_TIME);
+
+  if(errors.length) {
+    console.log(errors.length === 1 ? `There was 1 error during compile.\n` : `There were ${errors.length} errors during compile.\n`);
+    errors.forEach(err => {
+      console.log(err);
+    });
+    console.log('\n');
+  }
 }
 
 run(process.argv.slice(2));

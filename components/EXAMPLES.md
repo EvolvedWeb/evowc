@@ -1,31 +1,38 @@
-# Example Components to make
+# Example Components
 
-* Calendar
+Below are the example component that we have made. You can use them as is or make changes to them to suit your needs
+
 * Accordion
-* Rating
-* Pagination
-* Tabs - https://www.w3.org/WAI/ARIA/apg/patterns/tabpanel/
-* Icons? - https://github.com/lekoala/last-icon
-* Bread crumbs
-* Rich Text Editor
-* Quote
-* Image Carousel
-* Image Cropper
-* Person Card
-* Dialog
 * Alerts
-* Badge
-* Color Picker
+* Badge *
+* Bread crumbs
+* Button * - fails in Safari without polyfill
+* Button Group ( one | two | three ) *
+* Calendar -
+* Color Picker ??
+* Dialog *
+  * Login Dialog *
+  * Alert
+  * Prompt
+  * Confim
 * Drop Combo/Auto Complete
 * Drop Menu
+* Form Handler
 * Full Menu
 * GDPR
-* Form Handler
+* Icons? - https://github.com/lekoala/last-icon
+* Image Carousel
+* Image Cropper
+* Pagination
 * Progress Bar
-* Round Progress Bar
-* Segmented Control ( one | two | three )
-* Spinner
+* Quote
+* Rating
+* Rich Text Editor
+* Round Progress Bar *
+* Social Media - Person Card
+* Spinner *
 * Table
-* Tool Tip
+* Tabs - https://www.w3.org/WAI/ARIA/apg/patterns/tabpanel/
 * Toggle Checkbox
+* Tool Tip
 * Word Count Text Area

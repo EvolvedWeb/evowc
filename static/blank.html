@@ -1,0 +1,83 @@
+<html>
+<head></head>
+<body>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+    }
+
+    .fields {
+      background: #eee;
+      border-bottom: 1px solid black;
+      margin: 0;
+      padding: 5px;
+    }
+
+    th {
+      text-align: right;
+    }
+
+    .component {
+      border-bottom: 1px solid black;
+      margin-bottom: 5px;
+      padding: 5px;
+    }
+
+  </style>
+  <div class="fields">
+    <h2>Testing "SpecialThingElement"</h2>
+    <form>
+      <table>
+        <tbody>
+          <tr>
+            <th><label for="i0">message:</label></th>
+            <td><input id="i0" data-var-type="string" value="This 'is' a test:" name="message"></td>
+          </tr>
+          <tr>
+            <th><label for="i1">today:</label></th>
+            <td><input id="i1" data-var-type="date" value="3/8/2023" name="today"></td>
+          </tr>
+          <tr>
+            <th><label for="i2">locale:</label></th>
+            <td><input id="i2" data-var-type="string" value="en" name="locale"></td>
+          </tr>
+          <tr>
+            <th><label for="i3">num:</label></th>
+            <td><input id="i3" data-var-type="int" value="100" name="num"></td>
+          </tr>
+          <tr>
+            <th><label for="i4">show:</label></th>
+            <td><input id="i4" data-var-type="boolean" type="checkbox" checked="" name="show"></td>
+          </tr>
+        </tbody>
+      </table>
+    </form>
+  </div>
+  <div class="component">
+    <special-thing></special-thing>
+  </div>
+  <script type="module">
+    import { SpecialThingElement } from '/js/components/SpecialThingElement.js';
+    console.log('HERE!!');
+
+    const form = document.querySelector('form');
+    const testEl = document.querySelector('special-thing');
+
+    form.addEventListener('input', (evt) => {
+      const el = evt.target;
+      const t = el.dataset.varType;
+      console.log(el.value, t);
+      if (t === 'boolean') {
+        testEl[el.name] = el.checked;
+      }
+      else if (t === 'number') {
+        testEl[el.name] = Number(el.value);
+      }
+      else {
+        testEl[el.name] = el.value;
+      }
+    })
+  </script>
+</body>
+</html>

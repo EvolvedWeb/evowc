@@ -6,8 +6,8 @@ You can create one or more components in the template file. But you can only hav
 
 There are sample components in the `components` folder. They are XML based files. Take a look at a few and read the docs to see how to create your own.
 
-
-<div style="background:#300;border:3px dashed #A00;margin:20px;padding:10px">
+<!--
+<div style="background:#611;border:3px dashed #A00;margin:20px;padding:10px;color:#FFF">
 
 ## Alpha Testing
 
@@ -27,6 +27,7 @@ After you clone the repo:
 1. **Do not check into the master branch**
 
 </div>
+-->
 
 ## Parts of a component file
 
@@ -95,19 +96,36 @@ The attribute `:message` in the `<component>` element will create a public prope
 
 When you create a PDA you can also define the data type of the generated property as well as an optional default value.
 
-The variable types that can be user are `'number'`, `'int'`, `'string'`, `'bool'`, `'object'`, `'array'`, `'date'` with the default type being `'string'`.
+The variable type names that can be used are `'array'`, `'bool'`, `'date'`, `'int'`, `'number'`, `'object'`, `'string'` with the default type being `'string'`.
+
+We also support shortened type names of `'arr'` for `'array'`, `'bool'` for `'boolean'`, `'num'` for `'number'`, `'obj'` for `'object'`, and `'str'` for `'string'`.
 
 #### Example
 
 ``` xml
-<component tag="special-thing" :age="int:10">
+<component tag="special-thing" :age="int:10" :name="str" :enable="bool:false">
   <template>
-    <p>Hello world.</p>
+    <p>Hello <span :text="name"></span>.</p>
+    <p>You are <span :text="age"></span> years old.</p>
   </template>
 </component>
 ```
 
 In the example above the property `age` will be a number and will have a default value of `10` when the component is constructed. Any value passed into `component.age` will be converted into a number. So `component.age = '33'` will store a numeric value of `33` and not a string of `"33"`.
+
+You can use URI encoding in your default values. If you want to add a double quote in the default value it needs to be written as a URI encoded value of `%22`. So, instead of writing the PDA like this: `:animals="arr:[1,2,"%22"dogs"]"` which is invalid you would write it like this: `:animals="arr:[%22cats%22,%22dogs%22]"`.
+
+#### Example
+
+``` xml
+<component tag="special-list" :animals="arr:[%22cats%22,%22dogs%22]">
+  <template></template>
+</component>
+```
+
+---
+
+Here is an example component that has a PDA called `message`. WHenever the `message` attribute on this component is set or when the `message` property is set then the text of the `<h1>` tag will be set to that value.
 
 #### Example:
 
@@ -129,8 +147,8 @@ HTML that uses the component:
   <my-message message="Initial Message"></my-message>
   <button onclick="changeMessage()">Change message</button>
   <script>
-    const target = document.querySelector('my-message');
     function changeMessage() {
+      const target = document.querySelector('my-message');
       target.message = "Second Message";
     }
   </script>
@@ -268,7 +286,7 @@ All event handlers receive one argument. That is the `event`. You can not pass a
 ### Pipes
 Property variables can use pipes to alter or format data without affecting the original values. Use the bar character ( __|__ ) to searate pipes
   * Like `:name="name|upperCase"` or  `:name="name|#upperCase|#reverse"`
-  * All pipe methods take a `string` and return a `string`.
+  * All pipe methods take a single parameter as treat it as a `string`. The methods must return a `string`.
 
   > _<span style="color:red">**TODO:** This may need to take whatever type the var is and return anything</span>_
 
