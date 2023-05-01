@@ -1,6 +1,6 @@
 {
   "name": "evowc",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Evo-WC transpiler converts a template file based on HTML and XML into a raw JS custom Web Component.",
   "main": "index.js",
   "bin": {
@@ -12,6 +12,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "node ./bin/evowc.js \"components/*.html\"",
+    "build1": "node ./bin/evowc.js \"components/SystemDialogElement.html\"",
     "start": "node app"
   },
   "repository": {
@@ -25,9 +26,9 @@
   },
   "homepage": "https://github.com/intervalia/evowc#readme",
   "dependencies": {
-    "express": "^4.18.2",
-    "fast-xml-parser": "^4.1.1",
-    "glob": "^8.1.0",
-    "html-minifier-terser": "^7.1.0"
+    "express": "4.18.2",
+    "fast-xml-parser": "4.2.2",
+    "glob": "10.2.2",
+    "html-minifier-terser": "7.2.0"
   }
 }

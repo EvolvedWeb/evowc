@@ -1,0 +1,97 @@
+<component tag="system-dialog"
+  :#message
+  :#title
+  :#show-input="bool:true"
+  :#show-cancel="bool:true"
+  :#answer>
+  <template>
+    <wc-dialog js="dialog" :title="#title" :show-cancel="#showCancel" show-x="false" allow-esc="false">
+      <div :html="#message"></div>
+      <textarea autofocus $if="#showInput" :value="#answer"></textarea>
+    </wc-dialog>
+  </template>
+  <style>
+    :host {
+      --system-dialog-z: 999999;
+      --system-dialog-min-width: 400px;
+      height: 0;
+      margin: 0;
+      padding: 0;
+      width: 0;
+      z-index: var(--system-dialog-z);
+    }
+    div {
+      min-width: var(--system-dialog-min-width);
+      padding: 12px 0;
+    }
+    textarea {
+      box-sizing: border-box;
+      font: inherit;
+      height: 6em;
+      padding: 4px;
+      resize: none;
+      width: 100%;
+    }
+  </style>
+  <script>
+    open({ message, title, showCancel, showInput } = {}) {
+      this.#message = message;
+      this.#title = title;
+      this.#showCancel = showCancel;
+      this.#showInput = showInput
+      return this.#els.dialog.open().then(resp => {
+        resp.data = resp.button === DIALOG_BUTTONS.OK ? this.#answer : false;
+        return resp;
+      });
+    }
+  </script>
+  <import>
+    import { DIALOG_BUTTONS } from './WcDialogElement.js';
+    const sleep = (time) => new Promise((resolve) => setTimeout(() => {
+    resolve();
+    }, time));
+    window.alertwc = async (message, title) => {
+      let dlg = document.createElement('system-dialog');
+      document.body.appendChild(dlg);
+      const data = {
+        message,
+        title: title ?? "Alert",
+        showCancel: false,
+        showInput: false
+      };
+      await dlg.open(data);
+      dlg.remove();
+      dlg = null;
+    }
+
+    window.promptwc = async (message, title) => {
+      let dlg = document.createElement('system-dialog');
+      document.body.appendChild(dlg);
+      const data = {
+        message,
+        title: title ?? "Prompt",
+        showCancel: true,
+        showInput: true
+      };
+      const resp = await dlg.open(data);
+      dlg.remove();
+      dlg = null;
+      return resp.data;
+    }
+
+    window.confirmwc = async (message, title) => {
+      let dlg = document.createElement('system-dialog');
+      document.body.appendChild(dlg);
+      const data = {
+        message,
+        title: title ?? "Confirm",
+        showCancel: true,
+        showInput: false
+      };
+      const resp = await dlg.open(data);
+      dlg.remove();
+      dlg = null;
+      return resp.button === DIALOG_BUTTONS.OK;
+    }
+  </import>
+</component>

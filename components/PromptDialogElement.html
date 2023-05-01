@@ -1,0 +1,36 @@
+<component tag="prompt-dialog" :message>
+  <template>
+    <wc-dialog js="dialog" title="Alert" show-x="false" allow-esc="false">
+      <div :html="message"></div>
+    </wc-dialog>
+  </template>
+  <style>
+    :host {
+      height: 0;
+      margin: 0;
+      padding: 0;
+      width: 0;
+    }
+    div {
+      min-width: 300px;
+      padding: 12px;
+    }
+  </style>
+  <import>
+    import { DIALOG_BUTTONS } from './WcDialogElement.js';
+    window.promptwc = async (message) => {
+      let dlg = document.createElement('prompt-dialog');
+      dlg.message = message;
+      document.body.appendChild(dlg);
+      const resp = await dlg.open();
+      dlg.remove();
+      dlg = null;
+      return resp.button === DIALOG_BUTTONS.OK;
+    }
+  </import>
+  <script>
+    open() {
+      return this.#els.dialog.open();
+    }
+  </script>
+</component>

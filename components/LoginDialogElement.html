@@ -1,0 +1,250 @@
+<component tag="login-dialog"
+  :forgot-pw-href
+  :sign-in-href
+  :sign-in-method="str:post"
+  :sign-up-href
+  :sign-up-text="str:Not a member yet?"
+  :busy="bool:false"
+  :show-remember-me="bool:false"
+  :error-message
+  :#username
+  :#password
+  :#token
+  :#remember-me="bool:false"
+  :#password-type="str:password"
+  :#toggle-state="str:var:STATE_SHOW"
+>
+  <template>
+    <wc-dialog js="dialog" title="Sign in" show-footer="false">
+      <section>
+        <form :action="signInHref" :method="signInMethod|#toLower" .submit="#login">
+          <input type="hidden" name="token" :value="#token" />
+          <div class="error-message" $if="errorMessage" :text="errorMessage" .click="#clearError"></div>
+          <div>
+            <label for="username">Email:</label>
+            <input id="username" name="username" :value="#username" type="email" required autocomplete="username" autofocus aria-label="Username" .input="#clearError" />
+          </div>
+          <div>
+            <div class="password-block">
+              <label for="password">Password:</label>
+              <a class="forgot-pw" $if="forgotPwHref" :href="forgotPwHref" .click="#forgotPw">Forgot password?</a>
+            </div>
+            <input id="password" name="password" maxlength="32" :value="#password" :type="#passwordType" required autocomplete="current-password" aria-label="Password" .input="#clearError" />
+            <button class="show-pw" type="button" is="wc-button" small variant="link" .click="#toggle" :attr.aria-label="#toggleState" :text="#toggleState"></button>
+          </div>
+            <div class="remember-me" $if="showRememberMe">
+              <label><input type="checkbox" value="1" :checked="#rememberMe" .input="#rememberMeHandler"/> Remember Me</label>
+            </div>
+          <button class="sign-in" is="wc-button" large aria-label="Sign in">Sign in</button>
+        </form>
+        <div class="sign-up" $if="signUpHref"><span :text="signUpText"></span> <a :href="signUpHref" .click="#signUp">Sign Up</a></div>
+      </section>
+      <div class="spinner-holder" $if="busy">
+        <wc-spinner></wc-spinner>
+      </div>
+    </wc-dialog>
+  </template>
+  <style>
+    :host {
+      --login-dialog-text-color: #334;
+      --login-dialog-link-color: #33A;
+      --login-dialog-font-size: 18px;
+      color:var(--login-dialog-text-color);
+      font-size: var(--login-dialog-font-size);
+      height: 0;
+      margin: 0;
+      padding: 0;
+      width: 0;
+    }
+    :host([size=small]) {
+      --login-dialog-font-size: 14px;
+    }
+    :host([size=large]) {
+      --login-dialog-font-size: 24px;
+    }
+    label, input, button {
+      font: 1em Calibri, Candara, Segoe, Segoe UI, Optima, Arial, sans-serif;
+    }
+    wc-dialog {
+      --dialog-border: none;
+      --dialog-border-radius: 5px;
+      --dialog-header-bgcolor: #fff;
+      --dialog-header-font: bold 1.6em Calibri, Candara, Segoe, Segoe UI, Optima, Arial, sans-serif;
+      --dialog-header-justify: center;
+      position: relative;
+    }
+    section {
+      margin: 0;
+      padding: 8px;
+      width: 20em;
+    }
+    form {
+      margin: 0;
+      padding: 0;
+    }
+    input[type=text], input[type=email], input[type=password] {
+      border-width: 1px;
+      box-sizing: border-box;
+      display: block;
+      margin: 4px 0;
+      padding: 10px 8px;
+      width: 100%;
+    }
+    div {
+      position: relative;
+    }
+    button.sign-in {
+      margin-top: 16px;
+      width: 100%;
+    }
+    button.show-pw {
+      color:var(--login-dialog-link-color);
+      position: absolute;
+      bottom: 13px;
+      right: 7px;
+    }
+    .password-block {
+      align-items:baseline;
+      display: flex;
+      justify-content: space-between;
+      margin-top: 12px;
+    }
+    .forgot-pw {
+      font-size: clamp(10px, .75em, 16px);
+      margin: 0;
+      padding: 0;
+    }
+    .sign-up {
+      font-size:  clamp(9px, .61em, 14px);
+      margin-top: 12px;
+      text-align: center;
+    }
+    .error-message {
+      background-color: #F99;
+      border: 1px solid #E66;
+      margin-bottom: 12px;
+      padding: 6px;
+      text-align: center;
+    }
+    a {
+      color:var(--login-dialog-link-color);
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    .spinner-holder {
+      align-items: center;
+      background-color: #3335;
+      display:flex;
+      justify-content: center;
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+    }
+  </style>
+  <import>
+    import { DIALOG_BUTTONS } from './WcDialogElement.js';
+    import './WcSpinnerElement.js';
+
+    const STATE_HIDE = 'hide';
+    const STATE_SHOW = 'show';
+  </import>
+  <script>
+    open() {
+      this.#username = '';
+      this.#password = '';
+      this.#rememberMe = false;
+      setTimeout(() => {
+        this.#getToken();
+      }, 1);
+      return this.#els.dialog.open();
+    }
+
+    #toLower(str) {
+      return str.toLowerCase();
+    }
+    #rememberMeHandler(event) {
+      this.#rememberMe = event.target.checked;
+    }
+    #toggle(event) {
+      if (this.#toggleState === STATE_HIDE) {
+        this.#toggleState = STATE_SHOW;
+        this.#passwordType = 'password';
+      }
+      else {
+        this.#toggleState = STATE_HIDE;
+        this.#passwordType = 'text';
+      }
+    }
+
+    #clearError() {
+      if (this.errorMessage) {
+        this.errorMessage = '';
+      }
+    }
+
+    //******************************************
+    // Events
+    #dispatch(name, {
+      detail = null,
+      bubbles = false,
+      cancelable = true,
+      composed = false
+    } = {}) {
+      if (typeof name !== 'string' || name.length === 0) {
+        throw new TypeError('name must be defined');
+      }
+
+      const event = new CustomEvent(name, { detail, bubbles, cancelable, composed });
+      this.dispatchEvent(event);
+      return event;
+    }
+    #getToken() {
+      const getTokenEvent = this.#dispatch('gettoken', {
+        detail: { token: '' },
+        cancelable: false
+      });
+      this.#token = '' + getTokenEvent.detail.token || '';
+    }
+    #forgotPw(event) {
+      const forgotPwEvent = this.#dispatch('forgotpw');
+      if (forgotPwEvent.defaultPrevented) {
+        event.preventDefault();
+      }
+    }
+    #signUp(event) {
+      const signUpEvent = this.#dispatch('signup');
+      if (signUpEvent.defaultPrevented) {
+        event.preventDefault();
+      }
+    }
+    #login(event) {
+      const data  = {
+        username: this.#username,
+        password: this.#password,
+      };
+
+      if (this.#showRememberMe) {
+        data.rememberMe = this.#rememberMe;
+      }
+      if(this.#token) {
+        data.token = this.#token;
+      }
+
+      const signInEvent = this.#dispatch('signin', {detail: data});
+      if (signInEvent.defaultPrevented) {
+        event.preventDefault();
+        return;
+      }
+
+      if (!this.signInHref) {
+        this.#els.dialog.closeDialog(DIALOG_BUTTONS.OK, data);
+        event.preventDefault();
+        return;
+      }
+    }
+  </script>
+</component>

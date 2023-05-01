@@ -1,0 +1,58 @@
+<component tag="round-progress-svg"
+  :value="number:0"
+  :decimals="int:0"
+  :color="string:#446688"
+  :#path>
+  <template>
+    <svg width="200" height="200">
+      <rect x="0" y="0" width="100" height="100" fill="white" />
+      <path fill="none" :attr.stroke="color" stroke-width="40" :attr.d="#path" />
+      <text style="stroke:none;fill:black;font:24px Tahoma" x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" :text="value|#toFixed"></text>
+    </svg>
+  </template>
+  <style>
+    :host {
+      border: 1px dahsed red;
+      display: inline-block;
+      height: var(--round-progress-height, 200px);
+      min-height: 100px;
+      min-width: 100px;
+      width: var(--round-progress-width, 200px);
+    }
+  
+  </style>
+  <script>
+    #toFixed(val) {
+      return (+val).toFixed(this.decimals);
+    }
+
+    #polarToCartesian(centerX, centerY, radius, angleInDegrees) {
+      var angleInRadians = (angleInDegrees - 90) * Math.PI / 180.0;
+
+      return {
+        x: centerX + (radius * Math.cos(angleInRadians)),
+        y: centerY + (radius * Math.sin(angleInRadians))
+      };
+    }
+
+    #describeArc(x, y, radius, startAngle, endAngle) {
+      var start = this.#polarToCartesian(x, y, radius, endAngle);
+      var end = this.#polarToCartesian(x, y, radius, startAngle);
+
+      var largeArcFlag = endAngle - startAngle & lt;= 180 ? "0" : "1";
+
+      var d = [
+        "M", Math.floor(start.x), Math.floor(start.y),
+        "A", radius, radius, 0, largeArcFlag, 0, Math.floor(end.x), Math.floor(end.y)
+      ].join(" ");
+
+      return d;
+    }
+
+    update() {
+      const end = (this.value * 2.7) + 225;
+      this.#path = this.#describeArc(100, 100, 70, 225, end);
+    }
+  </script>
+  </component>
+  
