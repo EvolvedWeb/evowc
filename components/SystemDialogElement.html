@@ -12,41 +12,33 @@
   </template>
   <style>
     :host {
+      --system-dialog-z: 999999;
+      --system-dialog-min-width: 400px;
       height: 0;
       margin: 0;
       padding: 0;
       width: 0;
+      z-index: var(--system-dialog-z);
     }
     div {
-      min-width: 400px;
+      min-width: var(--system-dialog-min-width);
       padding: 12px 0;
     }
     textarea {
       box-sizing: border-box;
       font: inherit;
-      height: 5em;
+      height: 6em;
+      padding: 4px;
       resize: none;
       width: 100%;
     }
   </style>
   <script>
-    update(field, oldVal, newVal) {
-      console.log('system-dialog:', this.id, field, oldVal, newVal);
-    }
-
     open({ message, title, showCancel, showInput } = {}) {
-      console.log(1);
-      this.#message = '';
-      this.#title = '';
-      this.#showCancel = true;
-      this.#showInput = true;
-      setTimeout(() => {
-        console.log(2);
-        this.#message = message;
-        this.#title = title;
-        this.#showCancel = showCancel;
-        this.#showInput = showInput
-      }, 5);
+      this.#message = message;
+      this.#title = title;
+      this.#showCancel = showCancel;
+      this.#showInput = showInput
       return this.#els.dialog.open().then(resp => {
         resp.data = resp.button === DIALOG_BUTTONS.OK ? this.#answer : false;
         return resp;
@@ -58,27 +50,21 @@
     const sleep = (time) => new Promise((resolve) => setTimeout(() => {
     resolve();
     }, time));
-    window.alertwc = (message, title) => {
-      console.log('----------- alertwc started');
+    window.alertwc = async (message, title) => {
       let dlg = document.createElement('system-dialog');
       document.body.appendChild(dlg);
-      return sleep(1).then(() => {
-        const data = {
-          message,
-          title: title ?? "Alert",
-          showCancel: false,
-          showInput: false
-        };
-        return dlg.open(data);
-      }).then(() => {
-        dlg.remove();
-        dlg = null;
-        console.log('----------- alertwc finished');
-      });
+      const data = {
+        message,
+        title: title ?? "Alert",
+        showCancel: false,
+        showInput: false
+      };
+      await dlg.open(data);
+      dlg.remove();
+      dlg = null;
     }
 
     window.promptwc = async (message, title) => {
-      console.log('----------- promptwc started');
       let dlg = document.createElement('system-dialog');
       document.body.appendChild(dlg);
       const data = {
@@ -90,12 +76,10 @@
       const resp = await dlg.open(data);
       dlg.remove();
       dlg = null;
-      console.log('----------- promptwc finished');
       return resp.data;
     }
 
     window.confirmwc = async (message, title) => {
-      console.log('----------- confirmwc started');
       let dlg = document.createElement('system-dialog');
       document.body.appendChild(dlg);
       const data = {
@@ -107,7 +91,6 @@
       const resp = await dlg.open(data);
       dlg.remove();
       dlg = null;
-      console.log('----------- confirmwc finished');
       return resp.button === DIALOG_BUTTONS.OK;
     }
   </import>

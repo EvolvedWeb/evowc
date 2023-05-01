@@ -11,13 +11,20 @@ const FILE_OPTIONS = {
 const TOTAL_TIME = 'Total processing time';
 async function run(args) {
   console.time(TOTAL_TIME);
+  // TODO: 2023-05-01 - Read config from package.json file
   const options = {
+    // valid values for addDebug:
+    //  boolean - add or not to every component
+    //  string - classname of the component to add debug code
+    //  array of strings - classnames of the components to add debug code
+    //addDebug: ['SystemDialogElement'],
+    output: 'static/js/components',
     minify: {
       css: true,
       html: true
     }
   };
-  const outputScriptPath = 'static/js/components';
+  const outputScriptPath = options.output;
   let errors = [];
 
   if (args.length > 0) {
@@ -57,6 +64,9 @@ async function run(args) {
         console.timeEnd('  time');
       }
     }
+  }
+  else {
+    console.log('No source files specified. Nothing to process');
   }
 
   console.log('\n');

@@ -16,7 +16,7 @@ export function setAttr(el, attr, value) {
   }
 }
 
-export function handleCondition(el, condition, commentEl) {
+export function cond(el, condition, commentEl) {
   if (el && commentEl) {
     if (condition) {
       commentEl.parentNode.insertBefore(el, commentEl);
@@ -41,14 +41,17 @@ export function comment(key, srcEl) {
 export const EvoElement = (baseClass = HTMLElement) => class extends baseClass {
   #domAttached = false;
   #rootDom;
+  #usingShadow;
   #styles;
   #componentName;
 
   createDom({ template='', styles='', shadowMode='open', componentName }) {
     if (shadowMode === 'none') {
+      this.#usingShadow = false;
       this.#rootDom = document.createDocumentFragment();
     }
     else {
+      this.#usingShadow = true;
       this.#rootDom = this.attachShadow({ mode: shadowMode });
       // Indicate that the template is already in the shadow DOM
       this.#domAttached = true;
@@ -63,13 +66,15 @@ export const EvoElement = (baseClass = HTMLElement) => class extends baseClass {
     //  that will be appended to this element once `connectedCallback` us called
     // We place everything into the real DOM to get all of the components to upgrade.
     // TODO: 2023-04-23 MGC - Putting everything into the DOM may have adverse effects
-    const tempEl = document.createElement('div');
-    tempEl.setAttribute('style', 'visible:hidden;width:0;height:0;');
-    document.body.appendChild(tempEl)
-    tempEl.innerHTML = template;
-    [...tempEl.children].forEach(el => this.#rootDom.appendChild(el));
-    tempEl.remove();
-    tempEl = null;
+    if (template) {
+      let tempEl = document.createElement('div');
+      tempEl.setAttribute('style', 'visible:hidden;width:0;height:0;');
+      document.body.appendChild(tempEl)
+      tempEl.innerHTML = template;
+      [...tempEl.children].forEach(el => this.#rootDom.appendChild(el));
+      tempEl.remove();
+      tempEl = null;
+    }
 
     return this.getEls();
   }
@@ -86,12 +91,14 @@ export const EvoElement = (baseClass = HTMLElement) => class extends baseClass {
       // Determine the correct place to add our styles
       // The location will be different based on if we are or are not in Shadow DOM
       const styleEl = document.createElement('style');
+      // Add out component name into the component attribute
+      styleEl.setAttribute('component', this.#componentName);
       styleEl.textContent = this.#styles;
-      if (this.#domAttached) {
-        this.#rootDom.appendChild(styleEl);
+      let doc;
+      if (this.#usingShadow) {
+        doc = this.#rootDom;
       }
       else {
-        let doc;
         let el = this;
         if (el.getRootNode) {
           doc = el.getRootNode();
@@ -102,15 +109,13 @@ export const EvoElement = (baseClass = HTMLElement) => class extends baseClass {
         else {
           doc = document.head; // Shadow DOM isn't supported so place it in `<head>`
         }
+      }
 
-        // If the CSS for the component is not in the correct place then add it.
-        // See if there is a style tag with our component name in the component attribute
-        if (!doc.querySelector(`style[component="${this.#componentName}"]`)) {
-          // Add out component name into the component attribute
-          styleEl.setAttribute('component', this.#componentName);
-          // Add this style tag into the dom
-          doc.appendChild(styleEl);
-        }
+      // If the CSS for the component is not in the correct place then add it.
+      // See if there is a style tag with our component name in the component attribute
+      if (!doc.querySelector(`style[component="${this.#componentName}"]`)) {
+        // Add this style tag into the dom
+        doc.appendChild(styleEl);
       }
     }
   }

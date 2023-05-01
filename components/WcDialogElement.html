@@ -129,10 +129,6 @@
       }
     }
 
-    update(field, oldVal, newVal) {
-      console.log('wc-dialog:', this.id, field, oldVal, newVal);
-    }
-
     open(data) {
       return new Promise((resolve, reject) => {
         if (this.#els.dialog.open) {

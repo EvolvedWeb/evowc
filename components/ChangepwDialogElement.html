@@ -1,43 +1,43 @@
-<component tag="login-dialog"
-  :forgot-pw-href
-  :sign-in-href
-  :sign-in-method="str:post"
-  :sign-up-href
-  :sign-up-text="str:Not a member yet?"
+<component tag="changepw-dialog"
+  :change-pw-href
+  :change-pw-method="str:post"
   :busy="bool:false"
-  :show-remember-me="bool:false"
   :error-message
   :#username
-  :#password
+  :#current-password
+  :#new-password
   :#token
-  :#remember-me="bool:false"
-  :#password-type="str:password"
-  :#toggle-state="str:var:STATE_SHOW"
+  :#password-type1="str:password"
+  :#password-type2="str:password"
+  :#toggle-state1="str:var:STATE_SHOW"
+  :#toggle-state2="str:var:STATE_SHOW"
 >
   <template>
-    <wc-dialog js="dialog" title="Sign in" show-footer="false">
+    <wc-dialog js="dialog" title="Change Password" show-footer="false">
       <section>
-        <form :action="signInHref" :method="signInMethod|#toLower" .submit="#login">
+        <form :action="changePwHref" :method="changePwMethod|#toLower" .submit="#changePw">
           <input type="hidden" name="token" :value="#token" />
           <div class="error-message" $if="errorMessage" :text="errorMessage" .click="#clearError"></div>
           <div>
-            <label for="username">Email:</label>
-            <input id="username" name="username" :value="#username" type="email" required autocomplete="username" autofocus aria-label="Username" .input="#clearError" />
+            <div class="prev-password-block">
+              <label for="prev-password">Current Password:</label>
+            </div>
+            <input id="prev-password" name="prev-password" maxlength="32" :value="#currentPassword"
+              :type="#passwordType1" required autofocus autocomplete="current-password" aria-label="Password" .input="#clearError" />
+            <button class="show-pw" type="button" is="wc-button" small variant="link" .click="#toggle1"
+              :attr.aria-label="#toggleState1" :text="#toggleState1"></button>
           </div>
           <div>
             <div class="password-block">
-              <label for="password">Password:</label>
-              <a class="forgot-pw" $if="forgotPwHref" :href="forgotPwHref" .click="#forgotPw">Forgot password?</a>
+              <label for="password">New Password:</label>
             </div>
-            <input id="password" name="password" maxlength="32" :value="#password" :type="#passwordType" required autocomplete="current-password" aria-label="Password" .input="#clearError" />
-            <button class="show-pw" type="button" is="wc-button" small variant="link" .click="#toggle" :attr.aria-label="#toggleState" :text="#toggleState"></button>
+            <input id="newpassword" name="newpassword" maxlength="32" :value="#newPassword"
+              :type="#passwordType2" required autocomplete="new-password" aria-label="Password" .input="#clearError" />
+            <button class="show-pw" type="button" is="wc-button" small variant="link" .click="#toggle2"
+              :attr.aria-label="#toggleState2" :text="#toggleState2"></button>
           </div>
-            <div class="remember-me" $if="showRememberMe">
-              <label><input type="checkbox" value="1" :checked="#rememberMe" .input="#rememberMeHandler"/> Remember Me</label>
-            </div>
-          <button class="sign-in" is="wc-button" large aria-label="Sign in">Sign in</button>
+          <button class="change-pw" is="wc-button" large aria-label="Change Password">Change Password</button>
         </form>
-        <div class="sign-up" $if="signUpHref"><span :text="signUpText"></span> <a :href="signUpHref" .click="#signUp">Sign Up</a></div>
       </section>
       <div class="spinner-holder" $if="busy">
         <wc-spinner></wc-spinner>
@@ -93,7 +93,7 @@
     div {
       position: relative;
     }
-    button.sign-in {
+    button.change-pw {
       margin-top: 16px;
       width: 100%;
     }
@@ -108,16 +108,6 @@
       display: flex;
       justify-content: space-between;
       margin-top: 12px;
-    }
-    .forgot-pw {
-      font-size: clamp(10px, .75em, 16px);
-      margin: 0;
-      padding: 0;
-    }
-    .sign-up {
-      font-size:  clamp(9px, .61em, 14px);
-      margin-top: 12px;
-      text-align: center;
     }
     .error-message {
       background-color: #F99;
@@ -155,45 +145,45 @@
   <script>
     open() {
       this.#username = '';
-      this.#password = '';
-      this.#rememberMe = false;
+      this.#currentPassword = '';
+      this.#newPassword = '';
+      this.busy = false;
       setTimeout(() => {
         this.#getToken();
       }, 1);
       return this.#els.dialog.open();
     }
-
     #toLower(str) {
       return str.toLowerCase();
     }
-    #rememberMeHandler(event) {
-      this.#rememberMe = event.target.checked;
-    }
-    #toggle(event) {
-      if (this.#toggleState === STATE_HIDE) {
-        this.#toggleState = STATE_SHOW;
-        this.#passwordType = 'password';
+    //******************************************
+    // Events
+    #toggle1(event) {
+      if (this.#toggleState1 === STATE_HIDE) {
+        this.#toggleState1 = STATE_SHOW;
+        this.#passwordType1 = 'password';
       }
       else {
-        this.#toggleState = STATE_HIDE;
-        this.#passwordType = 'text';
+        this.#toggleState1 = STATE_HIDE;
+        this.#passwordType1 = 'text';
       }
     }
-
+    #toggle2(event) {
+      if (this.#toggleState2 === STATE_HIDE) {
+        this.#toggleState2 = STATE_SHOW;
+        this.#passwordType2 = 'password';
+      }
+      else {
+        this.#toggleState2 = STATE_HIDE;
+        this.#passwordType2 = 'text';
+      }
+    }
     #clearError() {
       if (this.errorMessage) {
         this.errorMessage = '';
       }
     }
-
-    //******************************************
-    // Events
-    #dispatch(name, {
-      detail = null,
-      bubbles = false,
-      cancelable = true,
-      composed = false
-    } = {}) {
+    #dispatch(name, { detail = null, bubbles = false, cancelable = true, composed = false } = {}) {
       if (typeof name !== 'string' || name.length === 0) {
         throw new TypeError('name must be defined');
       }
@@ -209,38 +199,27 @@
       });
       this.#token = '' + getTokenEvent.detail.token || '';
     }
-    #forgotPw(event) {
-      const forgotPwEvent = this.#dispatch('forgotpw');
-      if (forgotPwEvent.defaultPrevented) {
+    #changePw(event) {
+      if (this.#currentPassword == this.#newPassword) {
         event.preventDefault();
+        this.errorMessage = `'Current Password' and 'New Password' must be different.`;
+        return;
       }
-    }
-    #signUp(event) {
-      const signUpEvent = this.#dispatch('signup');
-      if (signUpEvent.defaultPrevented) {
-        event.preventDefault();
-      }
-    }
-    #login(event) {
       const data  = {
-        username: this.#username,
-        password: this.#password,
+        currentPassword: this.#currentPassword,
+        newPassword: this.#newPassword
       };
-
-      if (this.#showRememberMe) {
-        data.rememberMe = this.#rememberMe;
-      }
       if(this.#token) {
         data.token = this.#token;
       }
 
-      const signInEvent = this.#dispatch('signin', {detail: data});
-      if (signInEvent.defaultPrevented) {
+      const changePwEvent = this.#dispatch('changepw', {detail: data});
+      if (changePwEvent.defaultPrevented) {
         event.preventDefault();
         return;
       }
 
-      if (!this.signInHref) {
+      if (!this.changePwHref) {
         this.#els.dialog.closeDialog(DIALOG_BUTTONS.OK, data);
         event.preventDefault();
         return;

@@ -30,6 +30,8 @@
       <some-face state="sad"></some-face>
     </div>
     -->
+    <div>Ranking: "<wc-rank rank="2"></wc-rank>"</div>
+    <hr>
     <local-time timestamp="Dec 25, 2023"></local-time><br/>
     <local-time timestamp="Mar 5, 1965"></local-time><br>
     <button type="button" js="doAlert">Alert</button>
@@ -52,8 +54,14 @@
       Warn: <alert-message message="This is a warning message" title="WARNING!" state="warn"></alert-message>
       Alert: <alert-message message="This is an error" state="alert"></alert-message>
     </div>
+    <hr/>
     <div style="margin-top: 10px">
-      <button js="dlgBtn" is="wc-button">Open Dialog</button>
+      <button js="dlgBtn" is="wc-button">Login</button>
+      <button js="dlgBtn2" is="wc-button">Change Password</button>
+    </div>
+    <hr/>
+    <div style="margin-top: 10px">
+      <button is="wc-button">Normal</button>
       <button is="wc-button" variant="info">Info</button>
       <button is="wc-button" variant="danger">Danger</button>
       <button is="wc-button" variant="minor">Minor</button>
@@ -124,12 +132,18 @@
       show-remember-me="true"
       forgot-pw-href="/forgotpw"
       sign-in-href="/login"
-      sign-up-href="/signup"></login-dialog>
+      sign-up-href="/signup"
+      sign-up-text="Ready to give us your info?"
+    ></login-dialog>
+    <changepw-dialog
+      id="changepw dialog"
+      js="changepw"></changepw-dialog>
   </div>
 
   <script type="module">
     import './js/components/AlertBoxElement.js';
     import './js/components/AlertMessageElement.js';
+    import './js/components/ChangepwDialogElement.js';
     import './js/components/HasSwitchElement.js';
     import './js/components/IfOneElement.js';
     import './js/components/LocalTimeElement.js';
@@ -146,6 +160,7 @@
     import './js/components/WcButtonGroupElement.js';
     import './js/components/WcCalendarElement.js';
     import './js/components/WcDialogElement.js';
+    import './js/components/WcRankElement.js';
     import './js/components/WcSpinnerElement.js';
 
     const els = [...document.querySelectorAll('[js]')]
@@ -165,6 +180,16 @@
       }
     }
 
+    async function changePWDialog() {
+      try {
+        const resp = await els.changepw.open();
+      }
+
+      catch (ex) {
+        console.log(ex);
+      }
+    }
+
     async function doAlert() {
       const resp = await promptwc('What is your favorite language and why?');
       console.log(resp);
@@ -172,6 +197,7 @@
 
     els.doAlert.addEventListener('click', doAlert);
     els.dlgBtn.addEventListener('click', openDialog);
+    els.dlgBtn2.addEventListener('click', changePWDialog);
     els.login.addEventListener('signup', (event) => {
       console.log('signup called');
       //event.preventDefault();
@@ -181,12 +207,19 @@
       event.preventDefault();
       els.login.errorMessage = '';
       els.login.busy = true;
+      setTimeout(() => {
+        els.login.errorMessage = 'Invalid username or password';
+        els.login.busy = false;
+      }, 3000);
+      /*
+      const options = {};
       const resp = fetch('/api/login', options);
       console.log(resp);
       if(resp.status === 401) {
         els.login.errorMessage = 'Invalid username or password';
         els.login.busy = false;
       };
+      */
     })
     els.login.addEventListener('forgotpw', (event) => {
       console.log('forgotpw called');
@@ -195,6 +228,16 @@
     els.login.addEventListener('gettoken', (event) => {
       console.log('gettoken called');
       event.detail.token = '01A838F1E';
+    })
+    els.changepw.addEventListener('changepw', (event) => {
+      console.log('changepw called');
+      event.preventDefault();
+      els.changepw.errorMessage = '';
+      els.changepw.busy = true;
+      setTimeout(() => {
+        els.changepw.errorMessage = 'Crazy things happened';
+        els.changepw.busy = false;
+      }, 3000);
     })
 
     const rpinc = [1, .5];

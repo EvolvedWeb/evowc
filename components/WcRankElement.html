@@ -1,0 +1,43 @@
+<component tag="wc-rank" :rank="num:0" :show-num="bool:false" :#val :#style>
+  <template>
+    <span class="container">
+      <span $if="showNum" :text="#val"></span>
+      <span class="stars">☆☆☆☆☆<span :attr.style="#style">★★★★★</span></span>
+    </span>
+  </template>
+  <style>
+    :host, span {
+      display: inline;
+    }
+    .container {
+      align-items: center;
+      display: inline-flex;
+      gap: 4px;
+      justify-content: center;
+      width: fit-content;
+    }
+    span {
+      color: #DF8500;
+      position: relative;
+    }
+    [style] {
+      left: 0;
+      color: orange;
+      overflow: hidden;
+      position: absolute;
+    }
+  </style>
+  <script>
+    update(key, oldVal, newVal) {
+      if (key === 'rank') {
+        if(newVal < 0) newVal = 0;
+        if(newVal > 5) newVal = 5;
+        const percent = Math.round(100 * (newVal / 5));
+        this.#style = `width:${percent}%`;
+        this.#val = newVal.toFixed(1).replace('.0', '');
+        this.setAttribute('title', `${newVal.toFixed(2)} / 5`);
+        this.rank = newVal;
+      }
+    }
+  </script>
+</component>
