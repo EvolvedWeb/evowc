@@ -1,0 +1,45 @@
+<component tag="wc-hr">
+  <template>
+    <div><span></span></div>
+  </template>
+  <style>
+    :host {
+      display: block;
+      height: 17px;
+      --wc-divider-bordercolor: #8F8F8F;
+      --wc-divider-skew: -10deg;
+      --wc-divider-space: 4px;
+    }
+    div {
+      height: 0;
+      margin: 8px 0;
+      position: relative;
+      width: 100%;
+    }
+    div::before, div::after {
+      border-top: 1px solid var(--wc-divider-bordercolor);
+      content: '';
+      height: 0;
+      position: absolute;
+      transform: skew(20%);
+      width: calc(50% - var(--wc-divider-space) / 2);
+    }
+    div::before {
+      left: 0;
+    }
+    div::after {
+      right: 0;
+    }
+    span {
+      border: 1px solid var(--wc-divider-bordercolor);
+      border-width: 0 1px;
+      display: inline-block;
+      height: 9px;
+      left: calc(50% - (var(--wc-divider-space) / 2 + .5px));
+      position: absolute;
+      top: -4px;
+      transform: skewX(var(--wc-divider-skew));
+      width: calc(var(--wc-divider-space) - 1px);
+    }
+  </style>
+</component>

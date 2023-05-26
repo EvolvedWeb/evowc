@@ -1,0 +1,22 @@
+<component tag="my-div" extends="div" shadow="closed">
+  <template><slot></slot></template>
+  <style>
+    :host {
+      align-items: center;
+      background-color: navy;
+      border: 1px solid #000;
+      color: #FF0;
+      display: flex;
+      height: fit-content;
+      justify-content: center;
+      padding: 10px;
+      text-align: center;
+      width: fit-content;
+    }
+  </style>
+  <script>
+    init() {
+      this.id = Math.floor(Math.random()*1000);
+    }
+  </script>
+</component>

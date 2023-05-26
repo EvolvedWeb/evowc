@@ -1,0 +1,153 @@
+<component tag="wc-calendar"
+  :value="date"
+  :locale="string"
+  :#show-last="bool:false"
+  :#title>
+  <template>
+    <table>
+      <thead>
+        <tr class="top"><th><button .click="#prevMonth">❮</button></th><th colspan="5" :text="#title"></th><th><button .click="#nextMonth">❯</button></th></tr>
+        <tr><th>Su</th><th>Mo</th><th>Tu</th><th>We</th><th>Th</th><th>Fr</th><th>Sa</th></tr>
+      </thead>
+      <tbody>
+        <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr $if="#showLast"><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+      </tbody>
+    </table>
+  </template>
+  <style>
+    :host {
+      background-color: #FFF;
+      border: 1px solid #888;
+      border-radius: 5px;
+      display: inline-block;
+      height: fit-content;
+      width: fit-content;
+    }
+    table {
+      border-collapse: collapse;
+      font: 14px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      height: 100%;
+      width: 100%;
+    }
+    th, td {
+      box-sizing: border-box;
+      height: 3em;
+      line-height: 1em;
+      max-height: 3em;
+      max-width: 3em;
+      min-height: 3em;
+      min-width: 3em;
+      padding: 4px;
+      width: 3em;
+    }
+    .top th {
+      border-bottom: 1px solid #999;
+    }
+    td {
+      position: relative;
+      text-align: center;
+      vertical-align: middle;
+    }
+    td[selected] span {
+      background: #ccc;
+      border: 4px solid white;
+    }
+    button {
+      all: unset;
+      border: 1px solid transparent;
+    }
+    button,
+    td[selected] span {
+      align-items: center;
+      border-radius: 50%;
+      box-sizing: border-box;
+      display: flex;
+      height: 100%;
+      justify-content: center;
+      line-height: 1em;
+      width: 100%;
+    }
+    button:hover {
+      background: #ccc;
+    }
+    button::focus {
+      border-color: #bbb;
+    }
+  </style>
+  <script>
+    init() {
+      this.value = new Date();
+      this.#setTitle();
+    }
+
+    update() {
+      this.#setTitle();
+    }
+
+    #prevMonth() {
+      const newDate = new Date(this.value);
+      newDate.setMonth(newDate.getMonth() - 1);
+      this.value = newDate;
+    }
+
+    #nextMonth() {
+      const newDate = new Date(this.value);
+      newDate.setMonth(newDate.getMonth() + 1);
+      this.value = newDate;
+    }
+
+    #setTitle() {
+      if (this.value) {
+        const locale = this.locale || document.documentElement.lang || navigator.language;
+        const format = { year: 'numeric', month: 'long' };
+        const formatter = new Intl.DateTimeFormat(locale, format);
+        this.#title = formatter.format(this.value);
+        const today = new Date();
+        const thisMonth = today.getMonth();
+        const thisYear = today.getFullYear();
+        const thisDate = today.getDate();
+        const temp = new Date(this.value);
+        const showingMonth = temp.getMonth();
+        const showingYear = temp.getFullYear();
+        temp.setDate(1);
+        let dow = temp.getDay();
+        temp.setMonth(temp.getMonth()+1);
+        temp.setDate(0);
+        const lastDate = temp.getDate();
+        const tds = [...(this.shadowRoot.querySelectorAll('td'))];
+        let date = 1;
+        this.#showLast = ((dow === 5 && lastDate === 31) || (dow === 6 && lastDate === 30));
+        tds.forEach(td => {
+          const isToday = showingYear === thisYear &&
+                          showingMonth === thisMonth &&
+                          date === thisDate;
+          if (isToday && dow === 0) {
+            td.setAttribute('selected', '');
+          }
+          else {
+            td.removeAttribute('selected');
+          }
+
+          if (dow === 0) {
+            if (isToday) {
+              td.innerHTML = `<span>${date}</span>`;
+            }
+            else {
+              td.textContent = (date > lastDate) ? '' : date;
+            }
+            date++;
+          }
+          else {
+            td.textContent = '';
+            dow--;
+          }
+        });
+      }
+    }
+  </script>
+</component>

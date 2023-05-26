@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const fsp = fs.promises;
 
-const evowc = require('../lib/evowc.js');
+const evowc = require('../lib/old/evowc-old.js');
 const getFileArrayFromGlob = require('../lib/getFileArrayFromGlob.js');
 const FILE_OPTIONS = {
   encoding: 'utf8'

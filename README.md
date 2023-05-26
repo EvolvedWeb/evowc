@@ -6,29 +6,6 @@ You can create one or more components in the template file. But you can only hav
 
 There are sample components in the `components` folder. They are XML based files. Take a look at a few and read the docs to see how to create your own.
 
-<!--
-<div style="background:#611;border:3px dashed #A00;margin:20px;padding:10px;color:#FFF">
-
-## Alpha Testing
-
-After you clone the repo:
-
-1. To install the repo run `npm install`
-1. To transpile the components run `npm run build` in one terminal
-1. To launch the simple web server run `npm start` in another terminal
-1. To view the webpage browse to `http://localhost:5555/test.html`
-1. To change which components are in the browser edit the file `static/test.html`
-1. Please use the __bug reporting in the issues section__ of the repo.
-1. Any __document suggestions__ should also be added to the issues section of the repo.
-1. __Write several component__ and test Evo-WC for any errors in the transpiler.
-1. __Do oddball things__ in your component, push the envelope.
-1. Currently there is no way to loop through tags. So no auto generation of tables, list items, etc. That is coming.
-1. **Please make a Pull Request with your example components or bug fixes.**
-1. **Do not check into the master branch**
-
-</div>
--->
-
 ## Parts of a component file
 
 The component file is based on XML. Your component is defined with a `<component>` element. You must include the `tag="component-name"` attribute in the `<component>` element.
@@ -38,7 +15,9 @@ The valid elements inside the `<component>` element are:
 * `<template>` - The HTML for your component.
 * `<style>` - The CSS for this component.
 * `<script>` - Custom JavaScript for this component.
-* `<import>` - List needed imports at the top of the generated JavaScript file.
+* `<script location="root">` - List needed imports at the top of the generated JavaScript file.
+* ~~`<import>` - List needed imports at the top of the generated JavaScript file.~~ - _No longer valid starting in version 0.5.0_
+
 
 The minimal component is made up by using both the `<component>` and `<template>` tags like this:
 
@@ -48,7 +27,7 @@ The minimal component is made up by using both the `<component>` and `<template>
 </component>
 ```
 
-## Component Element
+## `<component>` Element
 
 Each component is created by using the `<component></component>` element. Each component must have a `tag` attribute that defines the element tag to be used in your HTML to access this component.
 
@@ -73,12 +52,12 @@ Your HTML:
   <special-thing></special-thing>
   <script type="module">
     import { SpecialThingElement } from './js/components/SpecialThingElement.js';
-  </script>
+  </i>
 </body>
 </html>
 ```
 
-### Property Definition Attributes (PDA)
+### Class Property Attributes (CPAs)
 
 Most components will need to provide a way for the parent code to interact with the component. This is done by adding attributes into the `<component>` element that starts with a colon (__`:`__). These attributes will become properties on the component object as well as attributes that are monitored by the component's `observedAttributes` callback.
 
@@ -94,7 +73,7 @@ Most components will need to provide a way for the parent code to interact with 
 
 The attribute `:message` in the `<component>` element will create a public property called `message` in the component class and the component will observe changes made to the `message` attribute. If you change the `message` attribute the code will also change the component property.
 
-When you create a PDA you can also define the data type of the generated property as well as an optional default value.
+When you create a CPA you can also define the data type of the generated property as well as an optional default value.
 
 The variable type names that can be used are `'array'`, `'bool'`, `'date'`, `'int'`, `'number'`, `'object'`, `'string'` with the default type being `'string'`.
 
@@ -113,7 +92,7 @@ We also support shortened type names of `'arr'` for `'array'`, `'bool'` for `'bo
 
 In the example above the property `age` will be a number and will have a default value of `10` when the component is constructed. Any value passed into `component.age` will be converted into a number. So `component.age = '33'` will store a numeric value of `33` and not a string of `"33"`.
 
-You can use URI encoding in your default values. If you want to add a double quote in the default value it needs to be written as a URI encoded value of `%22`. So, instead of writing the PDA like this: `:animals="arr:[1,2,"%22"dogs"]"` which is invalid you would write it like this: `:animals="arr:[%22cats%22,%22dogs%22]"`.
+You can use URI encoding in your default values. If you want to add a double quote in the default value it needs to be written as a URI encoded value of `%22`. So, instead of writing the CPA like this: `:animals="arr:[1,2,"%22"dogs"]"` which is invalid you would write it like this: `:animals="arr:[%22cats%22,%22dogs%22]"`.
 
 #### Example
 
@@ -125,7 +104,7 @@ You can use URI encoding in your default values. If you want to add a double quo
 
 ---
 
-Here is an example component that has a PDA called `message`. WHenever the `message` attribute on this component is set or when the `message` property is set then the text of the `<h1>` tag will be set to that value.
+Here is an example component that has a CPA called `message`. WHenever the `message` attribute on this component is set or when the `message` property is set then the text of the `<h1>` tag will be set to that value.
 
 #### Example:
 
@@ -168,15 +147,15 @@ You can create private properties that are not accessable outside the component 
 
 #### Updating component attributes
 
-Sometimes you may want an attribute on the component to change when a property changes. This is a common need for CSS. If you want the property to also set the attribute on the component then your PDA needs to to include a `+` like this `:+show`. In this case, when you set the `show` property it will also set the attribute `show` on the component.
+Sometimes you may want an attribute on the component to change when a property changes. This is a common need for CSS. If you want the property to also set the attribute on the component then your CPA needs to to include a `+` like this `:+show`. In this case, when you set the `show` property it will also set the attribute `show` on the component.
 
 #### dataset / data attributes
 
 We support setting the `data` attributes through the `dataset` property. If you create an attribute like this `:data-dog-food="varName"` then the property `element.dataset.dogFood` will be set every time the setter for `varName` is called.
 
-We recommend using dataset attributes for passing needed data to an event handler.
+We recommend using data attributes for passing needed data to an event handler.
 
-##### example using dataset to pass params
+##### example using data attributes to pass params
 
 ``` xml
 <component tag="my-el" :#locale>
@@ -187,24 +166,48 @@ We recommend using dataset attributes for passing needed data to an event handle
     <button data-locale="ru" .click="#handleLocale">RU</button>
   </tamplate>
   <script>
-    #handleLocale(event) {
-      this.#locale = event.target.dataset.locale;
+    #handleLocale(event, data) {
+      this.#locale = data.locale;
     }
   </script>
 <component>
 ```
 
-### Style element
+### `<style>` element
 
 Place all of your CSS for the component into this `<style>` element.
 
 > Possible future plans to allow importing external CSS files.
 
-### Script element
 
-Place all of your JavaScript for the component into this `<script>` element. All of the code you place in here is inserted into the component class as class methods.
+### `<script location="root">` element
+Place any imports or code that is needed for this class but not to be part of the class. All code placed into this element will be included at the top of the generated JS file just after the line that includes the default imports. _See `<script>` element, below, for class member functions.
 
-<div style="background:#F00;color:#000;margin:0 20px 8px;padding:2px 8px;font-weight:bold;">Important: Do not use fat arrow functions for your class methods.</div>
+```html
+<script location="root">
+  import { DIALOG_BUTTONS } from './WcDialogElement.js';
+  const sleep = (time) => new Promise((resolve) => setTimeout(() => {resolve()}, time));
+  window.doSomething = (message) => {
+    // Place your code here
+  }
+</script>
+```
+
+### `<script>` element
+
+Place all of the JavaScript methods for your component into this `<script>` element. All of the code you place in here is inserted into the component class as class methods. _See `<script location="root">` element, above, for code that needs to be placed at the top of the file._
+
+<div style="background:#700;color:#ddd;margin:0 20px 8px;padding:4px 8px;"><b>Important:</b> Do not use fat arrow functions for your class methods.</div>
+
+#### Example:
+
+```html
+<script>
+  #click(event, data) {
+    // Handle your click event here
+  }
+</script>
+```
 
 #### Lifecycle Methods
 
@@ -213,15 +216,11 @@ You can provide, in your script, lifecycle functions that will be called at spec
 | Method | Description |
 | --- | --- |
 | `init()` | Called at the end of the constructor. Follow all of the [requirements for custom element constructors and reactions](https://html.spec.whatwg.org/multipage/custom-elements.html#custom-element-conformance). |
-| `update(member, oldVal, newVal)` | Called every time any property is updated when the component is connected to the DOM. You can adjust any private properties in this function. If this componenet was previously disconnected from the DOM then this also is called when the component is reconnected. The value for `member` is the name of the member variable that was updated just before calling this function. |
+| `update(member, oldVal, newVal)` | Called every time any property is updated and when the component is connected to the DOM. You can adjust any private properties in this function. If this componenet was previously disconnected from the DOM then this also is called when the component is reconnected. The value for `member` is the name of the member variable that was updated just before calling this function. |
 | `connected()` | This is called by the base class `connectedCallback` function. |
 | `disconnected()` | This is called by the base class `disconnectedCallback` function. |
 | `adopted()` | This is called by the base class `adoptedCallback` function. |
 | `attrChanged(attr, oldVal, newval)` | Called when an attribute has changed. This is called by the base class `attributeChangedCallback` function. |
-
-### Import element
-Place any imports that are needed for this class and only for this class in this element.
-
 
 ## Bindings
 
@@ -239,9 +238,11 @@ If we have this image tag in the template: `<img :src="imageUrl" :title="#imageT
 
 > _You can only place public or private propert names in the quotes and NOT call code like Angular._
 
-Generaly these values will be put into the property getter and setter methods. There are certain properties that do not exist in an HTML element and so we auto-set the attribute instead. For example there is no `alt` property on an `<img>` element so Evo WC will set the attribute `alt` instead. _Evo WC will only convert from properties to attributes for the well defined standard HTML attributes._
+Generaly these values will be put into the property getter and setter methods. There are certain properties that do not exist in an HTML element and so we auto-set the attribute instead. For example there is no `alt` property on an `<img>` element so Evo WC will set the `alt` attribute instead.
 
-> _**As of 2023-02-27 We have not compleated the attribute conversion list.**_
+> Evo WC will only convert from properties to attributes for the well defined standard HTML attributes. All others must be done using `:attr.your-attr="#val"`
+
+> _**As of version 0.5.0 We have not compleated the attribute conversion list.**_
 
 The template element attributes can be set like this:
 
@@ -249,13 +250,18 @@ The template element attributes can be set like this:
  | --- | --- |
  | `:title="val"` | `element.title = this.val` |
  | `:title="#val"` | `element.title = this.#val` |
- | `:attr.state="st"` | `element.setAttribute('state', this.st)` or, if the value of `this.st` is `null`, `element.removeAttribute('state')` |
+ | `:data-title="#val"` | `element.dataset.title = this.#val` |
+ | <nobr>`:aria-label="val"`</nobr> | `element.ariaLabel = this.val` |
+ | <nobr>`:attr.state="#state"`</nobr> | `element.setAttribute('state', this.#state)` or, if the value of `this.#state` is `null`, `element.removeAttribute('state')` |
  | `:html="value` | `element.innerHTML = this.value` |
  | `:text="name"` | `element.textContext = this.name` |
 
-#### 2-way-binding - `:value`
+<div style="border:1px solid black;background:#333;padding:8px;margin-bottom:18px;color:white;">
 
-`:value` provides two way binding for `<input>` and `<textarea>` elements. Like: `<input :value="firstName" />` will 2-way bind to the component's `get firstName()` and `set firstName()` methods.
+### 2-way-binding  (`:value`)
+
+`:value` provides two way binding for `<input>`, `<select>`, and `<textarea>` elements. For example: `<input :value="firstName" />` will 2-way bind to the component's `get firstName()` and `set firstName(val)` methods. When your code calls `set firstName(val)` then that value will be placed into the element. When the user edits the value for the element then `set firstName(val)` will be called with the new value.
+</div>
 
 ### Events
 An attribute that starts with a period ( __`.`__ ) are event handlers:
@@ -265,7 +271,9 @@ An attribute that starts with a period ( __`.`__ ) are event handlers:
 > You can use private member functions by starting the function name with `#` both here
 and for the acctual function name. ([JavaScript private class fields](https://devdocs.io/javascript/classes/private_class_fields))
 
-All event handlers receive one argument. That is the `event`. You can not pass any parameters into the event handler. Instead you add data attributes with anything you need to access in the event handler. For example you can have several buttons to change the component's locale and each has a different value for the attribute `data-locale` like this:
+All event handlers receive two arguments. The first is the `event`. and the second is `data`. `data` is the same as `event.target.dataSet`
+
+You can not pass any parameters into the event handler. Instead you add data attributes with anything you need to access in the event handler. For example you can have several buttons call the same method to change the component's locale. Each button has a different value for the attribute `data-locale` like this:
 
 
 ``` xml
@@ -276,8 +284,8 @@ All event handlers receive one argument. That is the `event`. You can not pass a
     <button .click="#setLocale" data-locale="es">ES</button>
   </template>
   <script>
-    #setLocale(event) {
-      this.#local = event.target.dataset.locale;
+    #setLocale(event, data) {
+      this.#local = data.locale;
     }
   </script>
 </component>
@@ -341,7 +349,7 @@ You can use `$if="variable"` or `$if="!variable"` to conditionaly hide and show 
 </component>
 ```
 
-## File `EvoElement.js`
+## Base class File `EvoElement.js`
 
 There are three things exported from the file `EvoElement.js`.
 
@@ -460,3 +468,29 @@ Sometime in the near future we plan to release translpilers in different languag
 * [Web Components Can Now Be Native Form Elements
 ](https://javascript.plainenglish.io/web-components-can-now-be-native-form-elements-107c7a93386)
 * [How to style shadow DOM with ::part() and ::slotted()](https://ziga-petek.medium.com/styling-shadow-dom-with-part-and-slotted-bc4bc94ab56b)
+
+
+
+
+<!--
+<div style="background:#611;border:3px dashed #A00;margin:20px;padding:10px;color:#FFF">
+
+## Alpha Testing
+
+After you clone the repo:
+
+1. To install the repo run `npm install`
+1. To transpile the components run `npm run build` in one terminal
+1. To launch the simple web server run `npm start` in another terminal
+1. To view the webpage browse to `http://localhost:5555/test.html`
+1. To change which components are in the browser edit the file `static/test.html`
+1. Please use the __bug reporting in the issues section__ of the repo.
+1. Any __document suggestions__ should also be added to the issues section of the repo.
+1. __Write several component__ and test Evo-WC for any errors in the transpiler.
+1. __Do oddball things__ in your component, push the envelope.
+1. Currently there is no way to loop through tags. So no auto generation of tables, list items, etc. That is coming.
+1. **Please make a Pull Request with your example components or bug fixes.**
+1. **Do not check into the master branch**
+
+</div>
+-->

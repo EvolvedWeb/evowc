@@ -13,15 +13,20 @@
 <body>
   <!--
   <portfolio-img text="July 26, 2016" title="Springville Main Street Lots"></portfolio-img>
-  <hr/>
+  <wc-hr></wc-hr>
   <special-thing></special-thing>
-  <hr/>
+  <wc-hr></wc-hr>
   <simple-address></simple-address>
 -->
+<div style="width:500px;margin:0 auto;">
+  <wc-hr></wc-hr>
+</div>
+<wc-loop title="Mr"></wc-loop>
+<!--
 <div is="my-div" label="Statement">Hi!<br/>How are you doing?</div>
-<hr>
+<wc-hr></wc-hr>
 <has-switch></has-switch>
-<hr/>
+<wc-hr></wc-hr>
 <div style="display:flex;flex-direction:column;margin-bottom:10px;">
     <!--
     <div style="display:flex;margin-bottom:40px;gap:10px">
@@ -29,9 +34,9 @@
       <if-one style="background:#FFE;border:1px solid black;padding:5px;"></if-one>
       <some-face state="sad"></some-face>
     </div>
-    -->
-    <div>Ranking: "<wc-rank rank="2"></wc-rank>"</div>
-    <hr>
+    -- >
+    <div>Ranking: "<wc-rank rank="0" show-num="true" live></wc-rank>"</div>
+    <wc-hr></wc-hr>
     <local-time timestamp="Dec 25, 2023"></local-time><br/>
     <local-time timestamp="Mar 5, 1965"></local-time><br>
     <button type="button" js="doAlert">Alert</button>
@@ -46,7 +51,7 @@
       Normal:&nbsp;<alert-box message="This is a message with no state" state=""></alert-box>
       Info:&nbsp;<alert-box message="This is an info message" state="info"></alert-box>
       Warn:&nbsp;<alert-box message="This is a warning message" title="WARNING!" state="warn"></alert-box>
-      Alert:&nbsp;<alert-box message="This is an error" state="alert" popup></alert-box>
+      Alert:&nbsp;<alert-box message="This is an error" state="alert" dpopup></alert-box>
     </div>
     <div>
       Normal: <alert-message message="This is a non-types message" state=""></alert-message>
@@ -54,12 +59,12 @@
       Warn: <alert-message message="This is a warning message" title="WARNING!" state="warn"></alert-message>
       Alert: <alert-message message="This is an error" state="alert"></alert-message>
     </div>
-    <hr/>
+    <wc-hr></wc-hr>
     <div style="margin-top: 10px">
       <button js="dlgBtn" is="wc-button">Login</button>
       <button js="dlgBtn2" is="wc-button">Change Password</button>
     </div>
-    <hr/>
+    <wc-hr></wc-hr>
     <div style="margin-top: 10px">
       <button is="wc-button">Normal</button>
       <button is="wc-button" variant="info">Info</button>
@@ -106,9 +111,9 @@
       Warning: <wc-badge variant="warning">Warning</wc-badge>
       Danger: <wc-badge variant="danger">danger</wc-badge>
       Light: <wc-badge variant="light">light</wc-badge>
-      Dark: <wc-badge variant="dark">dark</wc-badge><hr>
+      Dark: <wc-badge variant="dark">dark</wc-badge><wc-hr></wc-hr>
 <wc-badge variant="danger">Danger Will Robinson...</wc-badge>
-<wc-badge variant="warning">Warning!</wc-badge><hr>
+<wc-badge variant="warning">Warning!</wc-badge><wc-hr></wc-hr>
 
     </div>
     <div style="margin-top: 10px">
@@ -133,12 +138,23 @@
       forgot-pw-href="/forgotpw"
       sign-in-href="/login"
       sign-up-href="/signup"
-      sign-up-text="Ready to give us your info?"
+      -sign-up-text="Ready to give us your info?"
+      -forgot-pw-text="Memory Failing?"
+      -not-a-member-text="Want to join?"
+      -password-label="Secret Code:"
+      -remember-me-text="Don't forget me"
+      -sign-in-text="Log in"
+      -sign-up-text="Create an account"
+      -title="Log in"
+      -username-label="Username:"
+      -show-text="S"
+      -hide-text="H"
     ></login-dialog>
     <changepw-dialog
       id="changepw dialog"
       js="changepw"></changepw-dialog>
   </div>
+-->
 
   <script type="module">
     import './js/components/AlertBoxElement.js';
@@ -160,8 +176,10 @@
     import './js/components/WcButtonGroupElement.js';
     import './js/components/WcCalendarElement.js';
     import './js/components/WcDialogElement.js';
+    import './js/components/WcHrElement.js';
     import './js/components/WcRankElement.js';
     import './js/components/WcSpinnerElement.js';
+    import './js/components/WcLoopElementTest.js';
 
     const els = [...document.querySelectorAll('[js]')]
       .reduce((o, el) => (o[el.getAttribute('js')] = el, o), {});
@@ -256,7 +274,15 @@
       setTimeout(updateTime, 100);
     }
 
-    updateTime();
+    //updateTime();
+
+    const FOR_VAR_RE = /^\s*(?<variable>#?\w[\w\d]+)?\s+as\s+(?<item>\w[\w\d]+)?\.(?<key>#?\w[\w\d]+)?\s*/;
+    let testStr = 'things as item.key';
+    testStr = '   things    as     dogs.cats'
+    testStr = '   #things    as  .'
+    const a = FOR_VAR_RE.exec(testStr);
+    console.log(a?.groups);
+    console.log(FOR_VAR_RE.test(testStr));
   </script>
 </body>
 </html>

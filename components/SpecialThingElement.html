@@ -1,17 +1,38 @@
 <component tag="special-thing"
+  :+show="bool:true"
   :today="date"
   :locale="string:en"
-  :num="int:100"
+  :num="int(0,100):100"
+  :values="arr"
+  :test-it="str:hi"
   :message="string:This 'is' a test:"
-  :show="bool:true"
-  :#locale-date>
+  :#dog-food
+  :#input
+  :#localeDate="str">
   <template>
-    <div class="thing" :attr.show="show" :data-num="num" :alt="message" :html="message"></div>
-    <number>0</number>
-    <number>3</number>
+    <p :title="today|#relative|^toUpper"></p>
+    <br />
+    <h1 .mouseover="#mouseOverHandler">Hi</h1>
+    <p :title="today|#doSomething|^toUpper" el='dogEl'></p>
+    <div $for="values as item.key" :data-taco="item.title" :attr.key="item.key" class="showy">
+      <div>Name: <span :text="item.name"></span></div>
+      <div>Age: <span :text="item.age"></span></div>
+    </div>
+    <input :value="#input" />
+    <input :value="#input" .input="#doSomething" />
+    <div el="fruitCake" class="thing" :attr.show-me="show" :data-number="num" :alt="message" :html="message"></div>
+    <number :attr.name="locale|^toUpper">0</number>
+    <number :text="#dogFood"></number>
     <p :text="#localeDate"></p>
     <p $if="show">You have <span :text="num"></span> apples!</p>
-    <button .click="#newNum">Change</button>
+    <p $if="!show">You have <span :text="num"></span> bananas!</p>
+    <div>The value for num is
+      <span $switch="num:0,9">Below ten</span>
+      <span $switch="num:10,49">Below fifty</span>
+      <span $switch="num:50,99">Below one hundred</span>
+      <span $switch="!num:0,99">Something else</span>
+    </div>
+    <button .click="#newNum" :text="#dog-food"></button>
   </template>
   <style>
     .thing > dog {
@@ -19,6 +40,26 @@
       padding: 5px 0;
     }
   </style>
+  <style>
+    .cat {
+      background-color: aliceblue;
+      padding: 5px 0;
+    }
+  </style>
+  <script location="root">
+    import { toUpper } from 'evo-pipes.js';
+    const DOG = 10;
+  </script>
+  <script location="root">
+    const CAT = 11;
+    function thing(a) {
+      if(a) {
+        return 100;
+      }
+
+      return 0;
+    }
+  </script>
   <script>
     update() {
       const locale = this.locale || document.documentElement.lang || navigator.language;
@@ -29,8 +70,22 @@
         console.log('wow')
       }
     }
+
+    #mouseOverHandler(event, data) {
+      // Do something
+    }
+
+    #doSomething(event, data) {
+      
+    }
+
     #newNum() {
       this.num = Math.abs(Math.random() * 100);
+    }
+
+    // Do this too
+    #doSomething(val) {
+      return `-- ${val} --`;
     }
   </script>
 </component>

@@ -1,0 +1,176 @@
+{
+  "attributes": {},
+  "children": [
+    {
+      "$": "\n  "
+    },
+    {
+      "template": [
+        {
+          "$": "\n    "
+        },
+        {
+          "div": [
+            {
+              "$": "\n      "
+            },
+            {
+              "h2": [
+                {
+                  "$": "Testing For Loops"
+                }
+              ]
+            },
+            {
+              "$": "\n      "
+            },
+            {
+              "div": [
+                {
+                  "$": "\n        "
+                },
+                {
+                  "span": [],
+                  ":@": {
+                    ":text": "title"
+                  }
+                },
+                {
+                  "$": "\n        "
+                },
+                {
+                  "button": [],
+                  ":@": {
+                    ":text": "item.name",
+                    ".click": "#clickItem",
+                    ":data-key": "item.key"
+                  }
+                },
+                {
+                  "$": "\n        "
+                },
+                {
+                  "span": [],
+                  ":@": {
+                    ":text": "item.age"
+                  }
+                },
+                {
+                  "$": "\n      "
+                }
+              ],
+              ":@": {
+                "$for": "things as item.key",
+                "attr.key": "item.key"
+              }
+            },
+            {
+              "$": "\n      "
+            },
+            {
+              "button": [
+                {
+                  "$": "Reverse"
+                }
+              ],
+              ":@": {
+                ".click": "#reverse"
+              }
+            },
+            {
+              "$": "\n      "
+            },
+            {
+              "button": [
+                {
+                  "$": "Sort"
+                }
+              ],
+              ":@": {
+                ".click": "#sort"
+              }
+            },
+            {
+              "$": "\n      "
+            },
+            {
+              "button": [
+                {
+                  "$": "Add"
+                }
+              ],
+              ":@": {
+                ".click": "#add"
+              }
+            },
+            {
+              "$": "\n    "
+            }
+          ],
+          ":@": {
+            "class": "main"
+          }
+        },
+        {
+          "$": "\n  "
+        }
+      ]
+    },
+    {
+      "$": "\n  "
+    },
+    {
+      "style": [
+        {
+          "$": "\n    :host {\n      display: block;\n      height: fit-content;\n    }\n\n    .main{\n      background:#DDD;\n      border:1px solid #000;\n      margin:10px;\n      padding:10px;\n    }\n  "
+        }
+      ]
+    },
+    {
+      "$": "\n  "
+    },
+    {
+      "script": [
+        {
+          "$": "\n    const enCollator = new Intl.Collator('en');\n  "
+        }
+      ],
+      ":@": {
+        "location": "root"
+      }
+    },
+    {
+      "$": "\n  "
+    },
+    {
+      "script": [
+        {
+          "$": "\n    init() {\n        this.things = [\n          { name: 'Iron Man', age: 54, key: 1 },\n          { name: 'Alloy', age: 18, key: 2 },\n          { name: 'Bugs Bunny', age: 32, key: 3 },\n          { name: 'John Smith', age: 12, key: 4 },\n          { name: 'Fred Flinstone', age: 32, key: 5 },\n          { name: 'Flash Gordon', age: 4, key: 'flash' },\n          { name: 'Pen Gillet', age: 62, key: 55 },\n          { name: 'Daffy Duck', age: 12, key: 33 },\n          { name: 'Jane Doe', age: 32, key: 44 },\n          { name: 'Barney Rubble', age: 32, key: 125 },\n        ];\n    }\n    #clickItem(event, data) {\n      console.log(data);\n    }\n    #reverse(event, data) {\n      this.things = this.things.reverse();\n    }\n    #sort(event, data) {\n      this.things = [...this.things].sort((a, b) => enCollator.compare(a.name, b.name));\n    }\n    #add(event, data) {\n      const newItem = { name: this.#getName(), age: Math.round(Math.random() * 100), key: this.#things.length + 1 }\n      this.things = [...this.things, newItem];\n    }\n  "
+        }
+      ]
+    },
+    {
+      "$": "\n"
+    }
+  ],
+  "className": "WcLoopElement",
+  "extendsName": "",
+  "properties": {
+    "things": {
+      "attrName": "things",
+      "propName": "things",
+      "value": "[]",
+      "type": "arr",
+      "autoSetAttr": false
+    },
+    "title": {
+      "attrName": "title",
+      "propName": "title",
+      "value": "''",
+      "type": "str",
+      "autoSetAttr": false
+    }
+  },
+  "shadow": "open",
+  "tag": "wc-loop"
+}

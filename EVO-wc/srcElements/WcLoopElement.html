@@ -1,0 +1,61 @@
+<component tag="wc-loop"
+  :things="arr"
+  :title="str">
+  <template>
+    <div class="main">
+      <h2>Testing For Loops</h2>
+      <div $for="things as item.key" attr.key="item.key">
+        <span text="title"></span>
+        <button text="item.name" .click="#clickItem" data-key="item.key"></button>
+        <span text="item.age"></span>
+        <div $if="things">
+          <h1>Testing</h1>
+          <p>This is a test</p>
+        </div>
+      </div>
+      <button .click="#reverse">Reverse</button>
+      <button .click="#sort">Sort</button>
+    </div>
+  </template>
+  <style>
+    :host {
+      display: block;
+      height: fit-content;
+    }
+
+    .main{
+      background:#DDD;
+      border:1px solid #000;
+      margin:10px;
+      padding:10px;
+    }
+  </style>
+  <script location="root">
+    const enCollator = new Intl.Collator('en');
+  </script>
+  <script>
+    init() {
+        this.things = [
+          { name: 'Iron Man', age: 54, key: 1 },
+          { name: 'Alloy', age: 18, key: 2 },
+          { name: 'Bugs Bunny', age: 32, key: 3 },
+          { name: 'John Smith', age: 12, key: 4 },
+          { name: 'Fred Flinstone', age: 32, key: 5 },
+          { name: 'Flash Gordon', age: 4, key: 'flash' },
+          { name: 'Pen Gillet', age: 62, key: 55 },
+          { name: 'Daffy Duck', age: 12, key: 33 },
+          { name: 'Jane Doe', age: 32, key: 44 },
+          { name: 'Barney Rubble', age: 32, key: 125 },
+        ];
+    }
+    #clickItem(event, data) {
+      console.log(data);
+    }
+    #reverse(event, data) {
+      this.things = this.things.reverse();
+    }
+    #sort(event, data) {
+      this.things = [...this.things].sort((a, b) => enCollator.compare(a.name, b.name));
+    }
+  </script>
+</component>
