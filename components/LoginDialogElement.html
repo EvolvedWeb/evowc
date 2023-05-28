@@ -24,7 +24,7 @@
   :#username
 >
   <template>
-    <wc-dialog js="dialog" :title="title" show-footer="false">
+    <wc-dialog el="dialog" :title="title" show-footer="false">
       <section>
         <form :action="signInHref" :method="signInMethod|#toLower" .submit="#login">
           <input type="hidden" name="token" :value="#token" />

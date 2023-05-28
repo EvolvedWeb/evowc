@@ -5,7 +5,7 @@
   :#show-cancel="bool:true"
   :#answer>
   <template>
-    <wc-dialog js="dialog" :title="#title" :show-cancel="#showCancel" show-x="false" allow-esc="false">
+    <wc-dialog el="dialog" :title="#title" :show-cancel="#showCancel" show-x="false" allow-esc="false">
       <div :html="#message"></div>
       <textarea autofocus $if="#showInput" :value="#answer"></textarea>
     </wc-dialog>

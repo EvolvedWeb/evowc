@@ -1,38 +1,36 @@
 <component tag="special-thing"
   :+show="bool:true"
-  :today="date"
+  :today="date:var:__buildDate"
   :locale="string:en"
-  :num="int(0,100):100"
+  :num="int(0,10):0"
   :values="arr"
   :test-it="str:hi"
   :message="string:This 'is' a test:"
-  :#dog-food
+  :#dog-food="str:Click Me!"
   :#input
   :#localeDate="str">
   <template>
-    <p :title="today|#relative|^toUpper"></p>
-    <br />
     <h1 .mouseover="#mouseOverHandler">Hi</h1>
-    <p :title="today|#doSomething|^toUpper" el='dogEl'></p>
+    <p :text="message|#doSomethingPipe|^toUpper" el='dogEl'></p>
     <div $for="values as item.key" :data-taco="item.title" :attr.key="item.key" class="showy">
       <div>Name: <span :text="item.name"></span></div>
       <div>Age: <span :text="item.age"></span></div>
     </div>
-    <input :value="#input" />
-    <input :value="#input" .input="#doSomething" />
+    <input :value="#input" /><br/>
+    <input :value="#input" .input="#handleEvent" />
     <div el="fruitCake" class="thing" :attr.show-me="show" :data-number="num" :alt="message" :html="message"></div>
-    <number :attr.name="locale|^toUpper">0</number>
-    <number :text="#dogFood"></number>
-    <p :text="#localeDate"></p>
-    <p $if="show">You have <span :text="num"></span> apples!</p>
-    <p $if="!show">You have <span :text="num"></span> bananas!</p>
+    <number :attr.name="locale|^toUpper" :text="num"></number>
+    <number :text="#dogFood|^toUpper"></number>
+    <p>This was built on <span :text="#localeDate"></span></p>
+    <p $if="show">You have "<span :text="num"></span>" apples!</p>
+    <p $if="!show">You have "<span :text="num"></span>" bananas!</p>
     <div>The value for num is
-      <span $switch="num:0,9">Below ten</span>
-      <span $switch="num:10,49">Below fifty</span>
-      <span $switch="num:50,99">Below one hundred</span>
-      <span $switch="!num:0,99">Something else</span>
+      <span $switch="num:0,2">Below Three</span>
+      <span $switch="num:3,5">Below Six</span>
+      <span $switch="num:6,8">Below Nine</span>
+      <span $switch="!num:0,8">Above Nine</span>
     </div>
-    <button .click="#newNum" :text="#dog-food"></button>
+    <button .click="#newNum" :text="#dogFood"></button>
   </template>
   <style>
     .thing > dog {
@@ -47,7 +45,7 @@
     }
   </style>
   <script location="root">
-    import { toUpper } from 'evo-pipes.js';
+    import { toUpper } from '../evo-pipes.js';
     const DOG = 10;
   </script>
   <script location="root">
@@ -66,25 +64,26 @@
       const format = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
       const formatter = new Intl.DateTimeFormat(this.locale, format);
       this.#localeDate = formatter.format(this.timestamp);
-      if (1 < 100) {
-        console.log('wow')
-      }
     }
 
     #mouseOverHandler(event, data) {
       // Do something
     }
 
-    #doSomething(event, data) {
-      
+    #handleEvent(event, data) {
+
     }
 
     #newNum() {
-      this.num = Math.abs(Math.random() * 100);
+      this.num = Math.abs(Math.random() * 12);
+    }
+
+    #relative(str) {
+      return str.split('').reverse().join('');
     }
 
     // Do this too
-    #doSomething(val) {
+    #doSomethingPipe(val) {
       return `-- ${val} --`;
     }
   </script>

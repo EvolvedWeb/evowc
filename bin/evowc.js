@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const fsp = fs.promises;
 
-const evowc = require('../lib/old/evowc-old.js');
+const evowc = require('../lib/evowc.js')
 const getFileArrayFromGlob = require('../lib/getFileArrayFromGlob.js');
 const FILE_OPTIONS = {
   encoding: 'utf8'
@@ -37,22 +37,20 @@ async function run(args) {
         console.time('  time');
         let source = fs.readFileSync(componentFileName, FILE_OPTIONS);
 
-        const components = await evowc(source, options);
+        const component = await evowc(source, options);
 
-        for(let i = 0; i < components.length; i++) {
-          const component = components[i];
-          const outputScriptName = path.join(outputScriptPath, component.className+'.js');
-          console.info(`   * Saving "${component.tag}" as ${outputScriptName}`);
-          await fsp.writeFile(outputScriptName, component.html, FILE_OPTIONS)
-          /*
-          let scriptOutput = JSON.stringify(components,0,2);
-          await fsp.writeFile(outputScriptName + '.json', scriptOutput, FILE_OPTIONS)
+        const outputScriptName = path.join(outputScriptPath, component.className+'.js');
+        console.info(`   * Saving "${component.tag}" as ${outputScriptName}`);
+        await fsp.writeFile(outputScriptName, component.html, FILE_OPTIONS)
 
-          scriptOutput = JSON.stringify(sourceObj, 0, 2);
-          await fsp.writeFile(outputScriptName + '.orig.json', scriptOutput, FILE_OPTIONS)
-          */
-        }
-
+        const componentDataFilename = outputScriptName + '.json';
+        console.info(`   + Saving component data as ${componentDataFilename}`);
+        let componentDataJson = JSON.stringify(component,0,2);
+        await fsp.writeFile(componentDataFilename, componentDataJson, FILE_OPTIONS)
+        /*
+        scriptOutput = JSON.stringify(sourceObj, 0, 2);
+        await fsp.writeFile(outputScriptName + '.orig.json', scriptOutput, FILE_OPTIONS)
+        */
       }
 
       catch(ex) {

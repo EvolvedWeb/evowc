@@ -1,19 +1,19 @@
 <component tag="changepw-dialog"
-  :change-pw-href
+  :change-pw-href="str"
   :change-pw-method="str:post"
   :busy="bool:false"
   :error-message
   :#username
   :#current-password
   :#new-password
+  :#new-password2
+  :#state
   :#token
-  :#password-type1="str:password"
-  :#password-type2="str:password"
-  :#toggle-state1="str:var:STATE_SHOW"
-  :#toggle-state2="str:var:STATE_SHOW"
+  :#password-type="str:password"
+  :#show-text="str:var:STATE_SHOW"
 >
   <template>
-    <wc-dialog js="dialog" title="Change Password" show-footer="false">
+    <wc-dialog el="dialog" title="Change Password" show-footer="false">
       <section>
         <form :action="changePwHref" :method="changePwMethod|#toLower" .submit="#changePw">
           <input type="hidden" name="token" :value="#token" />
@@ -22,19 +22,28 @@
             <div class="prev-password-block">
               <label for="prev-password">Current Password:</label>
             </div>
-            <input id="prev-password" name="prev-password" maxlength="32" :value="#currentPassword"
-              :type="#passwordType1" required autofocus autocomplete="current-password" aria-label="Password" .input="#clearError" />
-            <button class="show-pw" type="button" is="wc-button" small variant="link" .click="#toggle1"
-              :attr.aria-label="#toggleState1" :text="#toggleState1"></button>
+            <input id="prevPassword" name="prevPassword" maxlength="32" :value="#currentPassword"
+              :type="#passwordType" required autofocus autocomplete="current-password" aria-label="Password" .input="#clearError" />
+            <button class="show-pw" type="button" is="wc-button" small variant="link" .click="#toggleShowState"
+              :attr.aria-label="#showText" :data-input="prevPassword" :text="#showText"></button>
           </div>
           <div>
             <div class="password-block">
-              <label for="password">New Password:</label>
+              <label for="password" :attr.state="#state">New Password:</label>
             </div>
-            <input id="newpassword" name="newpassword" maxlength="32" :value="#newPassword"
-              :type="#passwordType2" required autocomplete="new-password" aria-label="Password" .input="#clearError" />
-            <button class="show-pw" type="button" is="wc-button" small variant="link" .click="#toggle2"
-              :attr.aria-label="#toggleState2" :text="#toggleState2"></button>
+            <input id="newPassword" name="newPassword" maxlength="32" :value="#newPassword"
+              :type="#passwordType" required autocomplete="new-password" aria-label="Password" .input="#clearError" />
+            <button class="show-pw" type="button" is="wc-button" small variant="link" .click="#toggleShowState"
+              :attr.aria-label="#showText" :data-input="newPassword" :text="#showText"></button>
+          </div>
+          <div>
+            <div class="password-block">
+              <label for="password">Repeat New Password:</label>
+            </div>
+            <input id="newPassword2" name="newPassword2" maxlength="32" :value="#newPassword2" :type="#passwordType" required
+              autocomplete="new-password" aria-label="Password" .input="#clearError" />
+            <button class="show-pw" type="button" is="wc-button" small variant="link" .click="#toggleShowState"
+              :attr.aria-label="#showText" :data-input="newPassword" :text="#showText"></button>
           </div>
           <button class="change-pw" is="wc-button" large aria-label="Change Password">Change Password</button>
         </form>
@@ -109,6 +118,9 @@
       justify-content: space-between;
       margin-top: 12px;
     }
+    [state="invalid"] {
+      color: red;
+    }
     .error-message {
       background-color: #F99;
       border: 1px solid #E66;
@@ -143,6 +155,14 @@
     const STATE_SHOW = 'show';
   </script>
   <script>
+    update(field, oldVal, newVal) {
+      if (['#newPassword', '#newPassword2'].includes(field)) {
+        const isInvalid = (!this.#newPassword || !this.#newPassword2 ||
+            this.#newPassword !== this.#newPassword2)
+
+        this.#state = isInvalid ? 'invalid' : null;
+      }
+    }
     open() {
       this.#username = '';
       this.#currentPassword = '';
@@ -158,24 +178,14 @@
     }
     //******************************************
     // Events
-    #toggle1(event) {
-      if (this.#toggleState1 === STATE_HIDE) {
-        this.#toggleState1 = STATE_SHOW;
-        this.#passwordType1 = 'password';
+    #toggleShowState(event) {
+      if (this.#showText === STATE_HIDE) {
+        this.#showText = STATE_SHOW;
+        this.#passwordType = 'password';
       }
       else {
-        this.#toggleState1 = STATE_HIDE;
-        this.#passwordType1 = 'text';
-      }
-    }
-    #toggle2(event) {
-      if (this.#toggleState2 === STATE_HIDE) {
-        this.#toggleState2 = STATE_SHOW;
-        this.#passwordType2 = 'password';
-      }
-      else {
-        this.#toggleState2 = STATE_HIDE;
-        this.#passwordType2 = 'text';
+        this.#showText = STATE_HIDE;
+        this.#passwordType = 'text';
       }
     }
     #clearError() {

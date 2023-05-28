@@ -20,10 +20,7 @@
         const locale = this.locale || document.documentElement.lang || navigator.language;
         const format = this.format || { month: '2-digit', day: '2-digit', year: 'numeric' };
         const formatter = new Intl.DateTimeFormat(locale, format);
-        const newStr = formatter.format(this.timestamp);
-        if (this.#localetime !== newStr) {
-          this.#localetime = newStr;
-        }
+        this.#localetime = formatter.format(this.timestamp);
       }
     }
 

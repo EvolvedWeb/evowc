@@ -12,7 +12,7 @@
   :#dialog-style
   >
   <template>
-    <dialog js="dialog" .cancel="#dialogCancel" :style="#dialogStyle" :attr.show-footer="showFooter">
+    <dialog el="dialog" .cancel="#dialogCancel" :style="#dialogStyle" :attr.show-footer="showFooter">
       <header><div :html="title"></div><button class="closeX" $if="showX" .click="#clickClose"></button></header>
       <section><slot></slot></section>
       <footer $if="showFooter">

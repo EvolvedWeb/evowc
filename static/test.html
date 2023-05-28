@@ -22,7 +22,10 @@
   <wc-hr></wc-hr>
 </div>
 <wc-loop title="Mr"></wc-loop>
-<!--
+<div style="width:500px;margin:0 auto;">
+  <wc-hr></wc-hr>
+</div>
+<special-thing></special-thing>
 <div is="my-div" label="Statement">Hi!<br/>How are you doing?</div>
 <wc-hr></wc-hr>
 <has-switch></has-switch>
@@ -34,8 +37,8 @@
       <if-one style="background:#FFE;border:1px solid black;padding:5px;"></if-one>
       <some-face state="sad"></some-face>
     </div>
-    -- >
-    <div>Ranking: "<wc-rank rank="0" show-num="true" live></wc-rank>"</div>
+    -->
+    <div>Ranking: "<wc-rank show-num="true" live></wc-rank>"</div>
     <wc-hr></wc-hr>
     <local-time timestamp="Dec 25, 2023"></local-time><br/>
     <local-time timestamp="Mar 5, 1965"></local-time><br>
@@ -151,10 +154,10 @@
       -hide-text="H"
     ></login-dialog>
     <changepw-dialog
+      change-pw-href="/dogs"
       id="changepw dialog"
       js="changepw"></changepw-dialog>
   </div>
--->
 
   <script type="module">
     import './js/components/AlertBoxElement.js';
@@ -184,8 +187,8 @@
     const els = [...document.querySelectorAll('[js]')]
       .reduce((o, el) => (o[el.getAttribute('js')] = el, o), {});
 
-    async function openDialog() {
-      console.log(`openDialog called`);
+    async function openLoginDialog() {
+      console.log(`openLoginDialog called`);
       try {
         //const resp = await els.dialog.open();
         const resp = await els.login.open();
@@ -198,7 +201,7 @@
       }
     }
 
-    async function changePWDialog() {
+    async function openChangePWDialog() {
       try {
         const resp = await els.changepw.open();
       }
@@ -214,8 +217,8 @@
     }
 
     els.doAlert.addEventListener('click', doAlert);
-    els.dlgBtn.addEventListener('click', openDialog);
-    els.dlgBtn2.addEventListener('click', changePWDialog);
+    els.dlgBtn.addEventListener('click', openLoginDialog);
+    els.dlgBtn2.addEventListener('click', openChangePWDialog);
     els.login.addEventListener('signup', (event) => {
       console.log('signup called');
       //event.preventDefault();
@@ -229,15 +232,13 @@
         els.login.errorMessage = 'Invalid username or password';
         els.login.busy = false;
       }, 3000);
-      /*
-      const options = {};
-      const resp = fetch('/api/login', options);
-      console.log(resp);
-      if(resp.status === 401) {
-        els.login.errorMessage = 'Invalid username or password';
-        els.login.busy = false;
-      };
-      */
+      // const options = {};
+      // const resp = fetch('/api/login', options);
+      // console.log(resp);
+      // if(resp.status === 401) {
+      //   els.login.errorMessage = 'Invalid username or password';
+      //   els.login.busy = false;
+      // };
     })
     els.login.addEventListener('forgotpw', (event) => {
       console.log('forgotpw called');
@@ -247,16 +248,16 @@
       console.log('gettoken called');
       event.detail.token = '01A838F1E';
     })
-    els.changepw.addEventListener('changepw', (event) => {
-      console.log('changepw called');
-      event.preventDefault();
-      els.changepw.errorMessage = '';
-      els.changepw.busy = true;
-      setTimeout(() => {
-        els.changepw.errorMessage = 'Crazy things happened';
-        els.changepw.busy = false;
-      }, 3000);
-    })
+    // els.changepw.addEventListener('changepw', (event) => {
+    //   console.log('changepw called');
+    //   event.preventDefault();
+    //   els.changepw.errorMessage = '';
+    //   els.changepw.busy = true;
+    //   setTimeout(() => {
+    //     els.changepw.errorMessage = 'Crazy things happened';
+    //     els.changepw.busy = false;
+    //   }, 3000);
+    // })
 
     const rpinc = [1, .5];
     const rps = document.querySelectorAll('round-progress');
@@ -274,15 +275,15 @@
       setTimeout(updateTime, 100);
     }
 
-    //updateTime();
+    updateTime();
 
-    const FOR_VAR_RE = /^\s*(?<variable>#?\w[\w\d]+)?\s+as\s+(?<item>\w[\w\d]+)?\.(?<key>#?\w[\w\d]+)?\s*/;
-    let testStr = 'things as item.key';
-    testStr = '   things    as     dogs.cats'
-    testStr = '   #things    as  .'
-    const a = FOR_VAR_RE.exec(testStr);
-    console.log(a?.groups);
-    console.log(FOR_VAR_RE.test(testStr));
+    // const FOR_VAR_RE = /^\s*(?<variable>#?\w[\w\d]+)?\s+as\s+(?<item>\w[\w\d]+)?\.(?<key>#?\w[\w\d]+)?\s*/;
+    // let testStr = 'things as item.key';
+    // testStr = '   things    as     dogs.cats'
+    // testStr = '   #things    as  .'
+    // const a = FOR_VAR_RE.exec(testStr);
+    // console.log(a?.groups);
+    // console.log(FOR_VAR_RE.test(testStr));
   </script>
 </body>
 </html>

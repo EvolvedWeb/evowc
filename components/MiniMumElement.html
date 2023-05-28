@@ -1,5 +1,10 @@
-<component tag="mini-mum">
+<component tag="mini-mum" :dogs="date">
   <template>
-    <p>Hello world</p>
+    <p .click="#clickMe">Hello world</p>
   </template>
+  <script>
+    #clickMe(event, data) {
+      // Do something
+    }
+  </script>
 </component>

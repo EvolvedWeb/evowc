@@ -1,7 +1,40 @@
+/**
+ * Convert an attribute name to a property name. Mainly
+ * used by the `attributeChangedCallback` method.
+ *
+ * @param {string} attr - Snake case attribute name
+ * @returns string - Camel case property name
+ */
 export const propFromAttr = attr => attr.replace(/-[a-z]/g, (key) => key[1].toUpperCase());
 
+/**
+ * Check to see if the passesd in value is an object and not null
+ * @param {any} value - value to be checked
+ * @returns boolean - `true` is the value is an object and not null
+ */
+export const isObject = value => !!(value && typeof value === 'object');
+
+/**
+ * Convert an attribute value to a boolean value.
+ * If the attribute is defined with no value or if the value is
+ * either 'true' or '1' then this function returns `true` otherwise
+ * this function returns false.
+ *
+ * @param {string} val - Attribute value to be checked
+ * @returns boolean - boolean version of the attribute value
+ */
 export const boolFromVal = (val) => ['', 'true', '1'].includes(val) ? true : ['false', '0'].includes(val) ? false : Boolean(val);
 
+/**
+ * Set an attribute on the DOM element `el`. If the value passed in
+ * is `true` then the attribute will be set with no value.
+ * If the value passed in is `false`, `null`, or `undefined` then
+ * the atribute will be removed from `el`.
+ *
+ * @param {HTMLElement} el - The DOM element to be affected
+ * @param {string} attr - The name of the attribute
+ * @param {string|boolean} value - The value to set for the attribute
+ */
 export function setAttr(el, attr, value) {
   if(el instanceof Element) {
     if (value == null || value === false) {
@@ -20,21 +53,75 @@ export function setAttr(el, attr, value) {
   }
 }
 
-export function compObjs(newVal, oldVal) {
+/**
+ * Compare two objects deeply equal
+ *
+ * @param {object} obj1 - first object to compare
+ * @param {object} obj2 - second object to compare
+ * @returns boolean - `true` if the objects have the same content
+ */
+export function compObjs(obj1, obj2) {
+  if(!obj1 || !obj2) {
+    return false;
+  }
+  const newEs = Object.entries(obj1);
+  const oldlen = Object.keys(obj2).length;
+  return (newEs.length === oldlen) && newEs.every(([k,nv]) => {
+    const ov = obj2[k];
+    if (isObject(nv) && isObject(ov)) {
+      return compObjs(nv, ov);
+    }
 
+    return nv === ov;
+  });
 }
 
-export function compArrays(newVal, oldVal) {
-
+/**
+ * Compare if two arrays are deeply equal
+ * @param {Array} arr1 First array to compare
+ * @param {Array} arr2 Second array to compare
+ * @returns boolean - `true` if the arrays have the same content
+ */
+export function compArrays(arr1, arr2) {
+  return (Array.isArray(arr1) || Array.isArray(arr2)) &&
+    compObjs(arr1, arr2);
 }
 
-export function compDates(newVal, oldVal) {
-
+/**
+ * Compare if two dates are equal
+ * @param {Array} date1 First date to compare
+ * @param {Array} date1 Second date to compare
+ * @returns boolean - `true` if the dates have the same value
+ */
+export function compDates(date1, date2) {
+  return (date1?.valueOf && date2?.valueOf) &&
+    date1.valueOf() !== date2.valueOf();
 }
 
-export function cond(el, condition, commentEl) {
+export function cond(el, commentEl, value, compare ) {
   if (el && commentEl) {
-    if (condition) {
+    let isValid = false;
+    if (Array.isArray(compare)) {
+      const [ neg, min, max ] = compare;
+      if (max == null) {
+        isValid = (value >= min);
+      }
+      else if (min == null) {
+        isValid = (value <= max);
+      }
+      else {
+        isValid = (value >= min && value <= max);
+      }
+
+      if (neg) {
+        isValid = !isValid;
+      }
+    }
+    else {
+      isValid = (value === compare);
+    }
+
+    if (isValid) {
       commentEl.after(el);
     }
     else {
@@ -43,13 +130,27 @@ export function cond(el, condition, commentEl) {
   }
 }
 
-export function ael(element, evt, fn) {
-  element.addEventListener(evt, fn);
-  return () => element.removeEventListener(evt, fn);
+/**
+ * Addan event handler to `el`
+ * @param {HTMLElement} el The DOM element to monitor
+ * @param {string} evt - The event name to attach to `el`
+ * @param {*} fn - The event handler function
+ * @returns function - The function to remove this event handler
+ */
+export function ael(el, evt, fn) {
+  el.addEventListener(evt, fn);
+  return () => el.removeEventListener(evt, fn);
 }
 
-export function comment(key, srcEl) {
-  const c = document.createComment(key);
+/**
+ * Create a Comment and place it in the DOM just before `srcEl`
+ *
+ * @param {string} message - The message to place in the Comment
+ * @param {HTML} srcEl - The Comment will be inserted into the DOM just before this element
+ * @returns Comment - The HTML Comment element
+ */
+export function comment(message, srcEl) {
+  const c = document.createComment(`  ${message}  `);
   srcEl.before(c);
   return c;
 }
@@ -116,9 +217,9 @@ export const EvoElement = (baseClass = HTMLElement) => class extends baseClass {
   getEls(root) {
     const checkRoot = !!root;
     root ??= this.#rootDom;
-    const els = [...root.querySelectorAll('[js]')].reduce((o, el) => (o[el.getAttribute('js')] = el, o), {});
+    const els = [...root.querySelectorAll('[el]')].reduce((o, el) => (o[el.getAttribute('el')] = el, o), {});
     if(checkRoot) {
-      const key = root.getAttribute('js');
+      const key = root.getAttribute('el');
       if (key) {
         els[key] = root;
       }
@@ -137,10 +238,6 @@ export const EvoElement = (baseClass = HTMLElement) => class extends baseClass {
       const { comment, srcEl, item, index } = forInfo;
       const loopedEls = this.#loopedEls[loopItemKey] || [];
 
-      /**************************************************************************\
-        TODO: 2023-05-08 - Depending on the speed of how this routine works:
-        Figure out which elements need to be changed, created, moved or deleted
-      \**************************************************************************/
       // Create new elements
       const newEls = data.map((item, idx) => {
         // TODO: Check to see if element by this itemKey already exists in this.#loopedEls[loopItemKey]
@@ -259,5 +356,5 @@ export const EvoElement = (baseClass = HTMLElement) => class extends baseClass {
     2. Generate a new set of DOM for the looped item based on the array.
     3. Temporarily ignoire non-array varaible and the key.
     4. Non-array variables that are used in a $for will need a function to set all values in an array
-    5. Use key to reduce re - rendering
+    5. Use key to reduce re-rendering
 */

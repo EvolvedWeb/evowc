@@ -1,13 +1,13 @@
 <component tag="wc-rank"
   :+live="bool:false"
-  :rank="num(0,5):0"
+  :rank="num(0,5):5"
   :show-num="bool:false"
   :#style
   :#val
   >
   <template>
     <span class="container">
-      <span js="span" class="stars" .mouseleave="#mouseLeave" .mousemove="#mouseMove" .click="#click">☆☆☆☆☆<span :attr.style="#style">★★★★★</span></span>
+      <span el="span" class="stars" .mouseleave="#mouseLeave" .mousemove="#mouseMove" .click="#click">☆☆☆☆☆<span :attr.style="#style">★★★★★</span></span>
       <span $if="showNum" :text="#val"></span>
     </span>
   </template>
