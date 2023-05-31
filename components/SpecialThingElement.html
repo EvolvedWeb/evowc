@@ -12,13 +12,13 @@
   <template>
     <h1 .mouseover="#mouseOverHandler">Hi</h1>
     <p :text="message|#doSomethingPipe|^toUpper" el='dogEl'></p>
-    <div $for="values as item.key" :data-taco="item.title" :attr.key="item.key" class="showy">
+    <div $for="values as item.key" :data.taco="item.title" :attr.key="item.key" class="showy">
       <div>Name: <span :text="item.name"></span></div>
       <div>Age: <span :text="item.age"></span></div>
     </div>
     <input :value="#input" /><br/>
     <input :value="#input" .input="#handleEvent" />
-    <div el="fruitCake" class="thing" :attr.show-me="show" :data-number="num" :alt="message" :html="message"></div>
+    <div el="fruitCake" class="thing" :attr.show-me="show" :data.number="num" :alt="message" :html="message"></div>
     <number :attr.name="locale|^toUpper" :text="num"></number>
     <number :text="#dogFood|^toUpper"></number>
     <p>This was built on <span :text="#localeDate"></span></p>

@@ -1,21 +1,27 @@
 <component tag="changepw-dialog"
+  :busy="bool:false"
+  :change-pw-button-text="str:Change Password"
   :change-pw-href="str"
   :change-pw-method="str:post"
-  :busy="bool:false"
+  :description="str:To change your password enter your old<br>password and your new password."
   :error-message
-  :#username
+  :new-pw-aria-label="str:Enter your new password"
+  :new-pw-aria-label2="str:Enter your new password again"
+  :old-pw-aria-label="str:Enter your current password"
+  :title="str:Change Password"
   :#current-password
   :#new-password
   :#new-password2
+  :#password-type="str:var:PASSWORD"
+  :#show-text="str:var:STATE_SHOW"
   :#state
   :#token
-  :#password-type="str:password"
-  :#show-text="str:var:STATE_SHOW"
+  :#username
 >
   <template>
-    <wc-dialog el="dialog" title="Change Password" show-footer="false">
-      <section>
-        <form :action="changePwHref" :method="changePwMethod|#toLower" .submit="#changePw">
+    <wc-dialog el="dialog" :title="title" :description="description" show-footer="false">
+      <div class="section">
+        <form :action="changePwHref" :method="changePwMethod|^toLower" .submit="#changePw">
           <input type="hidden" name="token" :value="#token" />
           <div class="error-message" $if="errorMessage" :text="errorMessage" .click="#clearError"></div>
           <div>
@@ -23,31 +29,34 @@
               <label for="prev-password">Current Password:</label>
             </div>
             <input id="prevPassword" name="prevPassword" maxlength="32" :value="#currentPassword"
-              :type="#passwordType" required autofocus autocomplete="current-password" aria-label="Password" .input="#clearError" />
+              :aria.label="oldPwAriaLabel" :type="#passwordType" required autofocus
+              autocomplete="current-password" .input="#clearError" />
             <button class="show-pw" type="button" is="wc-button" small variant="link" .click="#toggleShowState"
-              :attr.aria-label="#showText" :data-input="prevPassword" :text="#showText"></button>
+              :aria.label="#showText" :text="#showText"></button>
           </div>
           <div>
             <div class="password-block">
-              <label for="password" :attr.state="#state">New Password:</label>
+              <label for="newPassword" :attr.state="#state">New Password:</label>
             </div>
             <input id="newPassword" name="newPassword" maxlength="32" :value="#newPassword"
-              :type="#passwordType" required autocomplete="new-password" aria-label="Password" .input="#clearError" />
+              :aria.label="newPwAriaLabel" :type="#passwordType" required
+              autocomplete="new-password" .input="#clearError" />
             <button class="show-pw" type="button" is="wc-button" small variant="link" .click="#toggleShowState"
-              :attr.aria-label="#showText" :data-input="newPassword" :text="#showText"></button>
+              :aria.label="#showText" :text="#showText"></button>
           </div>
           <div>
             <div class="password-block">
-              <label for="password">Repeat New Password:</label>
+              <label for="newPassword2">Repeat New Password:</label>
             </div>
-            <input id="newPassword2" name="newPassword2" maxlength="32" :value="#newPassword2" :type="#passwordType" required
-              autocomplete="new-password" aria-label="Password" .input="#clearError" />
+            <input id="newPassword2" name="newPassword2" maxlength="32" :value="#newPassword2"
+              :aria.label="newPwAriaLabel2" :type="#passwordType" required
+              autocomplete="new-password" .input="#clearError" />
             <button class="show-pw" type="button" is="wc-button" small variant="link" .click="#toggleShowState"
-              :attr.aria-label="#showText" :data-input="newPassword" :text="#showText"></button>
+              :aria.label="#showText" :text="#showText"></button>
           </div>
-          <button class="change-pw" is="wc-button" large aria-label="Change Password">Change Password</button>
+          <button class="change-pw" is="wc-button" large :aria.label="changePwButtonText" :text="changePwButtonText"></button>
         </form>
-      </section>
+      </div>
       <div class="spinner-holder" $if="busy">
         <wc-spinner></wc-spinner>
       </div>
@@ -82,9 +91,9 @@
       --dialog-header-justify: center;
       position: relative;
     }
-    section {
+    div.section {
       margin: 0;
-      padding: 8px;
+      padding: 0;
       width: 20em;
     }
     form {
@@ -150,7 +159,10 @@
   <script location="root">
     import { DIALOG_BUTTONS } from './WcDialogElement.js';
     import './WcSpinnerElement.js';
+    import { toLower } from '../evo-pipes.js';
 
+    const PASSWORD = 'password';
+    const TEXT = 'text';
     const STATE_HIDE = 'hide';
     const STATE_SHOW = 'show';
   </script>
@@ -173,19 +185,16 @@
       }, 1);
       return this.#els.dialog.open();
     }
-    #toLower(str) {
-      return str.toLowerCase();
-    }
     //******************************************
     // Events
     #toggleShowState(event) {
       if (this.#showText === STATE_HIDE) {
         this.#showText = STATE_SHOW;
-        this.#passwordType = 'password';
+        this.#passwordType = PASSWORD;
       }
       else {
         this.#showText = STATE_HIDE;
-        this.#passwordType = 'text';
+        this.#passwordType = TEXT;
       }
     }
     #clearError() {

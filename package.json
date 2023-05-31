@@ -12,8 +12,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "node ./bin/evowc.js \"components/*.html\"",
-    "build1": "node --stack_size=1200 --inspect-brk ./bin/evowc.js \"components/SpecialThingElement.html\"",
-    "build2": "node ./bin/evowc.js \"components/MiniMumElement.html\"",
+    "build1": "node --inspect-brk ./bin/evowc.js \"components/SpecialThingElement.html\"",
+    "build2": "node ./bin/evowc.js \"components/WcLoopElement.html\"",
+    "build3": "node ./bin/evowc.js \"components/ChangepwDialogElement.html\"",
     "start": "node app"
   },
   "repository": {

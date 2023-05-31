@@ -60,31 +60,27 @@ export function setAttr(el, attr, value) {
  * @param {object} obj2 - second object to compare
  * @returns boolean - `true` if the objects have the same content
  */
-export function compObjs(obj1, obj2) {
-  if(!obj1 || !obj2) {
-    return false;
+export function sameObjs(obj1, obj2) {
+  // If both objects are null then they are the same
+  if (obj1 == null && obj2 == null) {
+    return true;
   }
-  const newEs = Object.entries(obj1);
-  const oldlen = Object.keys(obj2).length;
-  return (newEs.length === oldlen) && newEs.every(([k,nv]) => {
+
+  // If either of these value are not objects the compare them
+  if(typeof obj1 !== 'object' || typeof obj2 !== 'object') {
+    return obj1 === obj2;
+  }
+
+  const entries = Object.entries(obj1);
+  const len2 = Object.keys(obj2).length;
+  return (entries.length === len2) && entries.every(([k,nv]) => {
     const ov = obj2[k];
     if (isObject(nv) && isObject(ov)) {
-      return compObjs(nv, ov);
+      return sameObjs(nv, ov);
     }
 
     return nv === ov;
   });
-}
-
-/**
- * Compare if two arrays are deeply equal
- * @param {Array} arr1 First array to compare
- * @param {Array} arr2 Second array to compare
- * @returns boolean - `true` if the arrays have the same content
- */
-export function compArrays(arr1, arr2) {
-  return (Array.isArray(arr1) || Array.isArray(arr2)) &&
-    compObjs(arr1, arr2);
 }
 
 /**
@@ -93,7 +89,7 @@ export function compArrays(arr1, arr2) {
  * @param {Array} date1 Second date to compare
  * @returns boolean - `true` if the dates have the same value
  */
-export function compDates(date1, date2) {
+export function sameDates(date1, date2) {
   return (date1?.valueOf && date2?.valueOf) &&
     date1.valueOf() !== date2.valueOf();
 }
@@ -131,15 +127,18 @@ export function cond(el, commentEl, value, compare ) {
 }
 
 /**
- * Addan event handler to `el`
- * @param {HTMLElement} el The DOM element to monitor
- * @param {string} evt - The event name to attach to `el`
- * @param {*} fn - The event handler function
- * @returns function - The function to remove this event handler
+ * Add an event listener to `element`
+ * @param {HTMLElement} element The DOM element to monitor
+ * @param {string} type - The event type to attach to `element`
+ * @param {*} listener - The event listener function
+ * @returns function - The function to remove this event listener
  */
-export function ael(el, evt, fn) {
-  el.addEventListener(evt, fn);
-  return () => el.removeEventListener(evt, fn);
+export function ael(element, type, listener) {
+  if (!element || !type || typeof listener !== 'function') {
+    throw new Error('Please provide proper arguments when calling ael(element, type, listener');
+  }
+  element.addEventListener(type, listener);
+  return () => element.removeEventListener(type, listener);
 }
 
 /**
@@ -197,9 +196,9 @@ export const EvoElement = (baseClass = HTMLElement) => class extends baseClass {
       // Prep for the $for elements
       this.#rootDom.querySelectorAll('[_loop]').forEach(el => {
         const key = el.getAttribute('_loop');
-        const [item, index] = el.getAttribute('_item').split('.');
+        const [item, index] = el.getAttribute('_key').split('.');
         el.removeAttribute('_loop');
-        el.removeAttribute('_item');
+        el.removeAttribute('_key');
         const commentEl = comment(key, el);
         const info = { key, comment: commentEl, srcEl: el, item, index };
         this.#forList[key] = info;

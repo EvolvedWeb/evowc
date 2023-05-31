@@ -3,11 +3,11 @@
     <div class="text-block" :attr.aa-bb-cc-dd="#thing" :aa-bb-cc-dd="#thing" :attr.dog="text" :attr.cat="text|#toUpper|#reverse">
       <div class="title" :html="title">stuff</div>
       <div class="text" :text="text"></div>
-      <input :value="dogs" :data-taco-bell="#thing" .input="#logIt" />
+      <input :value="dogs" :data.taco-bell="#thing" .input="#logIt" />
       <p :text="dogs"></p>
       <p :text="#thing"></p>
       <button .click="#inc">Inc</button>
-      <button .click="#dec" :aria-busy="busy">Dec</button>
+      <button .click="#dec" :aria.busy="busy">Dec</button>
     </div>
   </template>
   <style>
