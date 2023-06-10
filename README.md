@@ -494,3 +494,10 @@ After you clone the repo:
 
 </div>
 -->
+
+
+## Router Component
+
+Evo has a simple router component.
+We use the express.js syntax for routes (/users/:id) to map URLs to Web Component views.
+You are responsible for making sure that your server properly responds to all routes to load the same page.

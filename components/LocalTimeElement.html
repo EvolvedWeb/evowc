@@ -1,15 +1,18 @@
-<component tag="local-time" shadow="closed" :dog="array:[1,2,3,4]"
-  :timestamp="date" :locale="string"
+<component tag="local-time" shadow="closed"
+  :dog="array:[1,2,3,4]"
+  :timestamp="date"
+  :locale="string"
   :format="object:{weekday:'long',year:'numeric',month:'long',day:'numeric'}"
-  :#localetime :#classes>
+  :#localetime
+  :#classes>
   <template>
     <span :text="#localetime" :style="locale" :class="#classes"></span>
-    <button is="wc-button" small .click="#setLocale" data.locale="en">EN</button>
-    <button is="wc-button" small .click="#setLocale" data.locale="fr">FR</button>
-    <button is="wc-button" small .click="#setLocale" data.locale="ru">RU</button>
-    <button is="wc-button" small .click="#setLocale" data.locale="ja">JA</button>
+    <button is="wc-button" small .click="#setLocale" data-locale="en">EN</button>
+    <button is="wc-button" small .click="#setLocale" data-locale="fr">FR</button>
+    <button is="wc-button" small .click="#setLocale" data-locale="ru">RU</button>
+    <button is="wc-button" small .click="#setLocale" data-locale="ja">JA</button>
   </template>
-  <script location="root">
+  <script root>
     import "./WcButtonElement.js";
   </script>
   <style>
@@ -24,8 +27,8 @@
       }
     }
 
-    #setLocale(event) {
-      this.locale = event.target.dataset.locale;
+    #setLocale(event, data) {
+      this.locale = data.locale;
     }
 
     toString() {

@@ -1,0 +1,67 @@
+<component tag="wc-route"
+  :href
+  :#showing="bool:false"
+>
+  <template>
+    <slot $if="#showing"></slot>
+  </template>
+  <style>
+    :host {
+      display: block;
+      height: fit-content;
+      margin: 0;
+      padding: 0;
+      width: 100%;
+    }
+  </style>
+  <script root>
+    let evoStateIndex = 0;
+    /**
+     * @param {string} url - relative url to navigate to via pushState().
+     * @param {object} state - An object which is associated with the history entry passed to pushState() or replaceState().
+     * @param {boolean} replace - `true` call replaceState() instead of pushState().
+     */
+    export function navigate(url, state, replace = false) {
+      const newState = {...(state ?? {}), evoStateIndex};
+      evoStateIndex++;
+      if(replace) {
+         history.replaceState(newState, '', url)
+      }
+      else {
+        history.pushState(newState, '', url);
+      }
+      setTimeout(() => {
+        window.dispatchEvent(new CustomEvent('evoPushState'));
+      }, 0);
+    }
+  /*
+  function newHistoryFn (type) {
+    var orig = history[type];
+    return (...args) => {
+      var rv = orig.apply(this, args);
+      var e = new CustomeEvent(type);
+      e.arguments = args;
+      window.dispatchEvent(e);
+      return rv;
+    };
+  };
+  ['pushState', 'replaceState'].forEach(type => history[type] = newHistoryFn(type));
+  */
+  </script>
+  <script>
+    init() {
+      window.addEventListener("evoPushState", () => {
+        this.#showing = window.location.pathname === this.href;
+      });
+      window.addEventListener("popstate", () => {
+        this.#showing = window.location.pathname === this.href;
+      });
+    }
+
+    update(key, oldVal, newVal) {
+      if(key === 'href') {
+        this.#showing = window.location.pathname === this.href;
+      }
+    }
+  </script>
+</component>

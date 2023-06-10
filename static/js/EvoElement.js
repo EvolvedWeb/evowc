@@ -226,21 +226,35 @@ export const EvoElement = (baseClass = HTMLElement) => class extends baseClass {
     return els;
   }
   allEls(key) {
-    return [...this.#rootDom.querySelectorAll(`[js="${key}"]`)];
+    return [...this.#rootDom.querySelectorAll(`[el="${key}"]`)];
   }
-  forLoop(loopItemKey, data, itemKeyName, bindCb) {
-    const forInfo = this.#forList[loopItemKey];
-    if(!Array.isArray(data)) {
-      throw new TypeError(`The 'data' must be an array of all the data to render`);
+  loopItemEls(loopElementKey, idx) {
+    let els = {};
+    const loopedEls = this.#loopedEls[loopElementKey] || [];
+    const elItem = loopedEls && loopedEls[idx];
+    if (elItem) {
+      els = this.getEls(elItem.el);
     }
+
+    return els;
+  }
+  forLoop(loopElementKey, data, itemKeyName, bindCb) {
+    const forInfo = this.#forList[loopElementKey];
     if (forInfo) {
+      if (!Array.isArray(data)) {
+        throw new TypeError(`The 'data' must be an array of all the data to render`);
+      }
+
       const { comment, srcEl, item, index } = forInfo;
-      const loopedEls = this.#loopedEls[loopItemKey] || [];
+      const loopedEls = this.#loopedEls[loopElementKey] || [];
 
       // Create new elements
-      const newEls = data.map((item, idx) => {
-        // TODO: Check to see if element by this itemKey already exists in this.#loopedEls[loopItemKey]
+      const newEls = data.map((item, index) => {
+        // TODO: Check to see if element by this itemKey already exists in this.#loopedEls[loopElementKey]
         let el = null;
+        if (!item.hasOwnProperty(itemKeyName)) {
+          console.log(`item does not have a key property called "${itemKeyName}"`);
+        }
         const itemKey = item[itemKeyName];
         if(itemKey && loopedEls.length) {
           loopedEls.some((item, i) => {
@@ -256,7 +270,7 @@ export const EvoElement = (baseClass = HTMLElement) => class extends baseClass {
         const events = [];
 
         // Call the code to set all values and create all event handlers
-        bindCb(els, item, events);
+        bindCb(els, index, item, events);
 
         return { itemKey, el, events };
       }, {});
@@ -273,12 +287,12 @@ export const EvoElement = (baseClass = HTMLElement) => class extends baseClass {
         item = null;
       })
 
-      this.#loopedEls[loopItemKey] = newEls;
+      this.#loopedEls[loopElementKey] = newEls;
       // Insert all of the new elements
       comment.after(...(newEls.map(item => item.el)));
     }
     else {
-      console.error(`No $for information for the loopItemKey "${loopItemKey}"`);
+      console.error(`No $for information for the loopElementKey "${loopElementKey}"`);
     }
   }
   dispatch(name, {detail = null, bubbles = false, cancelable = true, composed = false } = {}) {

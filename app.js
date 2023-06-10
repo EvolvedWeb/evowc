@@ -1,4 +1,5 @@
 const PORT = 5555;
+const path = require('path');
 const evowc = require('./lib/old/evowc-old.js');
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -12,9 +13,25 @@ app.use(bodyParser.json());
 app.get('/', doRedir);
 app.post('/api/process', processComponent);
 app.post('/api/login', processLogin);
+app.get('/test/*', doTestPage);
 
 function doRedir(req, res, next) {
   res.redir('/index.html');
+}
+
+function doTestPage(req, res, next) {
+  const options = {
+    root: path.join(__dirname, 'static')
+  };
+
+  const fileName = 'test.html';
+  res.sendFile(fileName, options, function (err) {
+    if (err) {
+      next(err);
+    } else {
+      console.log('Sent:', fileName);
+    }
+  });
 }
 
 async function processComponent(req, res, next) {

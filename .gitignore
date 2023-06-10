@@ -11,3 +11,4 @@ node_modules/
 static/js/components/
 .env
 .env.test
+envinfo.txt
