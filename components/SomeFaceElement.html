@@ -5,8 +5,8 @@
       <span eye="right"></span>
       <span mouth></span>
     </span>
-    <button .click="#setState" data.locale="happy">Happy</button>
-    <button .click="#setState" data.locale="sad">Sad</button>
+    <button .click="#setState" data-locale="happy">Happy</button>
+    <button .click="#setState" data-locale="sad">Sad</button>
   </template>
   <style>
     span[face] {
@@ -58,8 +58,8 @@
 
   </style>
   <script>
-    #setState(event) {
-      this.state = event.target.dataset.locale;
+    #setState(event, data) {
+      this.state = data.locale;
     }
   </script>
 </component>

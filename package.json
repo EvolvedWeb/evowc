@@ -14,7 +14,7 @@
     "build": "node ./bin/evowc.js \"components/*.html\"",
     "build1": "node --inspect-brk ./bin/evowc.js \"components/SpecialThingElement.html\"",
     "build2": "node ./bin/evowc.js \"components/WcLoopElement.html\"",
-    "build3": "node ./bin/evowc.js \"components/ChangepwDialogElement.html\"",
+    "build3": "node ./bin/evowc.js \"components/WcAnchorElement.html\"",
     "start": "node app"
   },
   "repository": {

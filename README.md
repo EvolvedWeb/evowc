@@ -1,11 +1,14 @@
 # Evo-WC
 
-Evo-WC is a web component transpiler that takes template file based on HTML and XML and created raw JavaScript Web Component files. These components rely solely on the baseclass `EvoElement` that is included. No other runtime frameworks, libraries or code is needed.
+Evo-WC is a web component transpiler that takes a user created template file based on HTML and XML and creates raw JavaScript Web Component files. These components rely raw browser JavaScript and the baseclass `EvoElement` that is included. No other runtime frameworks, libraries or code is needed.
 
-You can create one or more components in the template file. But you can only have components or comments in the template file. Any other top level element will result in a compile error.
+You can only define one component per template file. You can only have a top level `<component></component>` object and comments in the template file. Any other top level element will result in a compile error.
 
-There are sample components in the `components` folder. They are XML based files. Take a look at a few and read the docs to see how to create your own.
+There are many sample components in the `components` folder. They are XML based files. We use the HTML file extension since mose editors properly support help in the `<script>` and `<style>` tags for an html file.Take a look at a few and read the docs to see how to create your own.
 
+## Web Components
+
+The Web Component specification was initroduced in 2011.
 ## Parts of a component file
 
 The component file is based on XML. Your component is defined with a `<component>` element. You must include the `tag="component-name"` attribute in the `<component>` element.
@@ -15,8 +18,7 @@ The valid elements inside the `<component>` element are:
 * `<template>` - The HTML for your component.
 * `<style>` - The CSS for this component.
 * `<script>` - Custom JavaScript for this component.
-* `<script location="root">` - List needed imports at the top of the generated JavaScript file.
-* ~~`<import>` - List needed imports at the top of the generated JavaScript file.~~ - _No longer valid starting in version 0.5.0_
+* `<script root>` - List needed imports at the top of the generated JavaScript file.
 
 
 The minimal component is made up by using both the `<component>` and `<template>` tags like this:
@@ -349,6 +351,10 @@ You can use `$if="variable"` or `$if="!variable"` to conditionaly hide and show 
 </component>
 ```
 
+### Conditional Todo
+
+> *2023-07-05 - Conditionals do not currently work with object properties. So, `$if="#person.name"` fails.*
+
 ## Base class File `EvoElement.js`
 
 There are three things exported from the file `EvoElement.js`.
@@ -501,3 +507,8 @@ After you clone the repo:
 Evo has a simple router component.
 We use the express.js syntax for routes (/users/:id) to map URLs to Web Component views.
 You are responsible for making sure that your server properly responds to all routes to load the same page.
+
+
+* 2-way binding with async validation
+* route to non existant file or element that is not in the file??
+  * Do I just allow for `element` or `import` attribute?

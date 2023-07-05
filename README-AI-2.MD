@@ -3,7 +3,7 @@
 #### User
 Act as a Senior JavaScript Architect and a marketing master. I am going to give you the contents of my README.MD (MARKDOWN) file for a new project (Evo-WC) that I am working on. I need you to learn what this product is and then I will ask you questions about the tech.
 
-EVO is NOT a framework. It is a compiler/transpiler. It converts the XML files into a raw JavaScript file that defines one Web Component. Each Web Component is a class that extends a common base class. This base class is designed to keep code in the individual Web Component files simple be incorporating common code so it is not repeated. The JavaScript files are then imported into the browser and the Web Component defined in that file is useable.
+EVO is NOT a framework. It is a compiler/transpiler. It converts an XML template file into a raw JavaScript file that defines one Web Component. Each Web Component is a class that extends a common base class. This base class is designed to keep code in the individual Web Component files simple be incorporating common code so it is not repeated. The JavaScript files are then imported into the browser and the Web Component defined in that file is useable.
 
 Do not assume that this is like any other library or frameworks like React or Angular. Evo is not a framework. Please ask me some questions about any assumptions you may want to make. I need you to have a very clear understanding of what EVO is and what it does.
 
@@ -1846,11 +1846,6 @@ Understanding Web Components
 * Explanation of Custom Elements, Shadow DOM, Templates, and HTML Imports
 * How Web Components enhance reusability and modularity
 
-Integrating Evo Components into React, Angular, and Vue
-* Overview of integration approaches with popular frameworks
-* Step-by-step instructions for integrating Evo components into each framework
-* Best practices and tips for seamless integration
-
 Exploring Evo's Features and Capabilities
 * Component templates and their structure
 * Property Directive Attributes (PDAs) and dynamic content rendering
@@ -1888,6 +1883,11 @@ Best Practices and Tips
 * Testing strategies for Evo components
 * Deployment and distribution considerations
 * Debugging and troubleshooting tips
+
+Integrating Evo Components into React, Angular, and Vue
+* Overview of integration approaches with popular frameworks
+* Step-by-step instructions for integrating Evo components into each framework
+* Best practices and tips for seamless integration
 
 Case Studies and Real-World Examples
 * Showcasing practical examples and use cases of Evo in action

@@ -1,0 +1,49 @@
+<component tag="wc-a" :href :+selected="bool:false">
+  <template>
+    <a :href="href" .click="#navigate" .keydown="#keyHandler"><slot></slot></a>
+  </template>
+  <style>
+    :host {
+      --wc-a-padding: 0;
+      --wc-a-margin: 0;
+      --wc-text-decoration: underline;
+    }
+    a {
+      display: inline-block;
+      margin: var(--wc-a-margin);
+      padding: var(--wc-a-padding);
+      text-decoration: var(--wc-text-decoration);
+    }
+  </style>
+  <script root>
+    import { router } from '../router.js';
+  </script>
+  <script>
+    init() {
+      router.onUpdate(() => this.#check());
+    }
+
+    #check() {
+      this.selected = window.location.pathname === this.href;
+    }
+
+    update(key, oldVal, newVal) {
+      if(key === 'href') {
+        this.#check();
+      }
+    }
+
+    #navigate(evt) {
+      if (this.href) {
+        evt.preventDefault();
+        router.navigate(this.href);
+      }
+    }
+
+    #keyHandler(evt) {
+      if (evt.key === 'Enter') {
+        this.#navigate(evt);
+      }
+    }
+  </script>
+</component>

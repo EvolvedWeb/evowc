@@ -1,28 +1,32 @@
-<component tag="has-switch" :+dog-food="number:0" :+cat-food="number:0">
+<component tag="has-switch"
+  :#tab="num:0">
   <template>
-    <button is="wc-button" .click="#setDogFood" data.val="0">Zero</button>
-    <button is="wc-button" .click="#setDogFood" data.val="1">One</button>
-    <button is="wc-button" .click="#setDogFood" data.val="2">Two</button>
+    <wc-button-group>
+      <button is="wc-button" .click="#setNumber" data-val="0">Zero</button>
+      <button is="wc-button" .click="#setNumber" data-val="1">One</button>
+      <button is="wc-button" .click="#setNumber" data-val="2">Two</button>
+    </wc-button-group>
     <hr/>
-    <p $switch="dogFood:0">Hello world - This is ZERO</p>
-    <div $switch="dogFood:1">
+    <p $switch="#tab:0">Hello world - This is ZERO</p>
+    <div $switch="#tab:1">
       <h1>This is number 1</h1>
       <div>
         <wc-calendar></wc-calendar>
       </div>
     </div>
-    <div $switch="dogFood:2">
+    <div $switch="#tab:2">
       <h2>Hello world 2</h2>
       <p>This is a second element inside a switch.</p>
     </div>
   </template>
   <script root>
+    import "./WcButtonGroupElement.js";
     import "./WcButtonElement.js";
+    import "./WcCalendarElement.js";
   </script>
   <script>
-    #setDogFood(event) {
-      this.dogFood = event.target.dataset.val;
-      this.catFood++;
+    #setNumber(event, data) {
+      this.#tab = data.val;
     }
   </script>
 </component>

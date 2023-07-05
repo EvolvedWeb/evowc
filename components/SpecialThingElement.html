@@ -1,11 +1,11 @@
 <component tag="special-thing"
   :+show="bool:true"
-  :today="date:var:__buildDate"
-  :locale="string:en"
+  :today="date:var:this._buildDate"
+  :locale
   :num="int(0,10):0"
   :values="arr"
   :test-it="str:hi"
-  :message="string:This 'is' a test:"
+  :message="str:This 'is' a test:"
   :#dog-food="str:Click Me!"
   :#input
   :#localeDate="str">
@@ -17,7 +17,7 @@
       <div>Age: <span :text="item.age"></span></div>
     </div>
     <input :value="#input" /><br/>
-    <input :value="#input" .input="#handleEvent" />
+    <input :value="#input" .input="#inputHandler" />
     <div el="fruitCake" class="thing" :attr.show-me="show" :data.number="num" :alt="message" :html="message"></div>
     <number :attr.name="locale|^toUpper" :text="num"></number>
     <number :text="#dogFood|^toUpper"></number>
@@ -30,15 +30,13 @@
       <span $switch="num:6,8">Below Nine</span>
       <span $switch="!num:0,8">Above Nine</span>
     </div>
-    <button .click="#newNum" :text="#dogFood"></button>
+    <button .click="#clickHander" :text="#dogFood"></button>
   </template>
   <style>
     .thing > dog {
       background-color: aliceblue;
       padding: 5px 0;
     }
-  </style>
-  <style>
     .cat {
       background-color: aliceblue;
       padding: 5px 0;
@@ -46,23 +44,12 @@
   </style>
   <script root>
     import { toUpper } from '../evo-pipes.js';
-    const DOG = 10;
-  </script>
-  <script root>
-    const CAT = 11;
-    function thing(a) {
-      if(a) {
-        return 100;
-      }
-
-      return 0;
-    }
   </script>
   <script>
     update() {
       const locale = this.locale || document.documentElement.lang || navigator.language;
       const format = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-      const formatter = new Intl.DateTimeFormat(this.locale, format);
+      const formatter = new Intl.DateTimeFormat(locale, format);
       this.#localeDate = formatter.format(this.timestamp);
     }
 
@@ -70,16 +57,16 @@
       // Do something
     }
 
-    #handleEvent(event, data) {
+    #inputHandler(event, data) {
 
     }
 
-    #newNum() {
+    /**
+     * @param {MouseEvent} event - MouseEvent
+     * @param {object} data - event.target.datset
+     */
+    #clickHander(event, data) {
       this.num = Math.abs(Math.random() * 12);
-    }
-
-    #relative(str) {
-      return str.split('').reverse().join('');
     }
 
     // Do this too
