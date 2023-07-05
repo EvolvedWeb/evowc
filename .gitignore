@@ -12,3 +12,4 @@ static/js/components/
 .env
 .env.test
 envinfo.txt
+pathToRegex-old.js
