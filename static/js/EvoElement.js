@@ -145,8 +145,8 @@ export function ael(element, type, listener) {
  * Create a Comment and place it in the DOM just before `srcEl`
  *
  * @param {string} message - The message to place in the Comment
- * @param {HTML} srcEl - The Comment will be inserted into the DOM just before this element
- * @returns Comment - The HTML Comment element
+ * @param {HTMLElement} srcEl - The Comment will be inserted into the DOM just before this element
+ * @returns {Comment} - The HTML Comment element
  */
 export function comment(message, srcEl) {
   const c = document.createComment(`  ${message}  `);
@@ -163,7 +163,7 @@ export const EvoElement = (baseClass = HTMLElement) => class extends baseClass {
   #forList = {};
   #loopedEls = {};
 
-  createDom({ template='', styles='', shadowMode='open', componentName }) {
+  createDom({ template='', styles='', shadowMode='open', componentName, commentEls = [] }) {
     if (shadowMode === 'none') {
       this.#usingShadow = false;
       this.#rootDom = document.createDocumentFragment();
@@ -189,7 +189,7 @@ export const EvoElement = (baseClass = HTMLElement) => class extends baseClass {
       // TODO: 2023-04-23 MGC - WARNING: Putting everything into the DOM may have adverse effects
       document.body.appendChild(tempEl)
       tempEl.innerHTML = template;
-      [...tempEl.children].forEach(el => this.#rootDom.appendChild(el));
+      [...tempEl.childNodes].forEach(el => this.#rootDom.appendChild(el));
       tempEl.remove();
       tempEl = null;
 
@@ -204,15 +204,20 @@ export const EvoElement = (baseClass = HTMLElement) => class extends baseClass {
         this.#forList[key] = info;
         el.remove();
       });
-
-      //console.log(this.#forList);
     }
 
-    return this.getEls();
+    const els = this.getEls();
+
+    commentEls.forEach(name => {
+      els[`${name}_c`] = comment(name, els[name]);
+    });
+
+    return els;
   }
 
-  //**********************************************************************************
-  // Get a handle to all of the dynamic elements
+  /**
+   * Get a handle to all of the dynamic elements
+   */
   getEls(root) {
     const checkRoot = !!root;
     root ??= this.#rootDom;
@@ -225,9 +230,11 @@ export const EvoElement = (baseClass = HTMLElement) => class extends baseClass {
     }
     return els;
   }
+
   allEls(key) {
     return [...this.#rootDom.querySelectorAll(`[el="${key}"]`)];
   }
+
   loopItemEls(loopElementKey, idx) {
     let els = {};
     const loopedEls = this.#loopedEls[loopElementKey] || [];
@@ -238,6 +245,7 @@ export const EvoElement = (baseClass = HTMLElement) => class extends baseClass {
 
     return els;
   }
+
   forLoop(loopElementKey, data, itemKeyName, bindCb) {
     const forInfo = this.#forList[loopElementKey];
     if (forInfo) {
@@ -295,6 +303,7 @@ export const EvoElement = (baseClass = HTMLElement) => class extends baseClass {
       console.error(`No $for information for the loopElementKey "${loopElementKey}"`);
     }
   }
+
   dispatch(name, {detail = null, bubbles = false, cancelable = true, composed = false } = {}) {
     if (typeof name !== 'string' || name.length === 0) {
       throw new TypeError('name must be defined');
@@ -304,6 +313,7 @@ export const EvoElement = (baseClass = HTMLElement) => class extends baseClass {
     this.dispatchEvent(event);
     return event;
   }
+
   connectedCallback() {
     if (!this.#domAttached) {
       this.appendChild(this.#rootDom);
@@ -314,12 +324,15 @@ export const EvoElement = (baseClass = HTMLElement) => class extends baseClass {
     this.update && this.update();
     this.connected && this.connected();
   }
+
   disconnectedCallback() {
     this.disconnected && this.disconnected();
   }
+
   adoptedCallback() {
     this.adopted && this.adopted();
   }
+
   attributeChangedCallback(attr, oldVal, newVal) {
     this.attrChanged && this.attrChanged(attr, oldVal, newVal);
     if (oldVal !== newVal) {
@@ -327,47 +340,50 @@ export const EvoElement = (baseClass = HTMLElement) => class extends baseClass {
       this[prop] = newVal;
     }
   }
+
+  /**
+   * Figure out where to place the CSS based on if this component is using shadow DOM or not.
+   * If this component is not using shadow DOM then we need to place it in the shadow DOM of
+   * the component that is containing this one. If this component is not is any shadow DOM then
+   * then CSS is placed into the <head></head>
+   */
   #insertStyles() {
     if (this.#styles) {
       // Determine the correct place to add our styles
       // The location will be different based on if we are or are not in Shadow DOM
       const styleEl = document.createElement('style');
-      // Add out component name into the component attribute
+
+      // Add this component name into the component attribute
       styleEl.setAttribute('component', this.#componentName);
       styleEl.textContent = this.#styles;
+
       let doc;
       if (this.#usingShadow) {
+        // If we are using shadow DOM then the css belongs in this shadow DOM.
         doc = this.#rootDom;
       }
       else {
         let el = this;
         if (el.getRootNode) {
+          // Find the shadow DOM wherein this component lives.
           doc = el.getRootNode();
           if (doc === document) {
+            // If the root node is the document then we place the CSS in `<head>`
             doc = document.head;
           }
         }
         else {
-          doc = document.head; // Shadow DOM isn't supported so place it in `<head>`
+          doc = document.head; // Shadow DOM isn't supported so place the CSS in `<head>`
         }
       }
 
       // If the CSS for the component is not in the correct place then add it.
       // See if there is a style tag with our component name in the component attribute
+      // We use the component attribute as a way to track our CSS files.
       if (!doc.querySelector(`style[component="${this.#componentName}"]`)) {
-        // Add this style tag into the dom
+        // Add this style tag into the DOM
         doc.appendChild(styleEl);
       }
     }
   }
 }
-/*
-  Get a handle to the looped element and remove it from the DOM
-
-  As the array changes:
-    1. Remove all previously generated DOM for this looped item.
-    2. Generate a new set of DOM for the looped item based on the array.
-    3. Temporarily ignoire non-array varaible and the key.
-    4. Non-array variables that are used in a $for will need a function to set all values in an array
-    5. Use key to reduce re-rendering
-*/

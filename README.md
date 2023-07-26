@@ -1,110 +1,138 @@
 # Evo-WC
 
-Evo-WC is a web component transpiler that takes a user created template file based on HTML and XML and creates raw JavaScript Web Component files. These components rely raw browser JavaScript and the baseclass `EvoElement` that is included. No other runtime frameworks, libraries or code is needed.
+Evo-WC, also known as Evo, is a web component transpiler designed to simplify the creation of native Web Components with minimal code. It compiles a user-created template file based on HTML/XML into a raw JavaScript Web Component file, relying solely on raw browser JavaScript and the base class `EvoElement`, without the need for additional runtime frameworks or libraries.
 
-You can only define one component per template file. You can only have a top level `<component></component>` object and comments in the template file. Any other top level element will result in a compile error.
+<div style="background:#311;border:3px dashed #900;margin:20px;padding:10px;color:#FFF">
 
-There are many sample components in the `components` folder. They are XML based files. We use the HTML file extension since mose editors properly support help in the `<script>` and `<style>` tags for an html file.Take a look at a few and read the docs to see how to create your own.
+## BETA Testing
 
-## Web Components
+Welcome to the beta version of our repository! We appreciate your participation and feedback in helping us improve Evo-WC. Below are some guidelines and rules to ensure a smooth experience:
 
-The Web Component specification was initroduced in 2011.
-## Parts of a component file
+1. **Installation:** Begin by installing the repository using `npm install`.
+1. **Transpiling Components:** To transpile the components, run `npm run build` in one terminal.
+1. **Launching Web Server:** Use `npm start` in another terminal to start the simple web server.
+1. **Viewing the Webpage:** Access the webpage by browsing to `http://localhost:5555/test.html`.
+1. **Customizing Components:** You can modify the components displayed in the browser by editing the `static/test.html` file.
+1. **Bug Reporting:** For bug reports, please utilize the issues section in the repository.
+1. **Document Suggestions:** Any suggestions for documentation improvements should also be added to the issues section of the repo.
+1. **Component Testing:** We encourage you to create several components and thoroughly test Evo for any errors in the transpiler.
+1. **Explore and Push Boundaries:** Feel free to experiment and push the boundaries with your components. Test Evo's capabilities in various scenarios.
+1. **Looping Limitation:** Currently, looping through tags is not supported for auto-generation of tables, list items, etc. We are working on adding this functionality in the future.
+1. **Contributions:** If you've created example components or bug fixes, please submit a Pull Request to share your work with the community.
+1. **Branch Management:** Remember not to check into the master branch. We prefer that you work in separate branches to keep the master branch clean.
 
-The component file is based on XML. Your component is defined with a `<component>` element. You must include the `tag="component-name"` attribute in the `<component>` element.
+Your valuable contributions and insights will play a crucial role in the development of Evo-WC. Thank you for being part of our beta testing program! If you have any questions or need assistance, feel free to reach out to us. Happy coding!
 
-The valid elements inside the `<component>` element are:
+</div>
 
-* `<template>` - The HTML for your component.
-* `<style>` - The CSS for this component.
-* `<script>` - Custom JavaScript for this component.
-* `<script root>` - List needed imports at the top of the generated JavaScript file.
+## Introduction to Evo
 
+Traditional Web Components often involve writing a substantial amount of boilerplate code, which can be cumbersome for developers. However, with Evo, you only need to write the necessary HTML, CSS and JavaScript code within a template file. In the HTML you can easily bind variables to attributes, properties, events, and more.
 
-The minimal component is made up by using both the `<component>` and `<template>` tags like this:
+Unlike most frameworks that use interpolation syntax like `<h3>Current customer: {{currentCustomer}}</h3>`, Evo opts for a different approach. You you can add a `<span>` element within the `<h3>` to achieve a similar binding effect. `<h3>Current customer: <span :text="currentCustomer"></span></h3>`. Or, You can combine the entire string into a private CPA, say `#welcome`, and then set the `textContent` or `innerHTML` of an element like `<h3 :text="#welcome"></h3>` and `<h3 :html="#welcome"></h3>`, respectively.
 
-``` xml
-<component tag="my-tag">
-  <template>Hi</template>
-</component>
-```
+Example using a `<span>`:
 
-## `<component>` Element
-
-Each component is created by using the `<component></component>` element. Each component must have a `tag` attribute that defines the element tag to be used in your HTML to access this component.
-
-Each component must also include a `<template></template>` that represents the HTML template for your component
-
-#### Example:
-
-Template file:
-``` xml
-<component tag="special-thing">
+```html
+<component tag="my-example" :customer>
   <template>
-    <p>Hello world.</p>
+    <h3>Current customer: <span :text="customer"></span></h3>
   </template>
 </component>
 ```
 
-Your HTML:
-``` html
-<html>
-<body>
-  <h1>Example file</h1>
-  <special-thing></special-thing>
-  <script type="module">
-    import { SpecialThingElement } from './js/components/SpecialThingElement.js';
-  </i>
-</body>
-</html>
-```
+Example using a private CPA:
 
-### Class Property Attributes (CPAs)
-
-Most components will need to provide a way for the parent code to interact with the component. This is done by adding attributes into the `<component>` element that starts with a colon (__`:`__). These attributes will become properties on the component object as well as attributes that are monitored by the component's `observedAttributes` callback.
-
-#### Example:
-
-``` xml
-<component tag="special-thing" :message>
+```html
+<component tag="my-example" :customer :#welcome>
   <template>
-    <p :text="message"></p>
+    <h3 :text="#welcome"></h3>
   </template>
+  <script>
+    update(property) {
+      if (property === 'customer') {
+        this.#welcome = `Current customer: ${this.customer}`;
+      }
+    }
+  </script>
 </component>
 ```
 
-The attribute `:message` in the `<component>` element will create a public property called `message` in the component class and the component will observe changes made to the `message` attribute. If you change the `message` attribute the code will also change the component property.
+As you can see from the two example, using a `<span>` takes less code from the developer and happens automatically. Using a private CPA requires using the `update()` member function to set the private CPA each time the `customer` CPA changes.
 
-When you create a CPA you can also define the data type of the generated property as well as an optional default value.
+### User interactions and Events
 
-The variable type names that can be used are `'array'`, `'bool'`, `'date'`, `'int'`, `'number'`, `'object'`, `'string'` with the default type being `'string'`.
+Evo efficiently manages user interactions by utilizing standard HTML events and JavaScript custom events. To implement event handling, a developer simply adds an event handler within the `<script>` section and pairs it with the corresponding event attribute in an HTML element.
 
-We also support shortened type names of `'arr'` for `'array'`, `'bool'` for `'boolean'`, `'num'` for `'number'`, `'obj'` for `'object'`, and `'str'` for `'string'`.
-
-#### Example
-
-``` xml
-<component tag="special-thing" :age="int:10" :name="str" :enable="bool:false">
+```html
+<component tag="my-example">
   <template>
-    <p>Hello <span :text="name"></span>.</p>
-    <p>You are <span :text="age"></span> years old.</p>
+    <button .click="#showMessage">Click Me</button>
   </template>
+  <script>
+    #showMessage(event, data) {
+      alert('The button was clicked');
+    }
+  </script>
 </component>
 ```
 
-In the example above the property `age` will be a number and will have a default value of `10` when the component is constructed. Any value passed into `component.age` will be converted into a number. So `component.age = '33'` will store a numeric value of `33` and not a string of `"33"`.
+In this example, we have a custom component named "my-example" that includes a `<button>` element with a .click event attribute. This attribute is bound to the #showMessage event handler defined in the `<script>` section.
 
-You can use URI encoding in your default values. If you want to add a double quote in the default value it needs to be written as a URI encoded value of `%22`. So, instead of writing the CPA like this: `:animals="arr:[1,2,"%22"dogs"]"` which is invalid you would write it like this: `:animals="arr:[%22cats%22,%22dogs%22]"`.
+When the user clicks on the "Click Me" button, the event is triggered, and Evo calls the associated `#showMessage` event handler. In this example, an alert with the message "The button was clicked" will show.
 
-#### Example
+By using this straightforward approach, Evo simplifies event management and enables developers to easily handle user interactions in their web components.
 
-``` xml
-<component tag="special-list" :animals="arr:[%22cats%22,%22dogs%22]">
-  <template></template>
-</component>
-```
+Evo's primary goals are to leverage HTML, CSS, and JavaScript standards, simplify developer workflows, enhance performance, and reduce memory consumption. It adheres to native HTML and JavaScript rules and patterns, avoiding unnecessary complexities present in many existing frameworks. Unlike other frameworks that may force extensive amounts of code to interact with the framework itself, Evo encourages developers to write only what is necessary for their components. With Evo you only write what you need.
+
+To help developers get started, Evo provides a variety of sample components in the components folder. These files use the HTML file extension to ensure proper support in most editors, with helpful syntax highlighting in `<script>` and `<style>` tags. By exploring these examples and referring to the documentation, developers can easily create their own custom components.
+
+## The Component Template File
+
+The component template file is an XML file that defines the structure and behavior of your web component. For optimal results in your editor, such as VS Code, it's recommended to use the .html file extension for your component file.
+
+To create a web component, you begin by defining it with a `<component>` element. This element serves as the starting point for your component's structure and behavior. Within the `<component>` element, you must include the `tag="component-name"` attribute, which provides a unique name for your component. This name will be used to represent your component when you add it to your HTML using the custom element syntax: `<component-name></component-name>`.
+
+Inside the `<component>` element, you can use the following valid elements:
+
+* `<template>`: This element holds the HTML markup for your component. It defines the visual appearance and structure of the component.
+
+* `<style>`: This element contains the CSS rules that apply only to this specific component. This allows for encapsulated and scoped styling using Shadow DOM.
+
+* `<script>`: This element houses custom JavaScript code specific to the component. Here, you can define event handlers, manipulate data, and add other necessary logic for the component's functionality. This code will be incorporated into the generated class, so it should be written as if it were already part of a class, including class properties and methods.
+
+* `<script root>`: This element is used to list necessary imports at the top of the generated JavaScript file. This helps manage dependencies and ensures the required modules are available for the component. You also include anything that is not part of the compiled class in this element.
 
 ---
+### `<component>` Element
+
+[The `<component>` element](./docs/ComponentElemenet.md) is a fundamental building block in Evo for defining custom web components. It serves as the container for all component-related definitions, including the component's template, styles, and custom JavaScript code.
+
+---
+### `<template>` Element
+
+The Evo [`<template>` element](./docs/TemplateElement.md) serves as a concise and readable way to define the structure and behavior of your custom web components. It enables developers to create reusable components with data binding, conditional rendering, and event handling directly within the template.
+
+---
+### `<style>` Element
+
+The [`<style>` element](./docs/StyleElement.md) in Evo is used to define the component's internal CSS, supporting scoped styles within the component's Shadow DOM or globally scoped when not using the shadow DOM.
+
+---
+### `<script>` Element
+
+The [`<script>` element](./docs/ScriptElement.md) in Evo serves as the container for writing JavaScript code that defines the component's behavior and logic. It allows developers to create class methods and define lifecycle functions, enabling seamless interaction with the component's properties, attributes, and events.
+
+## `<script root>` Element
+
+The [`<script root>` element](./docs/ScriptRootElement.md) in an Evo component file serves as a container for any imports or code that should be included at the top of the generated JavaScript file.
+
+
+## Properties and Attributes
+
+## Events
+
+### Click event handler example
 
 Here is an example component that has a CPA called `message`. WHenever the `message` attribute on this component is set or when the `message` property is set then the text of the `<h1>` tag will be set to that value.
 
@@ -112,7 +140,7 @@ Here is an example component that has a CPA called `message`. WHenever the `mess
 
 Component definition:
 
-```xml
+```html
 <component tag="my-message" :message>
   <template>
     <h1 :text="message"></h1>
@@ -139,376 +167,33 @@ HTML that uses the component:
 
 Both before and after the user clicks on the button the message attribute for the `<my-message>` component will be `"Initial Message"`. But, the value for `target.message` will be `"Initial Message"` before the user clicks the button and `"Second Message"` after they click on the button.
 
-> All public component properties are defined in the component class using private class fields. These private fields are exposed outside of the class by using public `getter` and `setter` methods.
 
-In the above example there is a private class field called `#message` and both a getter and a setter called `message`. When the setter is called is when the magic of Evo-WC happens. The setters know everything in the UI that needs to be updated. And, when you call the setter it does update only the things that use this variable.
+## Conditionals
+## Router Component (if applicable)
+## Exported Class and Functions from EvoElement.js File
+## Lifecycle methods
 
-#### Private properties
-
-You can create private properties that are not accessable outside the component and are not settable by changing an attribute. These propertied are defined with a `#` like this `:#propName` These properties can not be set outside of the generated class. The component code can call the private getter and setter for these properties like this `const a = this.#propName;` or `this.#propName = 'something';`
-
-#### Updating component attributes
-
-Sometimes you may want an attribute on the component to change when a property changes. This is a common need for CSS. If you want the property to also set the attribute on the component then your CPA needs to to include a `+` like this `:+show`. In this case, when you set the `show` property it will also set the attribute `show` on the component.
-
-#### dataset / data attributes
-
-We support setting the `data` attributes through the `dataset` property. If you create an attribute like this `:data-dog-food="varName"` then the property `element.dataset.dogFood` will be set every time the setter for `varName` is called.
-
-We recommend using data attributes for passing needed data to an event handler.
-
-##### example using data attributes to pass params
-
-``` xml
-<component tag="my-el" :#locale>
-  <template>
-    <p>Current locale is <span :text="#locale"></span></p>
-    <button data-locale="en" .click="#handleLocale">EN</button>
-    <button data-locale="ja" .click="#handleLocale">JS</button>
-    <button data-locale="ru" .click="#handleLocale">RU</button>
-  </tamplate>
-  <script>
-    #handleLocale(event, data) {
-      this.#locale = data.locale;
-    }
-  </script>
-<component>
-```
-
-### `<style>` element
-
-Place all of your CSS for the component into this `<style>` element.
-
-> Possible future plans to allow importing external CSS files.
-
-
-### `<script location="root">` element
-Place any imports or code that is needed for this class but not to be part of the class. All code placed into this element will be included at the top of the generated JS file just after the line that includes the default imports. _See `<script>` element, below, for class member functions.
-
-```html
-<script location="root">
-  import { DIALOG_BUTTONS } from './WcDialogElement.js';
-  const sleep = (time) => new Promise((resolve) => setTimeout(() => {resolve()}, time));
-  window.doSomething = (message) => {
-    // Place your code here
-  }
-</script>
-```
-
-### `<script>` element
-
-Place all of the JavaScript methods for your component into this `<script>` element. All of the code you place in here is inserted into the component class as class methods. _See `<script location="root">` element, above, for code that needs to be placed at the top of the file._
-
-<div style="background:#700;color:#ddd;margin:0 20px 8px;padding:4px 8px;"><b>Important:</b> Do not use fat arrow functions for your class methods.</div>
-
-#### Example:
-
-```html
-<script>
-  #click(event, data) {
-    // Handle your click event here
-  }
-</script>
-```
-
-#### Lifecycle Methods
-
-You can provide, in your script, lifecycle functions that will be called at specific times in the lifecycle of the component.
+You can enhance the behavior of your component by providing lifecycle functions in your script, which will be called at specific stages during the component's lifecycle.
 
 | Method | Description |
 | --- | --- |
-| `init()` | Called at the end of the constructor. Follow all of the [requirements for custom element constructors and reactions](https://html.spec.whatwg.org/multipage/custom-elements.html#custom-element-conformance). |
-| `update(member, oldVal, newVal)` | Called every time any property is updated and when the component is connected to the DOM. You can adjust any private properties in this function. If this componenet was previously disconnected from the DOM then this also is called when the component is reconnected. The value for `member` is the name of the member variable that was updated just before calling this function. |
-| `connected()` | This is called by the base class `connectedCallback` function. |
-| `disconnected()` | This is called by the base class `disconnectedCallback` function. |
-| `adopted()` | This is called by the base class `adoptedCallback` function. |
-| `attrChanged(attr, oldVal, newval)` | Called when an attribute has changed. This is called by the base class `attributeChangedCallback` function. |
+| init() | Called at the end of the constructor. This function allows you to perform additional setup or initialization steps for your component. Any code in this function must follow all of the [requirements for custom element constructors](https://html.spec.whatwg.org/multipage/custom-elements.html#custom-element-conformance). |
+| update(property, oldVal, newVal) | Called every time any property is updated, as well as when the component is connected to the DOM. You can use this function to adjust any private properties based on the changes in the component's properties. It is also called when the component is reconnected to the DOM after being previously disconnected. The property parameter provides the name of the member property that was updated just before calling this function. |
+| connected() | This function is called by the base class connectedCallback function, which is part of the web component's lifecycle. It is invoked when the component is connected to the DOM. You can use this function to perform actions that need to happen when the component is added to the page's DOM structure. |
+| disconnected() | This function is called by the base class disconnectedCallback function, which is part of the web component's lifecycle. It is invoked when the component is removed from the DOM. You can use this function to perform any cleanup or actions required when the component is no longer part of the page's DOM structure. |
+| adopted() | This function is called by the base class adoptedCallback function, which is part of the web component's lifecycle. It is invoked when the component is moved to a new document. You can use this function to handle any specific actions required when the component is moved between documents. |
+| attrChanged(attr, oldVal, newVal) | This function is called when an attribute has changed, and it is called by the base class attributeChangedCallback function, which is part of the web component's lifecycle. You can use this function to respond to attribute changes and update the component's behavior accordingly. |
 
-## Bindings
+By using these lifecycle functions, you can control and manage various aspects of your component's behavior throughout its existence, making your components more dynamic and responsive to changes in the DOM and attribute values.
 
-### Properties and Attributes
+## Base Class File EvoElement.js
+## Compile Options
+## Integration with TypeScript
 
-Within the template an attribute that starts with a colon ( __`:`__ ) indicates the name of the property that will be set by the variable defined in the quotes.
+Evo is designed to work seamlessly without requiring TypeScript. While you have the option to use TypeScript if you prefer, all of our example components are written in raw JavaScript. The generated files include extensive typing information using JSDocs. Most code editors interpret this typing information similar to TypeScript, but the advantage is that the transpiled code can be directly loaded into the browser without additional compilation steps.
 
-#### Example:
+If you choose to write your code in the `<script>` tag as TypeScript, you would need Evo to transpile it first before processing it with TypeScript.
 
-If we have this image tag in the template: `<img :src="imageUrl" :title="#imageTitle">`
-
-* Every time the component's public property `imageUrl` changes Evo-WC will set the `src` property of the image tag like this: `img.src = this.imageUrl;`
-
-* Every time the component's private property `#imageTitle` changes Evo-WC will set the `title` property of the image tag like this: `img.title = this.#imageTitle;`
-
-> _You can only place public or private propert names in the quotes and NOT call code like Angular._
-
-Generaly these values will be put into the property getter and setter methods. There are certain properties that do not exist in an HTML element and so we auto-set the attribute instead. For example there is no `alt` property on an `<img>` element so Evo WC will set the `alt` attribute instead.
-
-> Evo WC will only convert from properties to attributes for the well defined standard HTML attributes. All others must be done using `:attr.your-attr="#val"`
-
-> _**As of version 0.5.0 We have not compleated the attribute conversion list.**_
-
-The template element attributes can be set like this:
-
- | Attr | Code generated |
- | --- | --- |
- | `:title="val"` | `element.title = this.val` |
- | `:title="#val"` | `element.title = this.#val` |
- | `:data-title="#val"` | `element.dataset.title = this.#val` |
- | <nobr>`:aria-label="val"`</nobr> | `element.ariaLabel = this.val` |
- | <nobr>`:attr.state="#state"`</nobr> | `element.setAttribute('state', this.#state)` or, if the value of `this.#state` is `null`, `element.removeAttribute('state')` |
- | `:html="value` | `element.innerHTML = this.value` |
- | `:text="name"` | `element.textContext = this.name` |
-
-<div style="border:1px solid black;background:#333;padding:8px;margin-bottom:18px;color:white;">
-
-### 2-way-binding  (`:value`)
-
-`:value` provides two way binding for `<input>`, `<select>`, and `<textarea>` elements. For example: `<input :value="firstName" />` will 2-way bind to the component's `get firstName()` and `set firstName(val)` methods. When your code calls `set firstName(val)` then that value will be placed into the element. When the user edits the value for the element then `set firstName(val)` will be called with the new value.
-</div>
-
-### Events
-An attribute that starts with a period ( __`.`__ ) are event handlers:
-  * `.click="functionName"`
-  * `.mouseup="#myMouseUp"`
-
-> You can use private member functions by starting the function name with `#` both here
-and for the acctual function name. ([JavaScript private class fields](https://devdocs.io/javascript/classes/private_class_fields))
-
-All event handlers receive two arguments. The first is the `event`. and the second is `data`. `data` is the same as `event.target.dataSet`
-
-You can not pass any parameters into the event handler. Instead you add data attributes with anything you need to access in the event handler. For example you can have several buttons call the same method to change the component's locale. Each button has a different value for the attribute `data-locale` like this:
-
-
-``` xml
-<component tag="my-thing" :#locale>
-  <template>
-    <button .click="#setLocale" data-locale="en">EN</button>
-    <button .click="#setLocale" data-locale="fr">FR</button>
-    <button .click="#setLocale" data-locale="es">ES</button>
-  </template>
-  <script>
-    #setLocale(event, data) {
-      this.#local = data.locale;
-    }
-  </script>
-</component>
-```
-
-### Pipes
-Property variables can use pipes to alter or format data without affecting the original values. Use the bar character ( __|__ ) to searate pipes
-  * Like `:name="name|upperCase"` or  `:name="name|#upperCase|#reverse"`
-  * All pipe methods take a single parameter as treat it as a `string`. The methods must return a `string`.
-
-  > _<span style="color:red">**TODO:** This may need to take whatever type the var is and return anything</span>_
-
-#### Example pipes
-
-Pipes are very easy to write. You have only one incoming parameter and your pipe must return a string. Here are two example pipes:
-
-```javascript
-#upperCase(value) {
-  return value.toUpperCase();
-}
-
-#revserse(value) {
-  return [...value].reverse().join('');
-}
-```
-
-### Conditionals
-
-You can use `$if="variable"` or `$if="!variable"` to conditionaly hide and show sections of the html template.
-
-```html
-<component tag="if-one" :state="bool:true">
-  <template>
-    <div>this.state is currently set to <span :text="state"></span></div>
-    <button .click="#toggleState">Toggle</button>
-    <div class="red" $if="state">TRUE - This shows if this.state is set to true.
-      <p>Go watcha fun movie!</p>
-    </div>
-    <div class="blue" $if="!state">FALSE - If this.state is set to false then this shows.
-      <p>Listen to an audio book.</p>
-    </div>
-  </template>
-  <style>
-    .red {
-      background-color: #F00;
-      margin: 20px;
-      padding: 20px;
-    }
-    .blue {
-      background-color: #00F;
-      color: #FFF;
-      margin: 20px;
-      padding: 20px;
-    }
-  </s>
-  <script>
-    #toggleState(event) {
-      this.state = !this.state;
-    }
-  </script>
-</component>
-```
-
-### Conditional Todo
-
-> *2023-07-05 - Conditionals do not currently work with object properties. So, `$if="#person.name"` fails.*
-
-## Base class File `EvoElement.js`
-
-There are three things exported from the file `EvoElement.js`.
-
-* The class `EvoElement` - This is the base class for all of the generated Web Components.
-* The function `setAttr` - A helper function that calls either `setAttribute` or `removeAttribute` based on the value passed in.
-* The function `handleCondition` - A helper function that hides and shows a DOM element based on a value of the `condition` parameter.
-
-### Exported class `EvoElement`
-
-This is used by Evo WC as the base class for all component. Normally you will not use this base class yourself.
-
-In your component class you must not override the built in methods `connectedCallback`, `disconnectedCallback`, `adoptedCallback`, and `attributeChangedCallback`. Instead you will create your own methods `connected`, `disconnected`, `adopted`, and `attrChanged`.
-
-### Exported function `setAttr(el, attr, value)`
-
-* `el` is the element to be affected.
-* `attr` is the attribute to be set or reset.
-* `value` is the value to set for the attribute.
-  * If `value` is `null` then the attribute will be removed from the element `el`
-  * Any other value will set the attribute to that value.
-
-`setAttr` is a helper function that calls `el.removeAttribute(attr)` if you pass in `null` as the `value`. If the `value` is `true` then it calls `el.setAttribute(attr, '')`. For all other values it calls `el.setAttribute(attr, value)`.
-
-While it is not likely that you will need to, you can call `setAttr` from your own code. For example you can do the following to set the `name` attribute on your component:
-
-```javascript
-setAttr(this, 'name', 'SomeValue');
-```
-### Exported function `handleCondition(el, condition, commentEl)`
-
-`handleCondition` is a helper function that is used with conditional attributes `$if` and `$switch`.
-
-> 2023-02-27 - `$switch` works but is poorly designed and will be replaced.
-
-You pass in the element `el` that is conditionally to hide or show, the conditional value `condition` that is `true` or `false` and the comment element `commentEl` that will replace the element if the condition is `false`. It is important to have a unique comment element for each conditional.
-
-`handleCondition` will place either the element or the comment element into the DOM based on the condition.
-
-> Normally, this is not to be called by your code.
-
----
-
-## Notes of things that still need to be finished
-
-### Date Types
-
-* Support bigint
-
-### Compile options
-
-* Debug Mode that adds lost of debug code.
-* Generates JSDOC comments
-* Provide a way to add doc info into the template
-* On compile error: set the output of the JS file to display the error message in the UI
-* Do I allow TypeScript in the code??
-* SourceMaps? Would they work?
-
-### Pipes
-
-* Regular pipes work.
-* Importable pipes?
-  * Is this just an import and then calling that import from a member function?
-  * Is there a special way to indicate an imported pipe?
-
-### Conditional Attributes
-
-* Add docs that explain how to use the `state` attribute and CSS to improve performance
-* Conditionals should really only be used when large chunks of DOM are involved.
-* `$if` works
-* `$swich` is coming
-* Add Looping (`$for`)
-  * require a _key_ field.
-  * Improve it to _limit DOM changes_ (Reuse DOM where possible)
-* Only allow one conditional attribute per element
-* Should I add any others??
-  * https://angular.io/api/common#directives
-
-### Things to prevent
-
-* ERROR: Do not allow `<script>` in the template or style sections
-* ERROR: Do not allow `<style>` in the template or script sections
-* ERROR: Do not allow any `on????` event attributes in the template.
-  * Indicate that they need to convert to a `.event` handler instead.
-
-### Other language version (increase tool usage)
-
-Sometime in the near future we plan to release translpilers in different languages since not all backends are written in JavaScript. We want to support as many tools and lanuguages as possible. Here is the suggested list:
-
-* .NET
-* Java
-* Python
-* Gulp
-* Grunt
-* Webpack
-* Babble
-* Rollup
-
-## Element properties that are renamed or changed to attributes: 
-
-| converted from | converted to |
-| --- | --- |
-| accept | attr.accept |
-| alt | attr.alt |
-| for | attr.for |
-| html | innerHTML |
-| class | className |
-| style | attr.style |
-| text | textContent |
-
-> 2023-02-27 - List not complete
+> As of mid-2023, we have not extensively tested TypeScript integration, and there might be some potential issues. If you encounter any problems, we encourage you to create a bug request and provide your sample code along with the version of TypeScript you are using and the error message that was generated. This will help us improve and address any potential TypeScript-related issues for a better developer experience.
 
 ## Reference
-
-* [Custom elements](https://html.spec.whatwg.org/multipage/custom-elements.html#custom-elements)
-* [JavaScript private class fields](https://devdocs.io/javascript/classes/private_class_fields)
-* [Web Components Can Now Be Native Form Elements
-](https://javascript.plainenglish.io/web-components-can-now-be-native-form-elements-107c7a93386)
-* [How to style shadow DOM with ::part() and ::slotted()](https://ziga-petek.medium.com/styling-shadow-dom-with-part-and-slotted-bc4bc94ab56b)
-
-
-
-
-<!--
-<div style="background:#611;border:3px dashed #A00;margin:20px;padding:10px;color:#FFF">
-
-## Alpha Testing
-
-After you clone the repo:
-
-1. To install the repo run `npm install`
-1. To transpile the components run `npm run build` in one terminal
-1. To launch the simple web server run `npm start` in another terminal
-1. To view the webpage browse to `http://localhost:5555/test.html`
-1. To change which components are in the browser edit the file `static/test.html`
-1. Please use the __bug reporting in the issues section__ of the repo.
-1. Any __document suggestions__ should also be added to the issues section of the repo.
-1. __Write several component__ and test Evo-WC for any errors in the transpiler.
-1. __Do oddball things__ in your component, push the envelope.
-1. Currently there is no way to loop through tags. So no auto generation of tables, list items, etc. That is coming.
-1. **Please make a Pull Request with your example components or bug fixes.**
-1. **Do not check into the master branch**
-
-</div>
--->
-
-
-## Router Component
-
-Evo has a simple router component.
-We use the express.js syntax for routes (/users/:id) to map URLs to Web Component views.
-You are responsible for making sure that your server properly responds to all routes to load the same page.
-
-
-* 2-way binding with async validation
-* route to non existant file or element that is not in the file??
-  * Do I just allow for `element` or `import` attribute?

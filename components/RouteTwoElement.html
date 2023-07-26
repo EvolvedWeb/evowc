@@ -4,7 +4,8 @@
   <template>
     <div style="display:flex;flex-direction:column;margin-bottom:10px;">
       <div style="display:flex;margin-bottom:40px;gap:10px;justify-content:space-between;">
-        <wc-calendar></wc-calendar>
+        <!-- <wc-calendar></wc-calendar> -->
+        <mini-mum></mini-mum>
         <if-one style="background:#FFE;border:1px solid black;padding:5px;"></if-one>
         <div style="display:flex;flex-direction:column;justify-content:space-between;align-items:center;">
           <some-face state="sad"></some-face>
@@ -79,6 +80,7 @@
   </template>
   <script root>
     import './AlertBoxElement.js';
+    import './MiniMumElement.js';
     import './AlertMessageElement.js';
     import './IfOneElement.js';
     import './LocalTimeElement.js';
@@ -117,8 +119,8 @@
     }
 
     async #showAlert() {
-      const resp = await promptwc('What is your favorite language and why?');
-      console.log(resp);
+      const resp = await promptwc('What is your favorite language?');
+      await alertwc(`Your favorite language is: ${resp}`)
     }
 
     init() {

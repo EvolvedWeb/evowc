@@ -1,10 +1,10 @@
-<component tag="mini-mum" :dogs="date">
+<component tag="mini-mum" :title>
   <template>
-    <p .click="#clickMe">Hello world</p>
+    <h1>Hello Evo Component: <span :text="title"></span></h1>
   </template>
-  <script>
-    #clickMe(event, data) {
-      // Do something
+  <style>
+    h1 {
+      color: navy;
     }
-  </script>
+  </style>
 </component>
