@@ -1,0 +1,31 @@
+{
+  "all": true,
+  "branches": 50,
+  "cache": false,
+  "check-coverage": true,
+  "eager": true,
+  "exclude": [
+    "lib/**/*.mocha.js"
+  ],
+  "extension": [],
+  "functions": 50,
+  "include": [
+    "lib/**/*.js"
+  ],
+  "instrument": true,
+  "lines": 50,
+  "per-file": false,
+  "report-dir": "coverage/mocha",
+  "reporter": [
+    "lcov",
+    "text-summary"
+  ],
+  "require": [],
+  "statements": 40,
+  "watermarks": {
+    "lines": [40, 80],
+    "functions": [40, 80],
+    "branches": [40, 80],
+    "statements": [40, 80]
+  }
+}

@@ -1,5 +1,6 @@
 const PORT = 5555;
-const evowc = require('./lib/evowc.js');
+const path = require('path');
+const evowc = require('./oldFiles/evowc-old.js');
 const express = require('express');
 const bodyParser = require('body-parser');
 
@@ -12,9 +13,30 @@ app.use(bodyParser.json());
 app.get('/', doRedir);
 app.post('/api/process', processComponent);
 app.post('/api/login', processLogin);
+app.get('/test', doEvoPages('test.html'));
+app.get('/test/*', doEvoPages('test.html'));
+app.get('/slideshow', doEvoPages('slideshow.html'));
+app.get('/slideshow/*', doEvoPages('slideshow.html'));
 
 function doRedir(req, res, next) {
   res.redir('/index.html');
+}
+
+function doEvoPages(fileName) {
+  return (req, res, next) => {
+    const options = {
+      // @ts-ignore
+      root: path.join(__dirname, 'static')
+    };
+
+    res.sendFile(fileName, options, function (err) {
+      if (err) {
+        next(err);
+      } else {
+        console.log('Sent:', fileName);
+      }
+    });
+  }
 }
 
 async function processComponent(req, res, next) {

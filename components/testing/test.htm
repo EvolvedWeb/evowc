@@ -1,0 +1,80 @@
+<component tag="test-switch"
+  :message="string:This is a {test}"
+  :+show="bool:false"
+  :#thing="int:0"
+  >
+  <param name="#thing" min="0" max="100" />
+  <template>
+    <div class="frame" :attr.state="state" :attr.isPopup="popup">
+      <!-- Default - Bubble Phase -->
+      <button .click="clickHandler"></button>
+
+      <!-- Capture Phase / Once / passive -->
+      <button .click:c1p="clickHandler"></button>
+      <!-- :c1p - 'c', '1', and 'p' are all optional and can be placed in any order -->
+
+      <!-- ':psi' - auto preventDefault, stopPropigation & stopImmediatePropigation -->
+      <button .click="clickHandler:psi"></button>
+      <!-- :psi - 'p', 's', and 'i' are all optional and can be placed in any order -->
+
+      <div $if="title" class="title" :html="title"></div>
+      <input :value="#mine|#doSomething" />
+      <switch _on="message">
+        <div $case="one,two">ONE</div>
+        <div $case="two">TWO</div>
+        <div $default>
+          <h1>Default</h1>
+          <p>This is the default section</p>
+        </div>
+      </switch>
+      <switch $on="popup">
+        <div $case="true" class="message" :html="message"></div>
+      </switch>
+    </div>
+  </template>
+  <style>
+  </style>
+  <script>
+  </script>
+</component>
+<!--
+Bay.js things:
+<if this="todo.checked"><del>${todo.todo}</del></if>
+<else><span>${todo.todo}</span></else>
+
+<switch this="this.number">
+  <case this="'1'"></case>
+  <case this="'2'" break>
+    <p :style="color: green;">Number is One or Two</p>
+  </case>
+  <case this="'3'" break>
+    <p :style="color: orange;">Number is Three</p>
+  </case>
+  <case this="'4'" break>
+    <p :style="color: pink;">Number is Four</p>
+  </case>
+  <default>
+    <p>Number is not in cases it is ${this.number}</p>
+  </default>
+</switch>
+
+
+<map params="item, i, array" array="this.arr" join="<hr>">
+  <span>
+    <button :click="this.arr.splice(${i},1)">remove</button>
+    ${i + 1}. ${item}
+    <if this="item === 'Harry'"> & Meghan</if>
+    <if this="item === 'Bruce'"> Willis</if>
+  </span>
+</map>
+
+
+<ol>
+  <for params="item, i, array" array="this.arr">
+    <li>
+      ${item}
+      <if this="item === 'Albert'"> Einstein!</if>
+    </li>
+  </for>
+</ol>
+-->

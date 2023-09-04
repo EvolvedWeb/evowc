@@ -12,8 +12,10 @@ You can use them as is or make changes to them to suit your needs.
   * Alert *
   * Prompt *
   * Confim *
-* Star Ranking *
+* HR-like Divider *
+* Star Ranking * - Needs to dispatch change event
 * Round Progress Bar *
+* Routing * - 2023-06-05 - Initial code working just fine.
 * Spinner *
 
 * Accordion
@@ -36,7 +38,7 @@ You can use them as is or make changes to them to suit your needs.
 * Rich Text Editor
 * Social Media - Person Card
 * Table
-* Tabs - https://www.w3.org/WAI/ARIA/apg/patterns/tabpanel/
+* Tabs and TabGroup - https://www.w3.org/WAI/ARIA/apg/patterns/tabpanel/
 * Toggle Checkbox
 * Tool Tip
 * Word Count Text Area
@@ -44,11 +46,4 @@ You can use them as is or make changes to them to suit your needs.
 * Color Picker?
 * Icons? - https://github.com/lekoala/last-icon
 
-
-Get the leads involved in Guidebook
-Assign leads to do Code Signal
-Check with leads on Interview Questions
-Restart 1:1s with leads (Starting Friday)
-Check in on CDPs
-Check in with Leads of those in Dev Center
-Find the who and focus on the how
+https://getuikit.com/docs/introduction

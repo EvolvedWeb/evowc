@@ -1,44 +1,62 @@
 <component tag="changepw-dialog"
-  :change-pw-href
-  :change-pw-method="str:post"
   :busy="bool:false"
+  :change-pw-button-text="str:Change Password"
+  :change-pw-href="str"
+  :change-pw-method="str:post"
+  :description="str:To change your password enter your old<br>password and your new password."
   :error-message
-  :#username
+  :new-pw-aria-label="str:Enter your new password"
+  :new-pw-aria-label2="str:Enter your new password again"
+  :old-pw-aria-label="str:Enter your current password"
+  :title="str:Change Password"
   :#current-password
   :#new-password
+  :#new-password2
+  :#password-type="str:var:PASSWORD"
+  :#show-text="str:var:STATE_SHOW"
+  :#state
   :#token
-  :#password-type1="str:password"
-  :#password-type2="str:password"
-  :#toggle-state1="str:var:STATE_SHOW"
-  :#toggle-state2="str:var:STATE_SHOW"
+  :#username
 >
   <template>
-    <wc-dialog js="dialog" title="Change Password" show-footer="false">
-      <section>
-        <form :action="changePwHref" :method="changePwMethod|#toLower" .submit="#changePw">
+    <wc-dialog el="dialog" :title="title" :description="description" show-footer="false">
+      <div class="section">
+        <form :action="changePwHref" :method="changePwMethod|^toLower" .submit="#changePw">
           <input type="hidden" name="token" :value="#token" />
           <div class="error-message" $if="errorMessage" :text="errorMessage" .click="#clearError"></div>
           <div>
             <div class="prev-password-block">
               <label for="prev-password">Current Password:</label>
             </div>
-            <input id="prev-password" name="prev-password" maxlength="32" :value="#currentPassword"
-              :type="#passwordType1" required autofocus autocomplete="current-password" aria-label="Password" .input="#clearError" />
-            <button class="show-pw" type="button" is="wc-button" small variant="link" .click="#toggle1"
-              :attr.aria-label="#toggleState1" :text="#toggleState1"></button>
+            <input id="prevPassword" name="prevPassword" maxlength="32" :value="#currentPassword"
+              :aria.label="oldPwAriaLabel" :type="#passwordType" required autofocus
+              autocomplete="current-password" .input="#clearError" />
+            <button class="show-pw" type="button" is="wc-button" small variant="link" .click="#toggleShowState"
+              :aria.label="#showText" :text="#showText"></button>
           </div>
           <div>
             <div class="password-block">
-              <label for="password">New Password:</label>
+              <label for="newPassword" :attr.state="#state">New Password:</label>
             </div>
-            <input id="newpassword" name="newpassword" maxlength="32" :value="#newPassword"
-              :type="#passwordType2" required autocomplete="new-password" aria-label="Password" .input="#clearError" />
-            <button class="show-pw" type="button" is="wc-button" small variant="link" .click="#toggle2"
-              :attr.aria-label="#toggleState2" :text="#toggleState2"></button>
+            <input id="newPassword" name="newPassword" maxlength="32" :value="#newPassword"
+              :aria.label="newPwAriaLabel" :type="#passwordType" required
+              autocomplete="new-password" .input="#clearError" />
+            <button class="show-pw" type="button" is="wc-button" small variant="link" .click="#toggleShowState"
+              :aria.label="#showText" :text="#showText"></button>
           </div>
-          <button class="change-pw" is="wc-button" large aria-label="Change Password">Change Password</button>
+          <div>
+            <div class="password-block">
+              <label for="newPassword2">Repeat New Password:</label>
+            </div>
+            <input id="newPassword2" name="newPassword2" maxlength="32" :value="#newPassword2"
+              :aria.label="newPwAriaLabel2" :type="#passwordType" required
+              autocomplete="new-password" .input="#clearError" />
+            <button class="show-pw" type="button" is="wc-button" small variant="link" .click="#toggleShowState"
+              :aria.label="#showText" :text="#showText"></button>
+          </div>
+          <button class="change-pw" is="wc-button" large :aria.label="changePwButtonText" :text="changePwButtonText"></button>
         </form>
-      </section>
+      </div>
       <div class="spinner-holder" $if="busy">
         <wc-spinner></wc-spinner>
       </div>
@@ -73,9 +91,9 @@
       --dialog-header-justify: center;
       position: relative;
     }
-    section {
+    div.section {
       margin: 0;
-      padding: 8px;
+      padding: 0;
       width: 20em;
     }
     form {
@@ -109,6 +127,9 @@
       justify-content: space-between;
       margin-top: 12px;
     }
+    [state="invalid"] {
+      color: red;
+    }
     .error-message {
       background-color: #F99;
       border: 1px solid #E66;
@@ -135,14 +156,25 @@
       bottom: 0;
     }
   </style>
-  <import>
+  <script root>
     import { DIALOG_BUTTONS } from './WcDialogElement.js';
     import './WcSpinnerElement.js';
+    import { toLower } from '../EvoPipes.js';
 
+    const PASSWORD = 'password';
+    const TEXT = 'text';
     const STATE_HIDE = 'hide';
     const STATE_SHOW = 'show';
-  </import>
+  </script>
   <script>
+    update(field, oldVal, newVal) {
+      if (['#newPassword', '#newPassword2'].includes(field)) {
+        const isInvalid = (!this.#newPassword || !this.#newPassword2 ||
+            this.#newPassword !== this.#newPassword2)
+
+        this.#state = isInvalid ? 'invalid' : null;
+      }
+    }
     open() {
       this.#username = '';
       this.#currentPassword = '';
@@ -153,29 +185,16 @@
       }, 1);
       return this.#els.dialog.open();
     }
-    #toLower(str) {
-      return str.toLowerCase();
-    }
     //******************************************
     // Events
-    #toggle1(event) {
-      if (this.#toggleState1 === STATE_HIDE) {
-        this.#toggleState1 = STATE_SHOW;
-        this.#passwordType1 = 'password';
+    #toggleShowState(event) {
+      if (this.#showText === STATE_HIDE) {
+        this.#showText = STATE_SHOW;
+        this.#passwordType = PASSWORD;
       }
       else {
-        this.#toggleState1 = STATE_HIDE;
-        this.#passwordType1 = 'text';
-      }
-    }
-    #toggle2(event) {
-      if (this.#toggleState2 === STATE_HIDE) {
-        this.#toggleState2 = STATE_SHOW;
-        this.#passwordType2 = 'password';
-      }
-      else {
-        this.#toggleState2 = STATE_HIDE;
-        this.#passwordType2 = 'text';
+        this.#showText = STATE_HIDE;
+        this.#passwordType = TEXT;
       }
     }
     #clearError() {

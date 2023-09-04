@@ -1,0 +1,70 @@
+<component tag="evo-faq"
+  :src
+  :#faq-list="arr:[]"
+  >
+  <template>
+    <div $for="#faqList as faq.key" class="evo-faq">
+      <h3 class="question" :text="faq.question"></h3>
+      <div class="answer" :html="faq.answer"></div>
+    </div>
+  </template>
+  <style>
+    :host {
+      display: block;
+      margin: 1rem 0 0 0;
+      width: 100%;
+      overflow: hidden;
+      padding: 0;
+    }
+
+    .question {
+      background-color: transparent;
+      border: none;
+      box-sizing: border-box;
+      color: var(--color-bright-2);
+      font-weight: bold;
+      margin: 0;
+      padding: .5rem 1rem;
+      width: 100%;
+    }
+
+    .question::before {
+      content: '• '
+    }
+
+    .answer {
+      box-sizing: border-box;
+      color: var(--color-bright);
+      margin: 0 0 0 1rem;
+      padding: .5rem 1rem 2rem;
+      width: 100%;
+    }
+  </style>
+  <script>
+    // Internal functions
+    async update(field, oldVal, newVal) {
+      switch(field) {
+        case 'src':
+          if(this.src === '') {
+            this.#faqList = [];
+          }
+          else {
+            const resp = await fetch(this.src);
+            const list = await resp.json();
+            list.forEach((item, i) => {
+              item.key = i;
+              item.show = false;
+            });
+            this.#faqList = list;
+          }
+          break;
+        }
+      }
+    /*
+      events.push(ael( els.fel1, 'click', async (evt)=>{
+        await this.#toggle(evt, {...evt.target.dataset}, index, faq);
+        this.#loopItemHandler_0(els, index, faq);
+      }));
+    */
+  </script>
+</component>

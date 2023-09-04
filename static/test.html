@@ -7,256 +7,61 @@
   <style>
     body {
       font: 16px Tahoma;
+      --activeColor: #ffffff;
+      --inactiveColor: #eeeeee;
+      --inactiveHoverColor: #dddddd;
+    }
+    wc-a {
+      background-color: var(--inactiveColor);
+      border: 1px solid black;
+      border-radius: 8px 8px 0 0;
+      display: inline-block;
+      margin-bottom: -1px;
+      --wc-text-decoration: none;
+      --wc-a-padding: 10px 20px;
+    }
+    wc-a[selected] {
+      background-color: var(--activeColor);
+      border-bottom-color: var(--activeColor);
+    }
+    wc-a:hover:not([selected]) {
+      background-color: var(--inactiveHoverColor);
+    }
+    .holder {
+      border-bottom: 1px solid black;
+      display: flex;
+      gap: 3px;
+      padding: 0 5px;
     }
   </style>
 </head>
 <body>
-  <!--
-  <portfolio-img text="July 26, 2016" title="Springville Main Street Lots"></portfolio-img>
-  <hr/>
-  <special-thing></special-thing>
-  <hr/>
-  <simple-address></simple-address>
--->
-<div is="my-div" label="Statement">Hi!<br/>How are you doing?</div>
-<hr>
-<has-switch></has-switch>
-<hr/>
-<div style="display:flex;flex-direction:column;margin-bottom:10px;">
-    <!--
-    <div style="display:flex;margin-bottom:40px;gap:10px">
-      <wc-calendar></wc-calendar>
-      <if-one style="background:#FFE;border:1px solid black;padding:5px;"></if-one>
-      <some-face state="sad"></some-face>
-    </div>
-    -->
-    <div>Ranking: "<wc-rank rank="2"></wc-rank>"</div>
-    <hr>
-    <local-time timestamp="Dec 25, 2023"></local-time><br/>
-    <local-time timestamp="Mar 5, 1965"></local-time><br>
-    <button type="button" js="doAlert">Alert</button>
-    <div>
-      <wc-spinner size="48" color="#333" speed="1.5s"></wc-spinner>
-    </div>
-    <div style="border:1px solid black;margin:10px 0;display:flex;flex-flow: wrap;justify-content: space-evenly;">
-      <round-progress value="97"></round-progress>
-      <round-progress value="65" decimals="1" line-color="red" style="color:white;background:#442299;"></round-progress>
-    </div>
-    <div>
-      Normal:&nbsp;<alert-box message="This is a message with no state" state=""></alert-box>
-      Info:&nbsp;<alert-box message="This is an info message" state="info"></alert-box>
-      Warn:&nbsp;<alert-box message="This is a warning message" title="WARNING!" state="warn"></alert-box>
-      Alert:&nbsp;<alert-box message="This is an error" state="alert" popup></alert-box>
-    </div>
-    <div>
-      Normal: <alert-message message="This is a non-types message" state=""></alert-message>
-      Info: <alert-message message="This is an info message" state="info"></alert-message>
-      Warn: <alert-message message="This is a warning message" title="WARNING!" state="warn"></alert-message>
-      Alert: <alert-message message="This is an error" state="alert"></alert-message>
-    </div>
-    <hr/>
-    <div style="margin-top: 10px">
-      <button js="dlgBtn" is="wc-button">Login</button>
-      <button js="dlgBtn2" is="wc-button">Change Password</button>
-    </div>
-    <hr/>
-    <div style="margin-top: 10px">
-      <button is="wc-button">Normal</button>
-      <button is="wc-button" variant="info">Info</button>
-      <button is="wc-button" variant="danger">Danger</button>
-      <button is="wc-button" variant="minor">Minor</button>
-      REGULAR
-    </div>
-    <div style="margin-top: 10px">
-      <button small is="wc-button">Normal</button>
-      <button small is="wc-button" variant="info">Info</button>
-      <button small is="wc-button" variant="danger">Danger</button>
-      <button small is="wc-button" variant="minor">Minor</button>
-      SMALL
-    </div>
-    <div style="margin-top: 10px">
-      <button large is="wc-button">Normal</button>
-      <button large is="wc-button" variant="info">Info</button>
-      <button large is="wc-button" variant="danger">Danger</button>
-      <button large is="wc-button" variant="minor">Minor</button>
-      LARGE
-    </div>
-    <div style="margin-top: 10px">
-      <button is="wc-button" variant="primary">primary</button>
-      <button is="wc-button" variant="secondary">secondary</button>
-      <button is="wc-button" variant="success">success</button>
-      <button is="wc-button" variant="info">info</button>
-      <button is="wc-button" variant="warning">warning</button>
-      <button is="wc-button" variant="danger">danger</button>
-      <button is="wc-button" variant="light">light</button>
-      <button is="wc-button" variant="dark">dark</button>
-    </div>
-    <wc-button-group style="margin-top: 10px">
-      <button is="wc-button">One</button>
-      <button is="wc-button">Two</button>
-      <button is="wc-button">Three</button>
-      <button is="wc-button">Four</button>
-      <button is="wc-button">Five</button>
-    </wc-button-group>
-    <div style="margin-top: 10px">
-      Primary: <wc-badge variant="primary">primary</wc-badge>
-      Secondary: <wc-badge variant="secondary">secondary</wc-badge>
-      Success: <wc-badge variant="success">success</wc-badge>
-      Info: <wc-badge variant="info">info</wc-badge>
-      Warning: <wc-badge variant="warning">Warning</wc-badge>
-      Danger: <wc-badge variant="danger">danger</wc-badge>
-      Light: <wc-badge variant="light">light</wc-badge>
-      Dark: <wc-badge variant="dark">dark</wc-badge><hr>
-<wc-badge variant="danger">Danger Will Robinson...</wc-badge>
-<wc-badge variant="warning">Warning!</wc-badge><hr>
-
-    </div>
-    <div style="margin-top: 10px">
-      Primary: <wc-badge pill variant="primary">primary</wc-badge>
-      Secondary: <wc-badge pill variant="secondary">secondary</wc-badge>
-      Success: <wc-badge pill variant="success">success</wc-badge>
-      Info: <wc-badge pill variant="info">info</wc-badge>
-      Warning: <wc-badge pill variant="warning">warning</wc-badge>
-      Danger: <wc-badge pill variant="danger">danger</wc-badge>
-      Light: <wc-badge pill variant="light">light</wc-badge>
-      Dark: <wc-badge pill variant="dark">dark</wc-badge>
-    </div>
-
-    <wc-dialog id="dialog with calendar" js="dialog" title="Select a date" min-width="200" min-height="200">
-      <wc-calendar></wc-calendar>
-    </wc-dialog>
-
-    <login-dialog
-      id="login dialog"
-      js="login"
-      show-remember-me="true"
-      forgot-pw-href="/forgotpw"
-      sign-in-href="/login"
-      sign-up-href="/signup"
-      sign-up-text="Ready to give us your info?"
-    ></login-dialog>
-    <changepw-dialog
-      id="changepw dialog"
-      js="changepw"></changepw-dialog>
+  <div class="holder">
+    <wc-a href="/test/one">Page 1</wc-a>
+    <wc-a href="/test/two">Page 2</wc-a>
+    <wc-a href="/test/three">Page 3</wc-a>
+    <wc-a href="/test/four">Page 4</wc-a>
   </div>
-
+  <wc-router>
+    <wc-route href="/test/one" element="route-one" import="./RouteOneElement.js"></wc-route>
+    <wc-route href="/test/two" element="route-two" import="./RouteTwoElement.js"></wc-route>
+    <wc-route href="/test/three" element="route-three" import="./RouteThreeElement.js"></wc-route>
+    <wc-route href="(.*)" element="route-not-found" redirect="" import="./RouteNotFoundElement.js"></wc-route>
+  </wc-router>
+  <hr/>
+  <hr/>
+  <h-i></h-i>
+  <input type="checkbox" id="mine" />
   <script type="module">
-    import './js/components/AlertBoxElement.js';
-    import './js/components/AlertMessageElement.js';
-    import './js/components/ChangepwDialogElement.js';
-    import './js/components/HasSwitchElement.js';
-    import './js/components/IfOneElement.js';
-    import './js/components/LocalTimeElement.js';
-    import './js/components/LoginDialogElement.js';
-    import './js/components/MyDivElement.js';
-    import './js/components/PortfolioImgElement.js';
-    import './js/components/RoundProgressElement.js';
-    import './js/components/SimpleAddressElement.js';
-    import './js/components/SomeFaceElement.js';
-    import './js/components/SpecialThingElement.js';
-    import './js/components/SystemDialogElement.js';
-    import './js/components/WcBadgeElement.js';
-    import './js/components/WcButtonElement.js';
-    import './js/components/WcButtonGroupElement.js';
-    import './js/components/WcCalendarElement.js';
-    import './js/components/WcDialogElement.js';
-    import './js/components/WcRankElement.js';
-    import './js/components/WcSpinnerElement.js';
+    import '../js/components/HIElement.js';
+    import '../js/components/WcAElement.js';
+    import '../js/components/WcRouterElement.js';
 
-    const els = [...document.querySelectorAll('[js]')]
-      .reduce((o, el) => (o[el.getAttribute('js')] = el, o), {});
-
-    async function openDialog() {
-      console.log(`openDialog called`);
-      try {
-        //const resp = await els.dialog.open();
-        const resp = await els.login.open();
-        console.log('dialog closed');
-        console.log(resp);
-      }
-
-      catch(ex) {
-        console.log(ex);
-      }
-    }
-
-    async function changePWDialog() {
-      try {
-        const resp = await els.changepw.open();
-      }
-
-      catch (ex) {
-        console.log(ex);
-      }
-    }
-
-    async function doAlert() {
-      const resp = await promptwc('What is your favorite language and why?');
-      console.log(resp);
-    }
-
-    els.doAlert.addEventListener('click', doAlert);
-    els.dlgBtn.addEventListener('click', openDialog);
-    els.dlgBtn2.addEventListener('click', changePWDialog);
-    els.login.addEventListener('signup', (event) => {
-      console.log('signup called');
-      //event.preventDefault();
-    })
-    els.login.addEventListener('signin', async (event) => {
-      console.log('signin called');
-      event.preventDefault();
-      els.login.errorMessage = '';
-      els.login.busy = true;
-      setTimeout(() => {
-        els.login.errorMessage = 'Invalid username or password';
-        els.login.busy = false;
-      }, 3000);
-      /*
-      const options = {};
-      const resp = fetch('/api/login', options);
-      console.log(resp);
-      if(resp.status === 401) {
-        els.login.errorMessage = 'Invalid username or password';
-        els.login.busy = false;
-      };
-      */
-    })
-    els.login.addEventListener('forgotpw', (event) => {
-      console.log('forgotpw called');
-      //event.preventDefault();
-    })
-    els.login.addEventListener('gettoken', (event) => {
-      console.log('gettoken called');
-      event.detail.token = '01A838F1E';
-    })
-    els.changepw.addEventListener('changepw', (event) => {
-      console.log('changepw called');
-      event.preventDefault();
-      els.changepw.errorMessage = '';
-      els.changepw.busy = true;
-      setTimeout(() => {
-        els.changepw.errorMessage = 'Crazy things happened';
-        els.changepw.busy = false;
-      }, 3000);
-    })
-
-    const rpinc = [1, .5];
-    const rps = document.querySelectorAll('round-progress');
-    function updateTime() {
-      rps.forEach((rp, i) => {
-        rp.value+= rpinc[i];
-
-        if (rp.value >= 100 ) rp.value = 100;
-        if (rp.value <= 0) rp.value = 0
-
-        if (rp.value === 100 || rp.value === 0) {
-          rpinc[i] *= -1;
-        }
-      });
-      setTimeout(updateTime, 100);
-    }
-
-    updateTime();
+    const handler = msg => e => console.log(msg, e.target.checked, e);
+    const cb = document.getElementById('mine');
+    cb.addEventListener('click', handler('click'));
+    cb.addEventListener('input', handler('input'));
+    cb.addEventListener('change', handler('change'));
   </script>
 </body>
 </html>

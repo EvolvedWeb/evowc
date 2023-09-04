@@ -1,5 +1,6 @@
 <component tag="wc-dialog"
   :allow-esc="bool:true"
+  :description
   :title
   :min-width="int:150"
   :min-height="int:100"
@@ -12,9 +13,17 @@
   :#dialog-style
   >
   <template>
-    <dialog js="dialog" .cancel="#dialogCancel" :style="#dialogStyle" :attr.show-footer="showFooter">
-      <header><div :html="title"></div><button class="closeX" $if="showX" .click="#clickClose"></button></header>
-      <section><slot></slot></section>
+    <dialog el="dialog" .cancel="#dialogCancel" :style="#dialogStyle" role="dialog"
+      :attr.show-footer="showFooter" :aria.label="title"
+      :aria.description="description">
+      <header>
+        <div :html="title"></div>
+        <button class="closeX" $if="showX" .click="#clickClose"></button>
+      </header>
+      <section>
+        <p id="changeDialogDesc" :html="description"></p>
+        <slot></slot>
+      </section>
       <footer $if="showFooter">
         <button autofocus is="wc-button" .click="#clickOk" :text="okButtonText"></button>
         <button $if="showCancel" is="wc-button" minor .click="#clickCancel" :text="cancelButtonText"></button>
@@ -50,6 +59,13 @@
     dialog::backdrop {
       background-color: #0006;
     }
+    #changeDialogDesc {
+      margin-top: 0;
+      padding-top: 0;
+    }
+    #changeDialogDesc:empty {
+      display: none;
+    }
     header {
       align-items: center;
       background-color: var(--dialog-header-bgcolor, #dee6ff);
@@ -63,7 +79,7 @@
     }
     section {
       flex: 2 1 auto;
-      padding: 10px;
+      padding: 20px;
     }
     footer {
       border-top: 1px solid #666;
@@ -110,7 +126,7 @@
       background: #FFF9;
     }
   </style>
-  <import>
+  <script root>
     import './WcButtonElement.js';
 
     export const DIALOG_BUTTONS = {
@@ -119,7 +135,7 @@
       CLOSE: 'CLOSE',
       ESCAPE: 'ESCAPE'
     };
-  </import>
+  </script>
   <script>
     #dialogCancel(event) {
       event.preventDefault();

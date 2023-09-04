@@ -1,0 +1,36 @@
+<component tag="wc-a" :href :+selected="bool:false">
+  <template>
+    <a part="a" :href="href" .click="#navigate" .keydown="#keyHandler" rel="noopener noreferrer"><slot></slot></a>
+  </template>
+  <script root>
+    import { router } from '../EvoRouter.js';
+  </script>
+  <script>
+    init() {
+      router.onUpdate(() => this.#check());
+    }
+
+    #check() {
+      this.selected = window.location.pathname === this.href;
+    }
+
+    update(key, oldVal, newVal) {
+      if(key === 'href') {
+        this.#check();
+      }
+    }
+
+    #navigate(evt) {
+      if (this.href) {
+        evt.preventDefault();
+        router.navigate(this.href);
+      }
+    }
+
+    #keyHandler(evt) {
+      if (evt.key === 'Enter') {
+        this.#navigate(evt);
+      }
+    }
+  </script>
+</component>

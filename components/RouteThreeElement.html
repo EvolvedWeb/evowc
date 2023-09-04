@@ -1,0 +1,114 @@
+<component tag="route-three">
+  <template>
+    <h1>Section Three</h1>
+    <wc-hr></wc-hr>
+    <div style="margin-top: 10px">
+      <button .click="#openLogin" is="wc-button">Login</button>
+      <button .click="#openChangePW" is="wc-button">Change Password</button>
+    </div>
+    <wc-hr></wc-hr>
+    <div style="margin-top: 10px">
+      Primary: <wc-badge variant="primary">primary</wc-badge>
+      Secondary: <wc-badge variant="secondary">secondary</wc-badge>
+      Success: <wc-badge variant="success">success</wc-badge>
+      Info: <wc-badge variant="info">info</wc-badge>
+      Warning: <wc-badge variant="warning">Warning</wc-badge>
+      Danger: <wc-badge variant="danger">danger</wc-badge>
+      Light: <wc-badge variant="light">light</wc-badge>
+      Dark: <wc-badge variant="dark">dark</wc-badge><wc-hr></wc-hr>
+      <wc-badge variant="danger">Danger Will Robinson...</wc-badge>
+      <wc-badge variant="warning">Warning!</wc-badge><wc-hr></wc-hr>
+    </div>
+    <div style="margin-top: 10px">
+      Primary: <wc-badge pill variant="primary">primary</wc-badge>
+      Secondary: <wc-badge pill variant="secondary">secondary</wc-badge>
+      Success: <wc-badge pill variant="success">success</wc-badge>
+      Info: <wc-badge pill variant="info">info</wc-badge>
+      Warning: <wc-badge pill variant="warning">warning</wc-badge>
+      Danger: <wc-badge pill variant="danger">danger</wc-badge>
+      Light: <wc-badge pill variant="light">light</wc-badge>
+      Dark: <wc-badge pill variant="dark">dark</wc-badge>
+    </div>
+    <wc-dialog el="dialog" title="Select a date" min-width="200" min-height="200">
+      <wc-calendar></wc-calendar>
+    </wc-dialog>
+    <login-dialog el="login"
+      show-remember-me="true"
+      forgot-pw-href="/forgotpw"
+      sign-in-href="/login"
+      sign-up-href="/signup"
+      .signup="#signupHandler"
+      .signin="#signinHandler"
+      .forgotpw="#forgotPwHandler"></login-dialog>
+    <changepw-dialog el="changepw"
+      change-pw-href="/dogs"
+      .changepw="#changePwHandler"></changepw-dialog>
+  </template>
+  <script root>
+    import './AlertMessageElement.js';
+    import './WcBadgeElement.js';
+    import './WcButtonElement.js';
+    import './WcButtonGroupElement.js';
+    import './WcCalendarElement.js';
+    import './WcDialogElement.js';
+    import './WcHrElement.js';
+    import './ChangepwDialogElement.js';
+    import './LoginDialogElement.js';
+  </script>
+  <script>
+    #changePwHandler(event, data) {
+      console.log('changepw called');
+      event.preventDefault();
+      const el = event.target;
+      el.errorMessage = '';
+      el.busy = true;
+      setTimeout(() => {
+        el.errorMessage = 'Crazy things happened';
+        el.busy = false;
+      }, 3000);
+    }
+
+    #signupHandler(event, data) {
+      console.log('signup called');
+      //event.preventDefault();
+    }
+
+    async #signinHandler(event, data) {
+      console.log('signin called');
+      event.preventDefault();
+      const el = event.target;
+      el.errorMessage = '';
+      el.busy = true;
+      setTimeout(() => {
+        el.errorMessage = 'Invalid username or password';
+        el.busy = false;
+      }, 3000);
+      // const options = {};
+      // const resp = fetch('/api/login', options);
+      // console.log(resp);
+      // if(resp.status === 401) {
+      //   el.errorMessage = 'Invalid username or password';
+      //   el.busy = false;
+      // };
+    }
+    #forgotPwHandler(event, data) {
+      console.log('forgotpw called');
+      //event.preventDefault();
+    }
+    // this.#els.login.addEventListener('gettoken', (event, data) => {
+    //   console.log('gettoken called');
+    //   event.detail.token = '01A838F1E';
+    // });
+    async #openLogin() {
+      const resp = await this.#els.login.open();
+      console.log('dialog closed');
+      console.log(resp);
+    }
+
+    async #openChangePW() {
+      const resp = await this.#els.changepw.open();
+      console.log('dialog closed');
+      console.log(resp);
+    }
+  </script>
+</component>

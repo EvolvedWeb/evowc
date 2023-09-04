@@ -1,44 +1,58 @@
 <component tag="login-dialog"
-  :forgot-pw-href
-  :sign-in-href
-  :sign-in-method="str:post"
-  :sign-up-href
-  :sign-up-text="str:Not a member yet?"
   :busy="bool:false"
-  :show-remember-me="bool:false"
+  :description="str:To log in, enter your email address and password."
   :error-message
-  :#username
+  :forgot-pw-href // href for forgot password page
+  :forgot-pw-text="str:Forgot password?"
+  :hide-text="str:hide"
+  :not-a-member-text="str:Not a member yet?" // 
+  :password-aria-label="str:Enter your password"
+  :password-label="str:Password:"
+  :remember-me-text="str:Remember Me"
+  :show-remember-me="bool:false"
+  :show-text="str:show"
+  :sign-in-href // href for sign in page
+  :sign-in-method="str:post" // `get` or `post` for submitting sign in form
+  :sign-in-text="str:Sign in"
+  :sign-up-href // href for sign up page
+  :sign-up-text="str:Sign Up" //
+  :title="str:Sign in"
+  :username-aria-label="str:Enter your email address"
+  :username-label="str:Email:"
   :#password
-  :#token
-  :#remember-me="bool:false"
   :#password-type="str:password"
-  :#toggle-state="str:var:STATE_SHOW"
+  :#remember-me="bool:false"
+  :#toggle-state="str:show"
+  :#token
+  :#username
 >
   <template>
-    <wc-dialog js="dialog" title="Sign in" show-footer="false">
-      <section>
-        <form :action="signInHref" :method="signInMethod|#toLower" .submit="#login">
+    <wc-dialog el="dialog" :title="title" :description="description" show-footer="false">
+      <div>
+        <form :action="signInHref" :method="signInMethod|^toLower" .submit="#login">
           <input type="hidden" name="token" :value="#token" />
           <div class="error-message" $if="errorMessage" :text="errorMessage" .click="#clearError"></div>
           <div>
-            <label for="username">Email:</label>
-            <input id="username" name="username" :value="#username" type="email" required autocomplete="username" autofocus aria-label="Username" .input="#clearError" />
+            <label for="username" :text="usernameLabel"></label>
+            <input id="username" name="username" :value="#username" type="email" autocomplete="username" 
+              required autofocus :aria.label="usernameAriaLabel" .input="#clearError" />
           </div>
           <div>
             <div class="password-block">
-              <label for="password">Password:</label>
-              <a class="forgot-pw" $if="forgotPwHref" :href="forgotPwHref" .click="#forgotPw">Forgot password?</a>
+              <label for="password" :text="passwordLabel"></label>
+              <a class="forgot-pw" $if="forgotPwHref" :href="forgotPwHref" .click="#forgotPw" :text="forgotPwText"></a>
             </div>
-            <input id="password" name="password" maxlength="32" :value="#password" :type="#passwordType" required autocomplete="current-password" aria-label="Password" .input="#clearError" />
-            <button class="show-pw" type="button" is="wc-button" small variant="link" .click="#toggle" :attr.aria-label="#toggleState" :text="#toggleState"></button>
+            <input id="password" name="password" maxlength="32" :value="#password" :type="#passwordType"
+              required autocomplete="current-password" :aria.label="passwordAriaLabel" .input="#clearError" />
+            <button class="show-pw" type="button" is="wc-button" small variant="link" .click="#toggle" :aria.label="#toggleState" :text="#toggleState"></button>
           </div>
             <div class="remember-me" $if="showRememberMe">
-              <label><input type="checkbox" value="1" :checked="#rememberMe" .input="#rememberMeHandler"/> Remember Me</label>
+              <label><input type="checkbox" value="1" :checked="#rememberMe" .input="#rememberMeHandler"/> <span :text="rememberMeText"></span></label>
             </div>
-          <button class="sign-in" is="wc-button" large aria-label="Sign in">Sign in</button>
+          <button class="sign-in" is="wc-button" large :aria.label="signInText" :text="signInText"></button>
         </form>
-        <div class="sign-up" $if="signUpHref"><span :text="signUpText"></span> <a :href="signUpHref" .click="#signUp">Sign Up</a></div>
-      </section>
+        <div class="sign-up" $if="signUpHref"><span :text="notAMemberText"></span> <a :href="signUpHref" .click="#signUp" :text="signUpText"></a></div>
+      </div>
       <div class="spinner-holder" $if="busy">
         <wc-spinner></wc-spinner>
       </div>
@@ -145,17 +159,14 @@
       bottom: 0;
     }
   </style>
-  <import>
+  <script root>
     import { DIALOG_BUTTONS } from './WcDialogElement.js';
+    import { toLower } from '../EvoPipes.js';
     import './WcSpinnerElement.js';
-
-    const STATE_HIDE = 'hide';
-    const STATE_SHOW = 'show';
-  </import>
+  </script>
   <script>
     open() {
-      this.#username = '';
-      this.#password = '';
+      this.#username = this.#password = '';
       this.#rememberMe = false;
       setTimeout(() => {
         this.#getToken();
@@ -163,19 +174,28 @@
       return this.#els.dialog.open();
     }
 
-    #toLower(str) {
-      return str.toLowerCase();
+    update(key, oldVal, newVal) {
+      if(['showText', 'hideText'].includes(key)) {
+        if (this.#passwordType === 'text') {
+          this.#toggleState = this.hideText;
+        }
+        else {
+          this.#toggleState = this.showText;
+        }
+      }
     }
     #rememberMeHandler(event) {
       this.#rememberMe = event.target.checked;
     }
     #toggle(event) {
-      if (this.#toggleState === STATE_HIDE) {
-        this.#toggleState = STATE_SHOW;
+      if (this.#passwordType === 'text') {
+        this.#toggleState = this.showText;
+        console.log(this.#toggleState);
         this.#passwordType = 'password';
       }
       else {
-        this.#toggleState = STATE_HIDE;
+        this.#toggleState = this.hideText;
+        console.log(this.#toggleState);
         this.#passwordType = 'text';
       }
     }
@@ -188,35 +208,18 @@
 
     //******************************************
     // Events
-    #dispatch(name, {
-      detail = null,
-      bubbles = false,
-      cancelable = true,
-      composed = false
-    } = {}) {
-      if (typeof name !== 'string' || name.length === 0) {
-        throw new TypeError('name must be defined');
-      }
-
-      const event = new CustomEvent(name, { detail, bubbles, cancelable, composed });
-      this.dispatchEvent(event);
-      return event;
-    }
     #getToken() {
-      const getTokenEvent = this.#dispatch('gettoken', {
-        detail: { token: '' },
-        cancelable: false
-      });
+      const getTokenEvent = this.dispatch('gettoken', {detail: { token: '' }});
       this.#token = '' + getTokenEvent.detail.token || '';
     }
     #forgotPw(event) {
-      const forgotPwEvent = this.#dispatch('forgotpw');
+      const forgotPwEvent = this.dispatch('forgotpw');
       if (forgotPwEvent.defaultPrevented) {
         event.preventDefault();
       }
     }
     #signUp(event) {
-      const signUpEvent = this.#dispatch('signup');
+      const signUpEvent = this.dispatch('signup');
       if (signUpEvent.defaultPrevented) {
         event.preventDefault();
       }
@@ -234,7 +237,7 @@
         data.token = this.#token;
       }
 
-      const signInEvent = this.#dispatch('signin', {detail: data});
+      const signInEvent = this.dispatch('signin', {detail: data});
       if (signInEvent.defaultPrevented) {
         event.preventDefault();
         return;

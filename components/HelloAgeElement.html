@@ -1,0 +1,20 @@
+<component tag="hello-age" :message="str:Howdee Evo!" :age="int:7" :#ageStr>
+  <template>
+    <h4 :text="message"></h4>
+    <p :text="#ageStr"></p>
+  </template>
+  <style>
+    :host {
+      display: block;
+      outline: 3px dashed white;
+      padding: 5px;
+    }
+
+    h4:empty {display:none;}
+  </style>
+  <script>
+    update() {
+      this.#ageStr = `You are ${this.age} months old`;
+    }
+  </script>
+</component>

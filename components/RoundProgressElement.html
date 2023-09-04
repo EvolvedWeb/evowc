@@ -10,7 +10,7 @@
       <div class="solid-part"></div>
       <div class="moving-part" :style="#moving"></div>
       <div class="cover"></div>
-      <div class="text" :text="value|#toFixed">&nbsp;</div>
+      <div class="text" data-fixed="3" :text="value|#toFixed">&nbsp;</div>
     </section>
   </template>
   <style>
@@ -66,7 +66,7 @@
     }
   </style>
   <script>
-    #toFixed(val) {
+    #toFixed(val, data) {
       return (+val).toFixed(this.decimals);
     }
 

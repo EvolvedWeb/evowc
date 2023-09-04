@@ -1,0 +1,14 @@
+<component tag="h-i"
+  :+a="str:&apos;\dog&#39;"
+  :today="date:2023-07-24T18:04:43.349Z">
+  <template><span :text="a"></span></template>
+  <script>
+    update(...args) {
+      console.log('update', ...args);
+    }
+
+    attrChanged(...args) {
+      console.log('attrChanged', ...args);
+    }
+  </script>
+</component>

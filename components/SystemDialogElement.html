@@ -5,7 +5,7 @@
   :#show-cancel="bool:true"
   :#answer>
   <template>
-    <wc-dialog js="dialog" :title="#title" :show-cancel="#showCancel" show-x="false" allow-esc="false">
+    <wc-dialog el="dialog" :title="#title" :show-cancel="#showCancel" show-x="false" allow-esc="false">
       <div :html="#message"></div>
       <textarea autofocus $if="#showInput" :value="#answer"></textarea>
     </wc-dialog>
@@ -20,7 +20,7 @@
       width: 0;
       z-index: var(--system-dialog-z);
     }
-    div {
+    div:not(:empty) {
       min-width: var(--system-dialog-min-width);
       padding: 12px 0;
     }
@@ -45,11 +45,9 @@
       });
     }
   </script>
-  <import>
+  <script root>
     import { DIALOG_BUTTONS } from './WcDialogElement.js';
-    const sleep = (time) => new Promise((resolve) => setTimeout(() => {
-    resolve();
-    }, time));
+    const sleep = (time) => new Promise((resolve) => setTimeout(() => {resolve()}, time));
     window.alertwc = async (message, title) => {
       let dlg = document.createElement('system-dialog');
       document.body.appendChild(dlg);
@@ -93,5 +91,5 @@
       dlg = null;
       return resp.button === DIALOG_BUTTONS.OK;
     }
-  </import>
+  </script>
 </component>

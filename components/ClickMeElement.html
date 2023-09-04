@@ -1,0 +1,17 @@
+<component tag="click-me" :#count="int:0">
+  <template>
+    <p :text="#count"></p>
+    <button .click="#onClick">Click Me</button>
+  </template>
+  <style>
+    :host {
+      display: inline-block;
+      text-align: center;
+    }
+  </style>
+  <script>
+    #onClick(event, data) {
+      this.#count++;
+    }
+  </script>
+</component>

@@ -1,5 +1,10 @@
 # Updates to EVO-WC
 
+## Version 0.5.0 - 
+
+* Added min and max limiters for `int` and `num`. Example: `:rank="num(0,5):0"`.
+* Changed from `<import>` tag to `<script location="root">` so editors work better.
+
 ## version 0.4.0 - 2023-05-01 - *** Breaking Changes ***
 
 * Added SystemDialogs (alertwc, confirmwc and promptwc)
@@ -11,7 +16,7 @@
   * Change Password Dialog
   * Spinner
   * Star rank
-* Shank the names of the helper functions in the base class file
+* Shrank the names of the helper functions in the base class file
 * Added ability to inject debug output to components
 * Improved the creating of sub components to be valid at creation of the parent
 * Minor updates to the creation page. Lots left to do.

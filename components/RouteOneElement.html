@@ -1,0 +1,35 @@
+<component tag="route-one" shadow="none"
+  :#show-st="bool:false">
+  <template>
+    <wc-loop title="Name:"></wc-loop>
+    <wc-hr style="width:500px;margin:0 auto;"></wc-hr>
+    <div style="display:flex;justify-content: space-around;">
+      <div>
+        <button is="wc-button" .click="#toggle">Toggle</button><br/>
+        <special-thing :show="#showSt"></special-thing>
+      </div>
+      <simple-address></simple-address>
+      <has-switch></has-switch>
+    </div>
+    <wc-hr></wc-hr>
+    <div style="display:flex;flex-direction:row;">
+      <portfolio-img></portfolio-img>
+      &nbsp;
+      <person-profile></person-profile>
+    </div>
+  </template>
+  <script root>
+    import './HasSwitchElement.js';
+    import './PortfolioImgElement.js';
+    import './SimpleAddressElement.js';
+    import './SpecialThingElement.js';
+    import './WcHrElement.js';
+    import './WcLoopElement.js';
+    import './PersonProfileElement.js';
+  </script>
+  <script>
+    #toggle(event, data) {
+      this.#showSt = !this.#showSt;
+    }
+  </script>
+</component>

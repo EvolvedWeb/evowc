@@ -1,0 +1,130 @@
+<component tag="route-two" shadow="none"
+  :#progress1="num:97"
+  :#progress2="num:65">
+  <template>
+    <div style="display:flex;flex-direction:column;margin-bottom:10px;">
+      <div style="display:flex;margin-bottom:40px;gap:10px;justify-content:space-between;">
+        <!-- <wc-calendar></wc-calendar> -->
+        <mini-mum></mini-mum>
+        <if-one style="background:#FFE;border:1px solid black;padding:5px;"></if-one>
+        <div style="display:flex;flex-direction:column;justify-content:space-between;align-items:center;">
+          <some-face state="sad"></some-face>
+          <div style="align-self:flex-start">Ranking: "<wc-rank show-num="true" live></wc-rank>"</div>
+          <wc-spinner size="48" color="#333" speed="1.5s"></wc-spinner>
+        </div>
+      </div>
+      <wc-hr></wc-hr>
+      <div style="display:flex;flex-direction:row;justify-content:space-between">
+        <button type="button" .click="#showAlert">Alert</button>
+        <locale-date timestamp="Dec 25, 2023"></locale-date>
+        <locale-date timestamp="Mar 23, 1971"></locale-date>
+      </div>
+      <div style="border:1px solid black;margin:10px 0;display:flex;flex-flow: wrap;justify-content: space-evenly;">
+        <span style="background-color:black;color:white">
+          <round-progress :value="#progress1"></round-progress>
+        </span>
+        <round-progress :value="#progress2" decimals="1" line-color="red" style="color:white;background:#442299;"></round-progress>
+      </div>
+      <div>
+        Normal:&nbsp;<alert-box message="This is a message with no state" state=""></alert-box>
+        Info:&nbsp;<alert-box message="This is an info message" state="info"></alert-box>
+        Warn:&nbsp;<alert-box message="This is a warning message" title="WARNING!" state="warn"></alert-box>
+        Alert:&nbsp;<alert-box message="This is an error" state="alert" dpopup></alert-box>
+      </div>
+      <div>
+        Normal: <alert-message message="This is a non-types message" state=""></alert-message>
+        Info: <alert-message message="This is an info message" state="info"></alert-message>
+        Warn: <alert-message message="This is a warning message" title="WARNING!" state="warn"></alert-message>
+        Alert: <alert-message message="This is an error" state="alert"></alert-message>
+      </div>
+      <wc-hr></wc-hr>
+      <div style="margin-top: 10px">
+        <button is="wc-button">Normal</button>
+        <button is="wc-button" variant="info">Info</button>
+        <button is="wc-button" variant="danger">Danger</button>
+        <button is="wc-button" variant="minor">Minor</button>
+        REGULAR
+      </div>
+      <div style="margin-top: 10px">
+        <button small is="wc-button">Normal</button>
+        <button small is="wc-button" variant="info">Info</button>
+        <button small is="wc-button" variant="danger">Danger</button>
+        <button small is="wc-button" variant="minor">Minor</button>
+        SMALL
+      </div>
+      <div style="margin-top: 10px">
+        <button large is="wc-button">Normal</button>
+        <button large is="wc-button" variant="info">Info</button>
+        <button large is="wc-button" variant="danger">Danger</button>
+        <button large is="wc-button" variant="minor">Minor</button>
+        LARGE
+      </div>
+      <div style="margin-top: 10px">
+        <button is="wc-button" variant="primary">primary</button>
+        <button is="wc-button" variant="secondary">secondary</button>
+        <button is="wc-button" variant="success">success</button>
+        <button is="wc-button" variant="info">info</button>
+        <button is="wc-button" variant="warning">warning</button>
+        <button is="wc-button" variant="danger">danger</button>
+        <button is="wc-button" variant="light">light</button>
+        <button is="wc-button" variant="dark">dark</button>
+      </div>
+      <wc-button-group style="margin-top: 10px">
+        <button is="wc-button">One</button>
+        <button is="wc-button">Two</button>
+        <button is="wc-button">Three</button>
+        <button is="wc-button">Four</button>
+        <button is="wc-button">Five</button>
+      </wc-button-group>
+    </div>
+  </template>
+  <script root>
+    import './AlertBoxElement.js';
+    import './MiniMumElement.js';
+    import './AlertMessageElement.js';
+    import './IfOneElement.js';
+    import './LocaleDateElement.js';
+    import './RoundProgressElement.js';
+    import './SomeFaceElement.js';
+    import './WcButtonElement.js';
+    import './WcButtonGroupElement.js';
+    import './WcCalendarElement.js';
+    import './WcHrElement.js';
+    import './WcRankElement.js';
+    import './WcSpinnerElement.js';
+    import  './SystemDialogElement.js';
+  </script>
+  <script>
+    #inc1 = 1;
+    #inc2 = .5;
+    clamp(val, min = 0, max = 100) {
+      return Math.max(Math.min(val, max), min);
+    }
+
+    #updateTime() {
+      const p1 = this.clamp(this.#progress1 + this.#inc1);
+      if (p1 === 100 || p1 === 0) {
+        this.#inc1 *= -1;
+      }
+
+      const p2 = this.clamp(this.#progress2 + this.#inc2);
+      if (p2 === 100 || p2 === 0) {
+        this.#inc2 *= -1;
+      }
+
+      this.#progress1 = p1;
+      this.#progress2 = p2;
+
+      setTimeout(() => this.#updateTime(), 100);
+    }
+
+    async #showAlert() {
+      const resp = await promptwc('What is your favorite language?');
+      await alertwc(`Your favorite language is: ${resp}`)
+    }
+
+    init() {
+      this.#updateTime();
+    }
+  </script>
+</component>

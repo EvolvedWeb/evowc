@@ -1,0 +1,23 @@
+<component tag="example-4"
+  :#message="str:var:this.#els.myEl.message"
+  :#age="int:7">
+  <template>
+    <hello-age el="myEl" :message="#message" :age="#age"></hello-age>
+    <hr/>
+    <div>Message: <input :value="#message" /></div>
+    <div>Age: <input type="range" min="1" max="12" :value="#age" /></div>
+  </template>
+  <style>
+    :host {
+      margin: 10px;
+      padding: 10px;
+    }
+
+    input {
+      font-size: 2rem;;
+    }
+  </style>
+  <script root>
+    import "./HelloAgeElement.js"
+  </script>
+</component>
