@@ -1,0 +1,117 @@
+<component tag="evo-footer">
+  <template>
+    <div class="footer-cols">
+      <div>
+        <h3>Resources</h3>
+        <p><a href="get-started.html" rel="noopener noreferrer">Getting Started</a></p>
+        <p><a href="https://github.com/EvolvedWeb/evowc/blob/main/README.md" target="_blank" rel="noopener noreferrer">Documentation</a></p>
+        <p><a href="examples.html">Examples</a></p>
+      </div>
+      <div>
+        <h3>Support</h3>
+        <p><a href="faq.html" rel="noopener noreferrer">FAQ</a></p>
+        <p><a href="contact-us.html" rel="noopener noreferrer">Contact</a></p>
+      </div>
+      <!--
+        From Angular's website footer (https://angular.io/)
+        RESOURCES                 HELP                      COMMUNITY                 LANGUAGES
+        About                     Stack Overflow            Events                    简体中文版
+        Resource listing          Join Discord              Meetups                   正體中文版
+        Press kit                 Gitter                    Twitter                   日本語版
+        Blog                      Report Issues             GitHub                    한국어
+                                  Code of Conduct           Contribute                Complete language list
+                                  Privacy Policy
+
+        From React's website footer (https://react.dev/)
+        Learn React               API Reference             Community                 More
+        Quick Start               React APIs                Code of Conduct           Blog
+        Installation              React DOM APIs            Meet the Team             React Native
+        Describing the UI                                   Docs Contributors         Privacy
+        Adding Interactivity                                Acknowledgements          Terms
+        Managing State
+        Escape Hatches
+
+        From Vue's website footer (https://vuejs.org/)
+        Docs                      Resources                 Help                      Official Libraries
+        Guide                     Partners                  Discord Chat              Vue Router
+        Tutorial                  Themes                    GitHub Discussions        Pinia
+        Examples                  Certification             DEV Community             Tooling Guide
+        Quick Start               Jobs
+        Glossary                  T-Shirt Shop
+        Vue 2 Docs
+        Migration from Vue 2
+
+        News                      About                     Video Courses
+        Blog                      FAQ                       Vue Mastery
+        Twitter                   Team                      Vue School
+        Events                    Releases
+        Newsletters               Community Guide
+                                  Code of Conduct
+                                  The Documentary
+      -->
+    </div>
+    <p class="copyright">Evo-wc is <a href="https://github.com/evolvedweb/evowc" rel="noopener noreferrer">free and open source software</a>
+      released under the <a href="https://opensource.org/licenses/MIT" target="_blank" rel="noopener noreferrer">MIT License</a>
+      &mdash; Copyright © 2023 Michael Collins</p>
+  </template>
+  <style>
+    :host {
+      align-items: center;
+      background-color: var(--color-bright-3);
+      display: flex;
+      flex: 0 0 auto;
+      flex-flow: column;
+      gap: 60px;
+      height: max-content;
+      padding: 5rem 5rem 0;
+      position: relative;
+      width: 100%;
+    }
+
+    .footer-cols {
+      display: flex;
+      flex: 0 0 auto;
+      flex-flow: row;
+      font: bold 1.25rem Roboto, Monaco, 'Courier New', Courier, monospace;
+      gap: 3rem;
+      height: max-content;
+      justify-content: space-around;
+      overflow: hidden;
+      position: relative;
+      width: 100%;
+    }
+
+    h3 {
+      font: Bold 1.5rem 'Arial Black', Impact, sanserif;
+      margin: 0;
+      padding: 0;
+      text-wrap: balance;
+    }
+
+    h3, p {
+      font-size: 1rem;
+    }
+
+    a, a:visited {
+      color: var(--color-links);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .copyright {
+      background-color: var(--color-dark-2);
+      color: var(--color-bright-3);
+      margin: 0;
+      padding: 2rem 5rem 2rem;
+      text-align: center;
+      width: 100%;
+    }
+
+    .copyright a {
+      color: var(--color-bright-2);
+    }
+  </style>
+</component>

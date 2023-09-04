@@ -2,14 +2,11 @@
   <template>
     <div>this.state is currently set to <span :text="state"></span></div>
     <button .click="#toggleState">Toggle</button>
-    <div class="red" $if="state">TRUE - This shows if this.state is set to true.
-      <p>Go watcha fun movie!</p>
-    </div>
-    <div class="blue" $if="!state">FALSE - If this.state is set to false then this shows.
-      <p>Listen to an audio book.</p>
-    </div>
+    <div class="red" $if="state">Shows if this.state is set to true.</div>
+    <div class="blue" $if="!state">Shows when this.state is set to false.</div>
   </template>
   <style>
+    :host { display: inline-block; }
     .red { background-color: #F00; margin: 20px; padding: 20px; }
     .blue { background-color: #00F; color: #FFF; margin: 20px; padding: 20px; }
   </style>

@@ -29,7 +29,7 @@ Your valuable contributions and insights will play a crucial role in the develop
 
 Traditional Web Components often involve writing a substantial amount of boilerplate code, which can be cumbersome for developers. However, with Evo, you only need to write the necessary HTML, CSS and JavaScript code within a template file. In the HTML you can easily bind variables to attributes, properties, events, and more.
 
-Unlike most frameworks that use interpolation syntax like `<h3>Current customer: {{currentCustomer}}</h3>`, Evo opts for a different approach. You you can add a `<span>` element within the `<h3>` to achieve a similar binding effect. `<h3>Current customer: <span :text="currentCustomer"></span></h3>`. Or, You can combine the entire string into a private CPA, say `#welcome`, and then set the `textContent` or `innerHTML` of an element like `<h3 :text="#welcome"></h3>` and `<h3 :html="#welcome"></h3>`, respectively.
+Unlike most frameworks that use interpolation syntax like `<h3>Current customer: {{currentCustomer}}</h3>`, Evo opts for a different approach. You would add a `<span>` element within the `<h3>` to achieve a similar binding effect. `<h3>Current customer: <span :text="currentCustomer"></span></h3>`. Or, You can combine the entire string into a private CPA, say `#welcome`, and then set the `textContent` or `innerHTML` of an element like `<h3 :text="#welcome"></h3>` and `<h3 :html="#welcome"></h3>`, respectively.
 
 Example using a `<span>`:
 
@@ -134,13 +134,13 @@ The [`<script root>` element](./docs/ScriptRootElement.md) in an Evo component f
 
 ### Click event handler example
 
-Here is an example component that has a CPA called `message`. WHenever the `message` attribute on this component is set or when the `message` property is set then the text of the `<h1>` tag will be set to that value.
+Here is an example component that has a CPA called `message`. Whenever the `message` attribute on this component is set or when the `message` property is set then the text of the `<h1>` tag will be set to that value.
 
 #### Example:
 
 Component definition:
 
-```html
+```xml
 <component tag="my-message" :message>
   <template>
     <h1 :text="message"></h1>
@@ -148,7 +148,7 @@ Component definition:
 </component>
 ```
 
-HTML that uses the component:
+Here is an example of HTML that uses the component:
 
 ```html
 <html>
@@ -156,8 +156,9 @@ HTML that uses the component:
   <my-message message="Initial Message"></my-message>
   <button onclick="changeMessage()">Change message</button>
   <script>
+    const target = document.querySelector('my-message');
+
     function changeMessage() {
-      const target = document.querySelector('my-message');
       target.message = "Second Message";
     }
   </script>
@@ -188,12 +189,152 @@ By using these lifecycle functions, you can control and manage various aspects o
 
 ## Base Class File EvoElement.js
 ## Compile Options
+
+```json
+  "evo": {
+    "wc": {
+      "output": "static/js",
+      "outExtname": ".ts",
+      "minify": {
+        "css": true,
+        "html": true
+      }
+    }
+  },
+```
+
+More information soon
+
 ## Integration with TypeScript
 
 Evo is designed to work seamlessly without requiring TypeScript. While you have the option to use TypeScript if you prefer, all of our example components are written in raw JavaScript. The generated files include extensive typing information using JSDocs. Most code editors interpret this typing information similar to TypeScript, but the advantage is that the transpiled code can be directly loaded into the browser without additional compilation steps.
 
 If you choose to write your code in the `<script>` tag as TypeScript, you would need Evo to transpile it first before processing it with TypeScript.
 
-> As of mid-2023, we have not extensively tested TypeScript integration, and there might be some potential issues. If you encounter any problems, we encourage you to create a bug request and provide your sample code along with the version of TypeScript you are using and the error message that was generated. This will help us improve and address any potential TypeScript-related issues for a better developer experience.
+> As of August 2023, we have not extensively tested TypeScript integration, and there might be some potential issues. If you encounter any problems, we encourage you to create a Github issue and provide your sample code along with the version of TypeScript you are using and the error message that was generated. This will help us improve and address any potential TypeScript-related issues for a better developer experience.
+
+## VSCode Enhancements
+
+### HTML Snippet
+
+HTML Snippet to generate a skeleton of a template:
+
+```json
+  "evowc": {
+    "prefix": "evowc",
+    "body": [
+      "<component tag=\"${1:tag-name}\">",
+      "  <template>",
+      "    $0",
+      "  </template>",
+      "  <style>",
+      "  </style>",
+      "  <script root>",
+      "  </script>",
+      "  <script>",
+      "  </script>",
+      "</component>"
+    ]
+  }
+```
+
+### JavaScript Snipper
+
+JavaScript snippet for several evo repated class member functions:
+
+```json
+  "evo init function": {
+    "prefix": "evoinit",
+    "body": [
+      "${1:// Called at the end of the constructor",
+      "}init() {",
+      "  $0",
+      "}"
+    ]
+  },
+  "evo update function": {
+    "prefix": "evoupdate",
+    "body": [
+      "${1:// Called after any CPA value is changed",
+      "}update(property, oldVal, newVal) {",
+      "  $0",
+      "}"
+    ]
+  },
+  "evo event handler function": {
+    "prefix": "evoevent",
+    "body": [
+      "${1:// ${2:click} event handler for ${3:save button}",
+      "}${4:#functionName}(${5:event, data}) {",
+      "  $0",
+      "}"
+    ]
+  }
+```
+
+## ATOM enhancements
+
+> The following were converted from the VS Code snippets using chatGPT. If someone can validate that these are valid and let me know.
+
+### HTML Snippet
+
+HTML Snippet to generate a skeleton of a template:
+
+```cson
+'.text.html.basic':
+  'evowc':
+    'prefix': 'evowc'
+    'body': """
+      <component tag="${1:tag-name}">
+        <template>
+          $0
+        </template>
+        <style>
+        </style>
+        <script root>
+        </script>
+        <script>
+        </script>
+      </component>
+    """
+```
+
+### JavaScript Snipper
+
+JavaScript snippet for several evo repated class member functions:
+
+```json
+'.source.js':
+  'evo init function':
+    'prefix': 'evoinit'
+    'body': """
+      ${1:// Called at the end of the constructor
+      }init() {
+        $0
+      }
+    """
+
+  'evo update function':
+    'prefix': 'evoupdate'
+    'body': """
+      ${1:// Called after any CPA value is changed
+      }update(key, oldVal, newVal) {
+        $0
+      }
+    """
+
+  'evo event handler function':
+    'prefix': 'evoevent'
+    'body': """
+      // ${1:click} event handler for ${2:save button}
+      ${3:#functionName}(${4:event, data}) {
+        $0
+      }
+    """
+```
+
+If anyone can convert these snippets to work in other editors, please do and submit a pull request on this file.
 
 ## Reference
+
+Comming soon

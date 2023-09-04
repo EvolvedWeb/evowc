@@ -217,7 +217,7 @@ The only characters that must be encoded are:
 | `<` | `&lt;` |
 | `>` | `&gt;` |
 | `"` | `&quot;` |
-| `'` | `&#39;` |
+| `'` | `&#39;` or `&apos;` |
 
 &nbsp;
 

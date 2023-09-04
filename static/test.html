@@ -49,11 +49,19 @@
     <wc-route href="(.*)" element="route-not-found" redirect="" import="./RouteNotFoundElement.js"></wc-route>
   </wc-router>
   <hr/>
+  <hr/>
   <h-i></h-i>
+  <input type="checkbox" id="mine" />
   <script type="module">
     import '../js/components/HIElement.js';
     import '../js/components/WcAElement.js';
     import '../js/components/WcRouterElement.js';
+
+    const handler = msg => e => console.log(msg, e.target.checked, e);
+    const cb = document.getElementById('mine');
+    cb.addEventListener('click', handler('click'));
+    cb.addEventListener('input', handler('input'));
+    cb.addEventListener('change', handler('change'));
   </script>
 </body>
 </html>

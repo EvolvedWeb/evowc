@@ -1,36 +1,101 @@
 {
   "name": "evowc",
   "version": "0.5.0",
-  "description": "Evo-WC transpiler converts a template file based on HTML and XML into a raw JS custom Web Component.",
+  "description": "Evo-WC transpiler converts a template file based on HTML and XML into a raw JavaScript custom element Web Component.\nOnly write what you need!",
   "main": "index.js",
+  "keywords": [
+    "command-line",
+    "compile time",
+    "compiler",
+    "component property attributes",
+    "component-based architecture",
+    "conditional rendering",
+    "CSS encapsulation",
+    "custom elements",
+    "data binding",
+    "data transformation pipes",
+    "developer-friendly",
+    "event handling",
+    "Evo",
+    "evolved web components",
+    "evowc",
+    "framework",
+    "front-end development",
+    "lifecycle methods",
+    "looping",
+    "minimalism",
+    "modularity",
+    "native DOM events",
+    "performance",
+    "reactivity",
+    "reusability",
+    "shadow DOM",
+    "standards-based",
+    "transpiler",
+    "two-way data binding",
+    "web components",
+    "web development"
+  ],
   "bin": {
     "evowc": "bin/evowc.js"
   },
   "directories": {
-    "lib": "lib"
+    "bin": "bin",
+    "doc": "docs",
+    "example": "components",
+    "lib": "lib",
+    "test": "test"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "node ./bin/evowc.js \"components/*.html\"",
-    "build1": "node --inspect-brk ./bin/evowc.js \"components/SpecialThingElement.html\"",
-    "build2": "node ./bin/evowc.js \"components/WcLoopElement.html\"",
-    "build3": "node ./bin/evowc.js \"components/WcAnchorElement.html\"",
-    "start": "node app"
+    "build:debug": "node --inspect-brk ./bin/evowc.js \"components/**/*.html\"",
+    "build": "npm run evowc",
+    "debug-mocha": "node --inspect-brk node_modules/mocha/bin/_mocha --reporter tap \"lib/**/*.mocha.js\"",
+    "evowc1": "node ./bin/evowc.js AlertMessageElement.html",
+    "evowc": "node ./bin/evowc.js \"**/*.html\"",
+    "lint": "eslint \"lib/**/*.js\" \"bin/evowc.js\" \"static/js/*.js\"",
+    "postinstall": "npm run build",
+    "start": "node app",
+    "test-mocha": "nyc --nycrc-path test/.nycrc-mocha.json ./node_modules/.bin/_mocha \"lib/**/*.mocha.js\"",
+    "test": "npm run lint && npm run test-mocha"
+  },
+  "evo": {
+    "wc": {
+      "addDebug": false,
+      "saveDebugJson": true,
+      "minify": {
+        "css": true,
+        "html": true
+      },
+      "outExtname": ".js",
+      "paths": {
+        "srcRoot": ".",
+        "templateRoot": "./components",
+        "publicRoot": "./static",
+        "componentsRoot": "./static/js/components"
+      }
+    }
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/intervalia/evowc.git"
+    "url": "git+https://github.com/evolvedweb/evowc.git"
   },
-  "author": "Michael Collins <intervalia@gmail.com>",
+  "author": "Michael Collins <intervalia+evo@gmail.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/intervalia/evowc/issues"
+    "url": "https://github.com/evolvedweb/evowc/issues"
   },
-  "homepage": "https://github.com/intervalia/evowc#readme",
+  "homepage": "https://github.com/evolvedweb/evowc#readme",
   "dependencies": {
     "express": "4.18.2",
-    "fast-xml-parser": "4.2.2",
-    "glob": "10.2.6",
+    "fast-xml-parser": "4.2.7",
+    "glob": "10.3.3",
     "html-minifier-terser": "7.2.0"
+  },
+  "devDependencies": {
+    "@types/mocha": "^10.0.1",
+    "chai": "^4.3.7",
+    "eslint": "^8.47.0",
+    "mocha": "^10.2.0",
+    "nyc": "^15.1.0"
   }
 }

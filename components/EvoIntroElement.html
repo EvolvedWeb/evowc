@@ -1,0 +1,92 @@
+<component tag="evo-intro">
+  <template>
+    <section>
+      <h1>Evo-WC</h1>
+      <h2>Evolved - Web Components</h2>
+      <h3>Without all the boilerplate</h3>
+    </section>
+    <h4><wc-a href="/slideshow/0">Michael Collins - 08/15/2023</wc-a></h4>
+  </template>
+  <style>
+    @font-face {
+      font-family: kingvoon;
+      src: url("/fonts/Kingvoon.otf") format("opentype");
+    }
+    :host {
+      background: black;
+      bottom: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      left: 0;
+      margin: 0;
+      padding: 20px;
+      position: fixed;
+      right: 0;
+      top: 0;
+    }
+    section {
+      align-items: flex-start;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding-top: 12%;
+      width: 100%;
+    }
+    h1 {
+      font: 200px Kingvoon;
+      color: #FEFF2F;
+      margin: 0 0 1rem;
+    }
+    h2 {
+      color: #FFF;
+      font-size: 72px;
+      font-weight: bold;
+      margin: 0;
+    }
+    h3 {
+      color: #C896FF;
+      font-size: 55px;
+      font-weight: bold;
+      margin: 0;
+    }
+    h4 {
+      font-size: 38px;
+      font-weight: bold;
+      margin: 0;
+    }
+    wc-a::part(a) {
+      color: #FEFF2F;
+      text-decoration: none;
+    }
+    wc-a::part(a):hover {
+      --wc-a-hover-color: #FEFF2F;
+    }
+    wc-a::part(a):visited {
+      --wc-a-visited-color: #FEFF2F;
+    }
+  </style>
+  <script root>
+    import {router} from "../EvoRrouter.js";
+    import "./WcAElement.js"
+  </script>
+  <script>
+    init() {
+      this.tabIndex = 0; // Allow Keyboard Events
+      ael(this, 'keydown', (evt) => this.#keyHandler(evt))
+      router.onUpdate(() => this.#updateRoute());
+      this.#updateRoute();
+    }
+
+    #keyHandler(evt) {
+      const { key } = evt;
+      if (['PageDown','ArrowDown'].includes(key)) {
+        router.navigate('/slideshow/0');
+      }
+    }
+
+    #updateRoute() {
+      this.focus();
+    }
+</script>
+</component>

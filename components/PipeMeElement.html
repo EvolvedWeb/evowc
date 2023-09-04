@@ -1,0 +1,24 @@
+<component tag="pipe-me" :#val>
+  <template>
+    <input :value="#val">
+    <div>Upper: <span :text="#val|#upper"></span></div>
+    <div>Lower: <span :text="#val|lower"></span></div>
+    <div>Reverse: <span :text="#val|reverse|lower"></span></div>
+  </template>
+  <style>
+    div, input {
+      font-size: 2.5rem;
+    }
+  </style>
+  <script>
+    lower(str) {
+      return str.toLowerCase();
+    }
+    #upper(str) {
+      return str.toUpperCase();
+    }
+    reverse(str) {
+      return [...str].reverse().join("");
+    }
+  </script>
+</component>

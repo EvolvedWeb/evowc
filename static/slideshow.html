@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EVO slideshow</title>
+</head>
+<body>
+  <style>
+  :root {
+    font-size: calc(100vw / 130);
+  }
+  body {
+    background-color: #000;
+  }
+
+  body::before {
+    -animation: ani .5s linear alternate infinite;
+    background-image: url('/img/slideshowbg2.jpg');
+    background-size: cover;
+    bottom: 0;
+    content: '';
+    left: 0;
+    opacity: .1;
+    position: fixed;
+    right: 0;
+    top: 0;
+  }
+  @keyframes ani {
+    0% {
+    }
+    100% {
+    }
+  }
+
+  h1 {
+    color: red;
+  }
+  #fs {
+    align-items: center;
+    background-color: #777;
+    border-radius: 50%;
+    border: 1px solid #999;
+    box-sizing: border-box;
+    color: #bbb;
+    cursor: pointer;
+    display: flex;
+    height: 42px;
+    justify-content: center;
+    line-height: 1;
+    opacity: .01;
+    padding: 10px;
+    position: fixed;
+    right: 5px;
+    top: 5px;
+    width: 42px
+  }
+  #fs:hover {
+    opacity: .5;
+  }
+  </style>
+  <wc-router>
+    <wc-route href="/slideshow/:page" element="evo-slidelist"></wc-route>
+    <wc-route href="(.*)" element="evo-intro" redirect="" import="./EvoIntroElement.js"></wc-route>
+  </wc-router>
+  <div id="fs">+</div>
+  <script type="module">
+    import '../js/components/WcAElement.js';
+    import '../js/components/WcRouterElement.js';
+    import '../js/components/EvoSlidelistElement.js';
+    const fs = document.getElementById('fs');
+    fs.addEventListener('click', () => {
+      document.body.requestFullscreen();
+    })
+    document.addEventListener('keydown', evt => {
+      const { altKey, code, metaKey } = evt;
+      if (altKey && metaKey && ['KeyP'].includes(code)) {
+        console.log('KeyP');
+        evt.preventDefault();
+        document.body.requestFullscreen();
+      }
+    }, true);
+  </script>
+</body>
+</html>

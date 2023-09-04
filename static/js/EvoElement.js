@@ -1,3 +1,4 @@
+/* eslint-env browser */
 /**
  * Convert an attribute name to a property name. Mainly
  * used by the `attributeChangedCallback` method.
@@ -23,7 +24,7 @@ export const isObject = value => !!(value && typeof value === 'object');
  * @param {string} val - Attribute value to be checked
  * @returns boolean - boolean version of the attribute value
  */
-export const boolFromVal = (val) => ['', 'true', '1'].includes(val) ? true : ['false', '0'].includes(val) ? false : Boolean(val);
+export const boolFromVal = (val) => ['', 'true', '1'].includes(val) ? true : ['false', '0'].includes(val) ? false : val == null ? null : Boolean(val);
 
 /**
  * Set an attribute on the DOM element `el`. If the value passed in
@@ -221,6 +222,7 @@ export const EvoElement = (baseClass = HTMLElement) => class extends baseClass {
   getEls(root) {
     const checkRoot = !!root;
     root ??= this.#rootDom;
+    // eslint-disable-next-line no-return-assign, no-sequences
     const els = [...root.querySelectorAll('[el]')].reduce((o, el) => (o[el.getAttribute('el')] = el, o), {});
     if(checkRoot) {
       const key = root.getAttribute('el');
@@ -253,7 +255,7 @@ export const EvoElement = (baseClass = HTMLElement) => class extends baseClass {
         throw new TypeError(`The 'data' must be an array of all the data to render`);
       }
 
-      const { comment, srcEl, item, index } = forInfo;
+      const { comment: commentEl, srcEl/*, item, index*/ } = forInfo;
       const loopedEls = this.#loopedEls[loopElementKey] || [];
 
       // Create new elements
@@ -265,9 +267,9 @@ export const EvoElement = (baseClass = HTMLElement) => class extends baseClass {
         }
         const itemKey = item[itemKeyName];
         if(itemKey && loopedEls.length) {
-          loopedEls.some((item, i) => {
-            if (item.itemKey === itemKey) {
-              el = item.el;
+          loopedEls.some(loopedEl => {
+            if (loopedEl.itemKey === itemKey) {
+              el = loopedEl.el;
               return true;
             }
           });
@@ -284,20 +286,20 @@ export const EvoElement = (baseClass = HTMLElement) => class extends baseClass {
       }, {});
 
       // remove previous elements and event handlers
-      loopedEls.forEach(item => {
-        item.events.forEach(rmEvt => rmEvt()); // remove event handlers
-        item.el.remove(); // Remove the element from DOM
+      loopedEls.forEach(loopedEl => {
+        loopedEl.events.forEach(rmEvt => rmEvt()); // remove event handlers
+        loopedEl.el.remove(); // Remove the element from DOM
 
         // Clean up to prevent memory leaks
-        item.itemKey = null;
-        item.events = null;
-        item.el = null;
-        item = null;
+        loopedEl.itemKey = null;
+        loopedEl.events = null;
+        loopedEl.el = null;
+        loopedEl = null;
       })
 
       this.#loopedEls[loopElementKey] = newEls;
       // Insert all of the new elements
-      comment.after(...(newEls.map(item => item.el)));
+      commentEl.after(...(newEls.map(newEl => newEl.el)));
     }
     else {
       console.error(`No $for information for the loopElementKey "${loopElementKey}"`);
@@ -321,21 +323,26 @@ export const EvoElement = (baseClass = HTMLElement) => class extends baseClass {
       this.#domAttached = true;
     }
     this.#insertStyles()
-    this.update && this.update();
-    this.connected && this.connected();
+    // @ts-ignore
+    if(this.update) this.update();
+    // @ts-ignore
+    if(this.connected) this.connected();
   }
 
   disconnectedCallback() {
-    this.disconnected && this.disconnected();
+    // @ts-ignore
+    if(this.disconnected) this.disconnected();
   }
 
   adoptedCallback() {
-    this.adopted && this.adopted();
+    // @ts-ignore
+    if(this.adopted) this.adopted();
   }
 
   attributeChangedCallback(attr, oldVal, newVal) {
-    this.attrChanged && this.attrChanged(attr, oldVal, newVal);
     if (oldVal !== newVal) {
+      // @ts-ignore
+      if (this.attrChanged) this.attrChanged(attr, oldVal, newVal);
       const prop = propFromAttr(attr);
       this[prop] = newVal;
     }

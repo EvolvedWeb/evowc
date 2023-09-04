@@ -1,0 +1,37 @@
+<component tag="evo-header">
+  <template>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="get-started.html">Get Started</a>
+      <a href="docs.html">Docs</a>
+      <a href="examples.html">Examples</a>
+      <a href="faq.html">FAQ</a>
+      <div class="search-bar">
+        <input type="text" placeholder="Search" />
+      </div>
+    </nav>
+  </template>
+  <style>
+    :host {
+      background-color: var(--color-dark-2);
+      color: var(--color-dark);
+      padding: 10px 30px;
+    }
+
+    nav {
+      align-items: center;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    a {
+      color: var(--color-bright);
+      opacity: .8;
+      text-decoration: none;
+    }
+
+    a:hover {
+      opacity: 1;
+    }
+  </style>
+</component>

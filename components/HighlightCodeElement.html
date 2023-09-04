@@ -1,0 +1,406 @@
+<component tag="highlight-code"
+  :css="str:github-dark"
+  :lang="str:js"
+  :show-copy="bool:false"
+  :src
+  :#code
+  :#css-import
+  :#wasCopied="bool:false"
+  >
+  <template>
+    <style :text="#cssImport"></style>
+    <pre class="hljs"><code :attr.class="lang|#codeClassName" :html="#code"></code></pre>
+    <div $if="showCopy" class="top-right">
+      <span inert class="copied" :attr.show="#wasCopied">Code Copied</span>
+      <button class="copy".click="#copyText"></button>
+    </div>
+  </template>
+  <style>
+    :host {
+      display: inline-block;
+      line-height: normal;
+      margin: 0;
+      max-width: 100%;
+      overflow: hidden;
+      padding: 0;
+      position: relative;
+      --highlight-code-font-family: monospace;
+      --highlight-code-padding: 0;
+    }
+    :host([wide]) {
+      display: block;
+      width: 100%;
+      --highlight-code-padding: 20px;
+    }
+    pre.hljs {
+      max-height: 100%;
+      max-width: 100%;
+      overflow: auto;
+      margin: 0;
+      padding: 0;
+    }
+    :host([show-copy] pre.hljs) {
+      padding-right: 30px;
+    }
+    code {
+      box-sizing: border-box;
+      display: inline-block;
+      font-family: var(--highlight-code-font-family);
+      height: 100%;
+      overflow: auto;
+      padding: var(--highlight-code-padding, 20px);
+      width: 100%;
+    }
+
+    .top-right {
+      align-items: center;
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+      position: absolute;
+      left: 6px;
+      right: 6px;
+      top: 6px;
+      z-index: 10;
+    }
+
+    .copy {
+      background-color: transparent;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' height='24' viewBox='0 0 24 24' width='24'%3E%3Cpath d='M0 0h24v24H0z' fill='none'/%3E%3Cpath d='M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z' fill='white'/%3E%3C/svg%3E");
+      border: none;
+      color: #fff;
+      height: 24px;
+      margin: 0;
+      opacity: .5;
+      padding: 0;
+      width: 24px;
+    }
+    .copy:hover {
+      opacity: 1;
+    }
+    .copied {
+      display: inline-block;
+      border-radius: 8px;
+      font: 14px Roboto,"Helvetica Neue Light","Helvetica Neue",Helvetica,Arial,Lucida Grande,sans-serif;
+      padding: 2px 8px;
+      background-color: #eee;
+      color: #000;
+      opacity: 0;
+      transition: opacity .5s;
+    }
+    .copied[show] {
+      opacity: 1;
+      transition: opacity .25s;
+    }
+  </style>
+  <script root>
+    import hljs from 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/es/highlight.min.js';
+    /*
+    export const STYLES = {
+      A11Y_DARK: 'a11y-dark',
+      A11Y_LIGHT: 'a11y-light',
+      AGATE: 'agate',
+      AN_OLD_HOPE: 'an-old-hope',
+      ANDROIDSTUDIO: 'androidstudio',
+      ARDUINO_LIGHT: 'arduino-light',
+      ARTA: 'arta',
+      ASCETIC: 'ascetic',
+      ATOM_ONE_DARK_REASONABLE: 'atom-one-dark-reasonable',
+      ATOM_ONE_DARK: 'atom-one-dark',
+      ATOM_ONE_LIGHT: 'atom-one-light',
+      BROWN_PAPER: 'brown-paper',
+      CODEPEN_EMBED: 'codepen-embed',
+      COLOR_BREWER: 'color-brewer',
+      DARK: 'dark',
+      DEFAULT: 'default',
+      DEVIBEANS: 'devibeans',
+      DOCCO: 'docco',
+      FAR: 'far',
+      FELIPEC: 'felipec',
+      FOUNDATION: 'foundation',
+      GITHUB_DARK_DIMMED: 'github-dark-dimmed',
+      GITHUB_DARK: 'github-dark',
+      GITHUB: 'github',
+      GML: 'gml',
+      GOOGLECODE: 'googlecode',
+      GRADIENT_DARK: 'gradient-dark',
+      GRADIENT_LIGHT: 'gradient-light',
+      GRAYSCALE: 'grayscale',
+      HYBRID: 'hybrid',
+      IDEA: 'idea',
+      INTELLIJ_LIGHT: 'intellij-light',
+      IR_BLACK: 'ir-black',
+      ISBL_EDITOR_DARK: 'isbl-editor-dark',
+      ISBL_EDITOR_LIGHT: 'isbl-editor-light',
+      KIMBIE_DARK: 'kimbie-dark',
+      KIMBIE_LIGHT: 'kimbie-light',
+      LIGHTFAIR: 'lightfair',
+      LIOSHI: 'lioshi',
+      MAGULA: 'magula',
+      MONO_BLUE: 'mono-blue',
+      MONOKAI_SUBLIME: 'monokai-sublime',
+      MONOKAI: 'monokai',
+      NIGHT_OWL: 'night-owl',
+      NNFX_DARK: 'nnfx-dark',
+      NNFX_LIGHT: 'nnfx-light',
+      NORD: 'nord',
+      OBSIDIAN: 'obsidian',
+      PANDA_SYNTAX_DARK: 'panda-syntax-dark',
+      PANDA_SYNTAX_LIGHT: 'panda-syntax-light',
+      PARAISO_DARK: 'paraiso-dark',
+      PARAISO_LIGHT: 'paraiso-light',
+      POJOAQUE: 'pojoaque',
+      PUREBASIC: 'purebasic',
+      QTCREATOR_DARK: 'qtcreator-dark',
+      QTCREATOR_LIGHT: 'qtcreator-light',
+      RAINBOW: 'rainbow',
+      ROUTEROS: 'routeros',
+      SCHOOL_BOOK: 'school-book',
+      SHADES_OF_PURPLE: 'shades-of-purple',
+      SRCERY: 'srcery',
+      STACKOVERFLOW_DARK: 'stackoverflow-dark',
+      STACKOVERFLOW_LIGHT: 'stackoverflow-light',
+      SUNBURST: 'sunburst',
+      TOKYO_NIGHT_DARK: 'tokyo-night-dark',
+      TOKYO_NIGHT_LIGHT: 'tokyo-night-light',
+      TOMORROW_NIGHT_BLUE: 'tomorrow-night-blue',
+      TOMORROW_NIGHT_BRIGHT: 'tomorrow-night-bright',
+      VS: 'vs',
+      VS2015: 'vs2015',
+      XCODE: 'xcode',
+      XT256: 'xt256',
+      BASE16_3024: 'base16/3024',
+      BASE16_APATHY: 'base16/apathy',
+      BASE16_APPRENTICE: 'base16/apprentice',
+      BASE16_ASHES: 'base16/ashes',
+      BASE16_ATELIER_CAVE_LIGHT: 'base16/atelier-cave-light',
+      BASE16_ATELIER_CAVE: 'base16/atelier-cave',
+      BASE16_ATELIER_DUNE_LIGHT: 'base16/atelier-dune-light',
+      BASE16_ATELIER_DUNE: 'base16/atelier-dune',
+      BASE16_ATELIER_ESTUARY_LIGHT: 'base16/atelier-estuary-light',
+      BASE16_ATELIER_ESTUARY: 'base16/atelier-estuary',
+      BASE16_ATELIER_FOREST_LIGHT: 'base16/atelier-forest-light',
+      BASE16_ATELIER_FOREST: 'base16/atelier-forest',
+      BASE16_ATELIER_HEATH_LIGHT: 'base16/atelier-heath-light',
+      BASE16_ATELIER_HEATH: 'base16/atelier-heath',
+      BASE16_ATELIER_LAKESIDE_LIGHT: 'base16/atelier-lakeside-light',
+      BASE16_ATELIER_LAKESIDE: 'base16/atelier-lakeside',
+      BASE16_ATELIER_PLATEAU_LIGHT: 'base16/atelier-plateau-light',
+      BASE16_ATELIER_PLATEAU: 'base16/atelier-plateau',
+      BASE16_ATELIER_SAVANNA_LIGHT: 'base16/atelier-savanna-light',
+      BASE16_ATELIER_SAVANNA: 'base16/atelier-savanna',
+      BASE16_ATELIER_SEASIDE_LIGHT: 'base16/atelier-seaside-light',
+      BASE16_ATELIER_SEASIDE: 'base16/atelier-seaside',
+      BASE16_ATELIER_SULPHURPOOL_LIGHT: 'base16/atelier-sulphurpool-light',
+      BASE16_ATELIER_SULPHURPOOL: 'base16/atelier-sulphurpool',
+      BASE16_ATLAS: 'base16/atlas',
+      BASE16_BESPIN: 'base16/bespin',
+      BASE16_BLACK_METAL_BATHORY: 'base16/black-metal-bathory',
+      BASE16_BLACK_METAL_BURZUM: 'base16/black-metal-burzum',
+      BASE16_BLACK_METAL_DARK_FUNERAL: 'base16/black-metal-dark-funeral',
+      BASE16_BLACK_METAL_GORGOROTH: 'base16/black-metal-gorgoroth',
+      BASE16_BLACK_METAL_IMMORTAL: 'base16/black-metal-immortal',
+      BASE16_BLACK_METAL_KHOLD: 'base16/black-metal-khold',
+      BASE16_BLACK_METAL_MARDUK: 'base16/black-metal-marduk',
+      BASE16_BLACK_METAL_MAYHEM: 'base16/black-metal-mayhem',
+      BASE16_BLACK_METAL_NILE: 'base16/black-metal-nile',
+      BASE16_BLACK_METAL_VENOM: 'base16/black-metal-venom',
+      BASE16_BLACK_METAL: 'base16/black-metal',
+      BASE16_BREWER: 'base16/brewer',
+      BASE16_BRIGHT: 'base16/bright',
+      BASE16_BROGRAMMER: 'base16/brogrammer',
+      BASE16_BRUSH_TREES_DARK: 'base16/brush-trees-dark',
+      BASE16_BRUSH_TREES: 'base16/brush-trees',
+      BASE16_CHALK: 'base16/chalk',
+      BASE16_CIRCUS: 'base16/circus',
+      BASE16_CLASSIC_DARK: 'base16/classic-dark',
+      BASE16_CLASSIC_LIGHT: 'base16/classic-light',
+      BASE16_CODESCHOOL: 'base16/codeschool',
+      BASE16_COLORS: 'base16/colors',
+      BASE16_CUPCAKE: 'base16/cupcake',
+      BASE16_CUPERTINO: 'base16/cupertino',
+      BASE16_DANQING: 'base16/danqing',
+      BASE16_DARCULA: 'base16/darcula',
+      BASE16_DARK_VIOLET: 'base16/dark-violet',
+      BASE16_DARKMOSS: 'base16/darkmoss',
+      BASE16_DARKTOOTH: 'base16/darktooth',
+      BASE16_DECAF: 'base16/decaf',
+      BASE16_DEFAULT_DARK: 'base16/default-dark',
+      BASE16_DEFAULT_LIGHT: 'base16/default-light',
+      BASE16_DIRTYSEA: 'base16/dirtysea',
+      BASE16_DRACULA: 'base16/dracula',
+      BASE16_EDGE_DARK: 'base16/edge-dark',
+      BASE16_EDGE_LIGHT: 'base16/edge-light',
+      BASE16_EIGHTIES: 'base16/eighties',
+      BASE16_EMBERS: 'base16/embers',
+      BASE16_EQUILIBRIUM_DARK: 'base16/equilibrium-dark',
+      BASE16_EQUILIBRIUM_GRAY_DARK: 'base16/equilibrium-gray-dark',
+      BASE16_EQUILIBRIUM_GRAY_LIGHT: 'base16/equilibrium-gray-light',
+      BASE16_EQUILIBRIUM_LIGHT: 'base16/equilibrium-light',
+      BASE16_ESPRESSO: 'base16/espresso',
+      BASE16_EVA_DIM: 'base16/eva-dim',
+      BASE16_EVA: 'base16/eva',
+      BASE16_FLAT: 'base16/flat',
+      BASE16_FRAMER: 'base16/framer',
+      BASE16_FRUIT_SODA: 'base16/fruit-soda',
+      BASE16_GIGAVOLT: 'base16/gigavolt',
+      BASE16_GITHUB: 'base16/github',
+      BASE16_GOOGLE_DARK: 'base16/google-dark',
+      BASE16_GOOGLE_LIGHT: 'base16/google-light',
+      BASE16_GRAYSCALE_DARK: 'base16/grayscale-dark',
+      BASE16_GRAYSCALE_LIGHT: 'base16/grayscale-light',
+      BASE16_GREEN_SCREEN: 'base16/green-screen',
+      BASE16_GRUVBOX_DARK_HARD: 'base16/gruvbox-dark-hard',
+      BASE16_GRUVBOX_DARK_MEDIUM: 'base16/gruvbox-dark-medium',
+      BASE16_GRUVBOX_DARK_PALE: 'base16/gruvbox-dark-pale',
+      BASE16_GRUVBOX_DARK_SOFT: 'base16/gruvbox-dark-soft',
+      BASE16_GRUVBOX_LIGHT_HARD: 'base16/gruvbox-light-hard',
+      BASE16_GRUVBOX_LIGHT_MEDIUM: 'base16/gruvbox-light-medium',
+      BASE16_GRUVBOX_LIGHT_SOFT: 'base16/gruvbox-light-soft',
+      BASE16_HARDCORE: 'base16/hardcore',
+      BASE16_HARMONIC16_DARK: 'base16/harmonic16-dark',
+      BASE16_HARMONIC16_LIGHT: 'base16/harmonic16-light',
+      BASE16_HEETCH_DARK: 'base16/heetch-dark',
+      BASE16_HEETCH_LIGHT: 'base16/heetch-light',
+      BASE16_HELIOS: 'base16/helios',
+      BASE16_HOPSCOTCH: 'base16/hopscotch',
+      BASE16_HORIZON_DARK: 'base16/horizon-dark',
+      BASE16_HORIZON_LIGHT: 'base16/horizon-light',
+      BASE16_HUMANOID_DARK: 'base16/humanoid-dark',
+      BASE16_HUMANOID_LIGHT: 'base16/humanoid-light',
+      BASE16_IA_DARK: 'base16/ia-dark',
+      BASE16_IA_LIGHT: 'base16/ia-light',
+      BASE16_ICY_DARK: 'base16/icy-dark',
+      BASE16_IR_BLACK: 'base16/ir-black',
+      BASE16_ISOTOPE: 'base16/isotope',
+      BASE16_KIMBER: 'base16/kimber',
+      BASE16_LONDON_TUBE: 'base16/london-tube',
+      BASE16_MACINTOSH: 'base16/macintosh',
+      BASE16_MARRAKESH: 'base16/marrakesh',
+      BASE16_MATERIA: 'base16/materia',
+      BASE16_MATERIAL_DARKER: 'base16/material-darker',
+      BASE16_MATERIAL_LIGHTER: 'base16/material-lighter',
+      BASE16_MATERIAL_PALENIGHT: 'base16/material-palenight',
+      BASE16_MATERIAL_VIVID: 'base16/material-vivid',
+      BASE16_MATERIAL: 'base16/material',
+      BASE16_MELLOW_PURPLE: 'base16/mellow-purple',
+      BASE16_MEXICO_LIGHT: 'base16/mexico-light',
+      BASE16_MOCHA: 'base16/mocha',
+      BASE16_MONOKAI: 'base16/monokai',
+      BASE16_NEBULA: 'base16/nebula',
+      BASE16_NORD: 'base16/nord',
+      BASE16_NOVA: 'base16/nova',
+      BASE16_OCEAN: 'base16/ocean',
+      BASE16_OCEANICNEXT: 'base16/oceanicnext',
+      BASE16_ONE_LIGHT: 'base16/one-light',
+      BASE16_ONEDARK: 'base16/onedark',
+      BASE16_OUTRUN_DARK: 'base16/outrun-dark',
+      BASE16_PAPERCOLOR_DARK: 'base16/papercolor-dark',
+      BASE16_PAPERCOLOR_LIGHT: 'base16/papercolor-light',
+      BASE16_PARAISO: 'base16/paraiso',
+      BASE16_PASQUE: 'base16/pasque',
+      BASE16_PHD: 'base16/phd',
+      BASE16_PICO: 'base16/pico',
+      BASE16_POP: 'base16/pop',
+      BASE16_PORPLE: 'base16/porple',
+      BASE16_QUALIA: 'base16/qualia',
+      BASE16_RAILSCASTS: 'base16/railscasts',
+      BASE16_REBECCA: 'base16/rebecca',
+      BASE16_ROS_PINE_DAWN: 'base16/ros-pine-dawn',
+      BASE16_ROS_PINE_MOON: 'base16/ros-pine-moon',
+      BASE16_ROS_PINE: 'base16/ros-pine',
+      BASE16_SAGELIGHT: 'base16/sagelight',
+      BASE16_SANDCASTLE: 'base16/sandcastle',
+      BASE16_SETI_UI: 'base16/seti-ui',
+      BASE16_SHAPESHIFTER: 'base16/shapeshifter',
+      BASE16_SILK_DARK: 'base16/silk-dark',
+      BASE16_SILK_LIGHT: 'base16/silk-light',
+      BASE16_SNAZZY: 'base16/snazzy',
+      BASE16_SOLAR_FLARE_LIGHT: 'base16/solar-flare-light',
+      BASE16_SOLAR_FLARE: 'base16/solar-flare',
+      BASE16_SOLARIZED_DARK: 'base16/solarized-dark',
+      BASE16_SOLARIZED_LIGHT: 'base16/solarized-light',
+      BASE16_SPACEMACS: 'base16/spacemacs',
+      BASE16_SUMMERCAMP: 'base16/summercamp',
+      BASE16_SUMMERFRUIT_DARK: 'base16/summerfruit-dark',
+      BASE16_SUMMERFRUIT_LIGHT: 'base16/summerfruit-light',
+      BASE16_SYNTH_MIDNIGHT_TERMINAL_DARK: 'base16/synth-midnight-terminal-dark',
+      BASE16_SYNTH_MIDNIGHT_TERMINAL_LIGHT: 'base16/synth-midnight-terminal-light',
+      BASE16_TANGO: 'base16/tango',
+      BASE16_TENDER: 'base16/tender',
+      BASE16_TOMORROW_NIGHT: 'base16/tomorrow-night',
+      BASE16_TOMORROW: 'base16/tomorrow',
+      BASE16_TWILIGHT: 'base16/twilight',
+      BASE16_UNIKITTY_DARK: 'base16/unikitty-dark',
+      BASE16_UNIKITTY_LIGHT: 'base16/unikitty-light',
+      BASE16_VULCAN: 'base16/vulcan',
+      BASE16_WINDOWS_10_LIGHT: 'base16/windows-10-light',
+      BASE16_WINDOWS_10: 'base16/windows-10',
+      BASE16_WINDOWS_95_LIGHT: 'base16/windows-95-light',
+      BASE16_WINDOWS_95: 'base16/windows-95',
+      BASE16_WINDOWS_HIGH_CONTRAST_LIGHT: 'base16/windows-high-contrast-light',
+      BASE16_WINDOWS_HIGH_CONTRAST: 'base16/windows-high-contrast',
+      BASE16_WINDOWS_NT_LIGHT: 'base16/windows-nt-light',
+      BASE16_WINDOWS_NT: 'base16/windows-nt',
+      BASE16_WOODLAND: 'base16/woodland',
+      BASE16_XCODE_DUSK: 'base16/xcode-dusk',
+      BASE16_ZENBURN: 'base16/zenburn'
+    };
+    */
+    
+    const mutationConfig = {
+      childList: true,
+      subtree: true
+    };
+  </script>
+  <script>
+    // Private properties that are not CPAs
+    #observer;
+
+    // Internal functions
+    async update(field, oldVal, newVal) {
+      switch(field) {
+        case 'css':
+          this.#cssImport = `@import "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/${this.css}.min.css";`;
+          break;
+
+        case 'lang':
+          this.#doHighlight(this.textContent);
+          break;
+
+        case 'src':
+          if(this.src !== '') {
+            const resp = await fetch(this.src);
+            this.textContent = await resp.text();
+          }
+          break;
+      }
+    }
+
+    connected() {
+      this.#doHighlight(this.textContent);
+      this.#observer = new MutationObserver((...args) => this.#mutationCallback(...args));
+      this.#observer.observe(this, mutationConfig);
+    }
+
+    #mutationCallback(mutationsList, observer) {
+      this.#doHighlight(this.textContent);
+    };
+
+    #doHighlight(code) {
+      this.#code = hljs.highlight(code, {language: this.lang}).value;
+    }
+
+    #codeClassName(lang) {
+      return `language-${lang}`;
+    }
+
+    #copyText() {
+      navigator.clipboard.writeText(this.textContent);
+      this.#wasCopied = true;
+      setTimeout(() => {
+        this.#wasCopied = false;
+      }, 1500);
+    }
+  </script>
+</component>

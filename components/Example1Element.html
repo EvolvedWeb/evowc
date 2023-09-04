@@ -1,0 +1,16 @@
+<component tag="example-1" :#message="str:Hello World" shadow="none">
+  <template>
+    &lt;h3&gt;<h3>H3 Before Component</h3>&lt;/h3&gt;<br/>
+    &lt;minimal-component&gt;<minimal-component></minimal-component>&lt;/minimal-component&gt;<br />
+    &lt;h3&gt;<h3>H3 AfterComponent</h3>&lt;/h3&gt;
+  </template>
+  <script root>
+    class MinimalComponent extends HTMLElement {
+      connectedCallback() {
+        this.innerHTML = '<'+'style>h3 {color: blue;font-size:5rem;margin:0}<'+'/style><h3>H3 inside</h3>';
+      }
+    }
+
+    customElements.define('minimal-component', MinimalComponent);
+  </script>
+</component>

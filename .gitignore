@@ -13,3 +13,8 @@ static/js/components/
 .env.test
 envinfo.txt
 pathToRegex-old.js
+static/fonts
+EvoPresentation.txt
+oldFiles
+statetest.html
+StateTestElement.html
