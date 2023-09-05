@@ -8,24 +8,22 @@ Evo-WC, also known as Evo, is a web component transpiler designed to simplify th
 
 Welcome to the beta version of our repository! We appreciate your participation and feedback in helping us improve Evo-WC. Below are some guidelines and rules to ensure a smooth experience:
 
-1. **Installation:** Begin by installing the repository using `npm install`.
-1. **Transpiling Components:** To transpile the components, run `npm run build` in one terminal.
-1. **Launching Web Server:** Use `npm start` in another terminal to start the simple web server.
-1. **Viewing the Webpage:** Access the webpage by browsing to `http://localhost:5555/test.html`.
-1. **Customizing Components:** You can modify the components displayed in the browser by editing the `static/test.html` file.
-1. **Bug Reporting:** For bug reports, please utilize the issues section in the repository.
-1. **Document Suggestions:** Any suggestions for documentation improvements should also be added to the issues section of the repo.
-1. **Component Testing:** We encourage you to create several components and thoroughly test Evo for any errors in the transpiler.
+1. **Installation:** Follow the directions on [Evowc.com](https://www.evowc.com/get-started).
+1. **Bug Reporting:** For bug reports, please utilize the [issues section](https://github.com/EvolvedWeb/evowc/issues) in the repository.
+1. **Document Suggestions:** Any suggestions for documentation improvements should also be added to the [issues section](https://github.com/EvolvedWeb/evowc/issues) of the repo.
+1. **Component Testing:** We encourage you to create several components and thoroughly test Evo for any errors in the transpiler or runtime code.
 1. **Explore and Push Boundaries:** Feel free to experiment and push the boundaries with your components. Test Evo's capabilities in various scenarios.
-1. **Looping Limitation:** Currently, looping through tags is not supported for auto-generation of tables, list items, etc. We are working on adding this functionality in the future.
 1. **Contributions:** If you've created example components or bug fixes, please submit a Pull Request to share your work with the community.
-1. **Branch Management:** Remember not to check into the master branch. We prefer that you work in separate branches to keep the master branch clean.
+1. **Branch Management:** Remember not to check into the main branch. We prefer that you work in separate branches to keep the main branch clean.
 
 Your valuable contributions and insights will play a crucial role in the development of Evo-WC. Thank you for being part of our beta testing program! If you have any questions or need assistance, feel free to reach out to us. Happy coding!
 
 </div>
 
 ## Introduction to Evo
+
+<div style="border:4px solid #FFF;background-color: #600;color:white;text-align:center;padding:2rem;font-size:24px;margin-bottom:1rem;">Documentation is slightly out of date. We are working to update it as quickly as possible.</div>
+
 
 Traditional Web Components often involve writing a substantial amount of boilerplate code, which can be cumbersome for developers. However, with Evo, you only need to write the necessary HTML, CSS and JavaScript code within a template file. In the HTML you can easily bind variables to attributes, properties, events, and more.
 
