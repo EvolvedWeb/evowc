@@ -213,7 +213,7 @@ Distributed under the MIT License. See [`LICENSE`](LICENSE) for more information
 Michael Collins:
 
 * [Linked In](https://www.linkedin.com/in/michael-collins-92b514/)
-* intervalia+evo@gmail.com
+* [The Evo Slack Workspace](https://join.slack.com/t/evo-ef36662/shared_invite/zt-23pdcq6td-~s0037B2_YN0vbHfd6G2xA)
 
 Project Links:
 
