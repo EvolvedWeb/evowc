@@ -2,6 +2,8 @@
   <template>
     <h1>Section Three</h1>
     <wc-hr></wc-hr>
+    <pipe-me></pipe-me>
+    <wc-hr></wc-hr>
     <div style="margin-top: 10px">
       <button .click="#openLogin" is="wc-button">Login</button>
       <button .click="#openChangePW" is="wc-button">Change Password</button>
@@ -54,6 +56,7 @@
     import './WcHrElement.js';
     import './ChangepwDialogElement.js';
     import './LoginDialogElement.js';
+    import './PipeMeElement.js';
   </script>
   <script>
     #changePwHandler(event, data) {
