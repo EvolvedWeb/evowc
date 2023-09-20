@@ -768,12 +768,12 @@ set #value(newVal) {
           <li>Evo has a limited number of lifecycle methods.
             <ul>
             <li><cp>init()</cp> - Called at the end of the constructor.</li>
-            <li><cp>update(member, oldVal, newVal)</cp> - Called every time any property is updated and when the component is connected to the DOM.</li>
+            <li><cp>update({field, oldVal, newVal})</cp> - Called every time any property is updated and when the component is connected to the DOM.</li>
             <li><cp>connected()</cp> - This is called by the base class <cp>connectedCallback</cp> function.</li>
             <li><cp>disconnected()</cp> - This is called by the base class <cp>disconnectedCallback</cp> function.</li>
             <li><cp>adopted()</cp> - This is called by the base class <cp>adoptedCallback</cp> function.</li>
             <li><cp>attrChanged(attr, oldVal, newVal)</cp> - Called when an attribute has changed. This is called by the base class <cp>attributeChangedCallback</cp> function.</li>
-            <li>I will be adding <cp>this.onUpdate(member, handler)</cp> that you can call in the init function.<ul>
+            <li>I will be adding <cp>this.onUpdate(field, handler)</cp> and <cp>this.onUpdate([field1, field2, ...], handler)</cp> that you can call in the init function.<ul>
               <li>This will allow granular update functions.</li>
               </ul>
             </li>

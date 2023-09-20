@@ -14,8 +14,8 @@
       this.selected = window.location.pathname === this.href;
     }
 
-    update(key, oldVal, newVal) {
-      if(key === 'href') {
+    update({field}) {
+      if(field === 'href') {
         this.#check();
       }
     }

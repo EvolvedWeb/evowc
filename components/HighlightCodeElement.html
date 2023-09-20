@@ -358,7 +358,7 @@
     #observer;
 
     // Internal functions
-    async update(field, oldVal, newVal) {
+    async update({field}) {
       switch(field) {
         case 'css':
           this.#cssImport = `@import "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/${this.css}.min.css";`;

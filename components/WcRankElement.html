@@ -47,8 +47,8 @@
     }
   </style>
   <script>
-    update(key, oldVal, newVal) {
-      if (key === 'rank') {
+    update({field, newVal}) {
+      if (field === 'rank') {
         this.#updateRanking(newVal);
       }
     }

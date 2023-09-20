@@ -42,7 +42,7 @@
   </style>
   <script>
     // Internal functions
-    async update(field, oldVal, newVal) {
+    async update({field}) {
       switch(field) {
         case 'src':
           if(this.src === '') {

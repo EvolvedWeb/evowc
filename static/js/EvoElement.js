@@ -318,7 +318,7 @@ export const EvoElement = (baseClass = HTMLElement) => class extends baseClass {
     }
     this.#insertStyles()
     // @ts-ignore
-    if(this.update) this.update();
+    if(this.update) this.update({});
     // @ts-ignore
     if(this.connected) this.connected();
   }
