@@ -164,7 +164,7 @@ export const EvoElement = (baseClass = HTMLElement) => class extends baseClass {
   #forList = {};
   #loopedEls = {};
 
-  createDom({ template='', styles='', shadowMode='open', componentName, commentEls = [] }) {
+  createDom({ template='', styles='', shadowMode='open', componentName }) {
     if (shadowMode === 'none') {
       this.#usingShadow = false;
       this.#rootDom = document.createDocumentFragment();
@@ -207,13 +207,7 @@ export const EvoElement = (baseClass = HTMLElement) => class extends baseClass {
       });
     }
 
-    const els = this.getEls();
-
-    commentEls.forEach(name => {
-      els[`${name}_c`] = comment(name, els[name]);
-    });
-
-    return els;
+    return this.getEls();
   }
 
   /**

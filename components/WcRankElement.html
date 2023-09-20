@@ -46,54 +46,40 @@
       position: absolute;
     }
   </style>
-  <script root>
-    const DOG = "Woof Woof!"
-    const CAT = "Meow meow!"
-    function mine() {
-      // This is a test
-      if (10) {
-        // Do something
-      }
-    }
-  </script>
   <script>
     update(key, oldVal, newVal) {
       if (key === 'rank') {
-        this.#updateRateing(newVal);
+        this.#updateRanking(newVal);
       }
     }
 
-    #updateRateing(rating) {
+    #updateRanking(rating) {
       const percent = Math.round(100 * (rating / 5));
       this.#style = `width:${percent}%`;
       this.#val = rating.toFixed(1).replace('.0', '');
       this.setAttribute('title', `${rating.toFixed(2)} / 5`);
     }
 
-    #getRank(event) {
+    #getRankFromEvent(event) {
       const { offsetX } = event;
       const { offsetWidth, offsetLeft } = this.#els.span;
-      return (Math.round((((offsetX - offsetLeft) / offsetWidth) * 50) / 5) / 2) || .5;
+      return (Math.round((((offsetX - offsetLeft) / offsetWidth) * 50) / 5) / 2) || 0.5;
     }
 
-    #mouseLeave(event, data) {
-      this.#updateRateing(this.rank);
+    #mouseLeave() {
+      this.#updateRanking(this.rank);
     }
 
-    #mouseMove(event, data) {
+    #mouseMove(event) {
       if(this.live) {
-        const rank = this.#getRank(event);
-        if(rank < 0.5) {
-          rank = 0.5;
-        }
-        this.#updateRateing(rank);
+        this.rank = this.#getRankFromEvent(event);
         event.preventDefault();
       }
     }
 
-    #click(event, data) {
+    #click(event) {
       if (this.live) {
-        this.rank = this.#getRank(event);
+        this.rank = this.#getRankFromEvent(event);
         this.live = false;
         event.preventDefault();
       }
