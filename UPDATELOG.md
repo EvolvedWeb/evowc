@@ -1,6 +1,20 @@
 # Updates to EVO-WC
 
-## Version 0.5.0 - 2023-08-05 - *** REWROTE EVERYTHING - Breaking ***
+## Version 0.6.0 - 2023-09-20 - *** Breaking Changes ***
+
+* Resolves #34 - Comments are no longer stored in `this.#els`
+* Resolves #33 - `this.#els` is frozen making it read-only.
+* Resolves #32 - I changed the names of the private storage variables from `#_varName` to `#__varName` and from `#varName` to `#_varName` to avoid name collision.
+* Created a new README.md based on https://github.com/othneildrew/Best-README-Template and renamed the previous readme to oldREADME.md
+* Minor cleanup of some of the example components
+* Resolves #36 - Changed from `update(field, oldVal, newVal)` to `update( { field, oldVal, newVal } )` to allow future upgrades and to allow getting only the arguments you want.
+* Updated all demo components to handle #36 changes
+* Updated EvoElement.js to handle #36 changes
+* Resolves #10 - Supporting `:checked` in addition to `:value`
+* Updated the README to include a link to the Evo Slack Workspace.
+* Updated version to 0.6.0
+
+## Version 0.5.0 - 2023-08-05 - *** REWROTE EVERYTHING - Breaking Changes ***
 
 * The code was getting too complex so I broke it up into smaller files and process the initial XML very differently. Much easier to maintain.
 * Added min and max limiters for `int` and `num`. Example: `:rank="num(0,5):0"`.

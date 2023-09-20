@@ -126,7 +126,7 @@ To install and test Evo follow the steps below. `Evo init` will create a demo se
   npm init
 
   # install EvoWC in your project
-  npm i "https://github.com/EvolvedWeb/evowc.git#v0.5.0"
+  npm i "https://github.com/EvolvedWeb/evowc.git#v0.6.0"
   ```
 
 3. **Initialize Evo:**<br>
@@ -170,12 +170,16 @@ You can read more about how to use Evo in the [Documentation](https://github.com
 ## Roadmap
 
 - [x] Release version 0.5.0
-- [x] Fix errors and enhancements for version 1.0.0
+- [x] Release version 0.6.0
+- [ ] Release version 0.7.0
+- [ ] Release version 0.8.0
+- [ ] Release version 0.9.0
 - [ ] Improve documentation
 - [ ] Improve demo website
     - [ ] Use Router
     - [ ] Add a couple demo pages
     - [ ] Include several of the example components
+- [ ] Fix all errors and enhancements for version 1.0.0
 - [ ] Release version 1.0.0
 
 See the [open issues](https://github.com/EvolvedWeb/evowc/issues) for the current list of proposed features (and known issues).
