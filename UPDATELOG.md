@@ -7,7 +7,7 @@
 * Resolves #32 - I changed the names of the private storage variables from `#_varName` to `#__varName` and from `#varName` to `#_varName` to avoid name collision.
 * Created a new README.md based on https://github.com/othneildrew/Best-README-Template and renamed the previous readme to oldREADME.md
 * Minor cleanup of some of the example components
-* Resolves #36 - Changed from `update(field, oldVal, newVal)` to `update( { field, oldVal, newVal } )` to allow future upgrades and to allow getting only the arguments you want.
+* Resolves #36 - Changed from `update(field, oldVal, newVal)` to `update( { cpa, oldVal, newVal } )` to allow future upgrades and to allow getting only the arguments you want.
 * Updated all demo components to handle #36 changes
 * Updated EvoElement.js to handle #36 changes
 * Resolves #10 - Supporting `:checked` in addition to `:value`

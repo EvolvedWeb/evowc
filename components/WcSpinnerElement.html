@@ -53,14 +53,14 @@
     #prop(prop, val) {
       this.#els.spinner.style.setProperty(prop, val);
     }
-    update({field, newVal}) {
-      if (field === 'size' && newVal > 11 && newVal < 65) {
+    update({cpa, newVal}) {
+      if (cpa === 'size' && newVal > 11 && newVal < 65) {
         this.#prop('--wc-spinner-size', `${newVal}px`);
       }
-      if (field === 'color') {
+      if (cpa === 'color') {
         this.#prop('--wc-spinner-color', newVal);
       }
-      if (field === 'speed') {
+      if (cpa === 'speed') {
         this.#prop('--wc-spinner-speed', newVal);
       }
     }

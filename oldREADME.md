@@ -47,8 +47,8 @@ Example using a private CPA:
     <h3 :text="#welcome"></h3>
   </template>
   <script>
-    update(property) {
-      if (property === 'customer') {
+    update({cpa}) {
+      if (cpa === 'customer') {
         this.#welcome = `Current customer: ${this.customer}`;
       }
     }
@@ -177,7 +177,7 @@ You can enhance the behavior of your component by providing lifecycle functions 
 | Method | Description |
 | --- | --- |
 | init() | Called at the end of the constructor. This function allows you to perform additional setup or initialization steps for your component. Any code in this function must follow all of the [requirements for custom element constructors](https://html.spec.whatwg.org/multipage/custom-elements.html#custom-element-conformance). |
-| update(property, oldVal, newVal) | Called every time any property is updated, as well as when the component is connected to the DOM. You can use this function to adjust any private properties based on the changes in the component's properties. It is also called when the component is reconnected to the DOM after being previously disconnected. The property parameter provides the name of the member property that was updated just before calling this function. |
+| update({cpa, oldVal, newVal}) | Called every time any CPA is updated, as well as when the component is connected to the DOM. You can use this function to adjust any private properties based on the changes in the component's properties. It is also called when the component is reconnected to the DOM after being previously disconnected. The CPA parameter provides the name of the CPA that was updated just before calling this function. |
 | connected() | This function is called by the base class connectedCallback function, which is part of the web component's lifecycle. It is invoked when the component is connected to the DOM. You can use this function to perform actions that need to happen when the component is added to the page's DOM structure. |
 | disconnected() | This function is called by the base class disconnectedCallback function, which is part of the web component's lifecycle. It is invoked when the component is removed from the DOM. You can use this function to perform any cleanup or actions required when the component is no longer part of the page's DOM structure. |
 | adopted() | This function is called by the base class adoptedCallback function, which is part of the web component's lifecycle. It is invoked when the component is moved to a new document. You can use this function to handle any specific actions required when the component is moved between documents. |
@@ -254,7 +254,7 @@ JavaScript snippet for several evo repated class member functions:
     "prefix": "evoupdate",
     "body": [
       "${1:// Called after any CPA value is changed",
-      "}update(property, oldVal, newVal) {",
+      "}update({property, oldVal, newVal}) {",
       "  $0",
       "}"
     ]
@@ -316,7 +316,7 @@ JavaScript snippet for several evo repated class member functions:
     'prefix': 'evoupdate'
     'body': """
       ${1:// Called after any CPA value is changed
-      }update(key, oldVal, newVal) {
+      }update({cpa, oldVal, newVal}) {
         $0
       }
     """

@@ -86,8 +86,8 @@
       return bgColor;
     }
 
-    update({field}) {
-      switch (field) {
+    update({cpa}) {
+      switch (cpa) {
         case 'value':
           const rot = this.value * 2.70;
           this.#range = (rot > 180) ? 2 : (rot > 90) ? 1 : 0;

@@ -167,8 +167,8 @@
     const STATE_SHOW = 'show';
   </script>
   <script>
-    update({field}) {
-      if (['#newPassword', '#newPassword2'].includes(field)) {
+    update({cpa}) {
+      if (['#newPassword', '#newPassword2'].includes(cpa)) {
         const isInvalid = (!this.#newPassword || !this.#newPassword2 ||
             this.#newPassword !== this.#newPassword2)
 

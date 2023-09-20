@@ -8,15 +8,14 @@
 | Simplicity  | ✓ | ✓ |
 | Readability | ✓ | ✓ |
 | Performance | ✓ | ✓ (*) |
-| No constructor | ✓ | ✗ |
 | No `this`  | ✓ | ✗ |
-| Easy testing | ✓ | ✓ |
+| Easy testing | - | ✓ |
 | Code reusability | ✓ | ✓ |
 | Hot Reloading | ✓ | Not Yet (*) |
 | Fragments | ✓ | Not Yet (*) |
 | One-way binding | ✓ | ✓ |
 | Two-way binding for form elements | ✓ | ✓ |
-| Local State | useState | Standard properties (defined as CPAs) |
+| Local State | useState | class properties (defined as CPAs) |
 | Shared State | useContext | Not yet (*)  |
 | Application State | Redux | Not yet (*)  |
 | Side effects | useEffect | standard and lifecycle methods |
@@ -30,7 +29,6 @@
 | Dynamic imports  | ✓ | ✓ |
 | Error Boundaries | ✓ | ✗ |
 | Concurrent Mode | ✓ | ✗ |
-| Strict Mode | ✓ | ✗ |
 | Portals | ✓ | ✗ |
 | Suspense | ✓ | Conditional Directives  |
 | Easy optimization | ✓ | ✓ |
@@ -50,7 +48,7 @@
 | Built-in browser compatibility | ✗ | ✓ |
 | Enhanced SEO and accessibility | ✗ | ✓ |
 | Debug what you write | ✗ | ✓ |
-| Setting an elements class name | className={} | :class="" |
+| Setting an elements class name | `className={}` | `class=""` and binding `:class=""` |
 | HTML | JSX | Almost Native |
 | Routing | ✓ | ✓ |
 
@@ -92,8 +90,8 @@
       return await response.json();
     }
 
-    async update(key) {
-      if (key === 'personId' && this.personId != null) {
+    async update({cpa}) {
+      if (cpa === 'personId' && this.personId != null) {
         this.#person = await fetchPersonData(this.personId);
       }
     }
