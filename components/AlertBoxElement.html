@@ -9,7 +9,7 @@
 >
   <template>
     <div class="frame" :attr.state="state" :attr.is-popup="popup">
-      <button class="closer"></button>
+      <button class="closer" .click="#handler:pi"></button>
       <span $if="icon" :attr.icon="icon"></span>
       <div $if="title" class="title" :html="title"></div>
       <div class="message" :html="message"></div>
@@ -105,5 +105,8 @@
     }
   </style>
   <script>
+    #handler() {
+      console.log('clicked on it');
+    }
   </script>
 </component>
