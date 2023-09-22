@@ -14,6 +14,13 @@
 * Updated the README to include a link to the Evo Slack Workspace.
 * Updated the feature compare list
 * Added NoShadowElement.html to test the failings of bug 17. Still needs to be fixed.
+* Corrected the test app to load the correct code.
+* Resolves #13 - Added code to support the new (PSI) event options:
+  p: 'evt.preventDefault()',
+  s: 'evt.stopPropagation()',
+  i: 'evt.stopImmediatePropagation()'
+* Modified AlertBoxElement.html to test the new event handler (PSI) options
+* Added additional exports and jsDocs types into the generator code.
 * Updated version to 0.6.0
 
 ## Version 0.5.0 - 2023-08-05 - *** REWROTE EVERYTHING - Breaking Changes ***
