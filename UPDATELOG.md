@@ -1,6 +1,6 @@
 # Updates to EVO-WC
 
-## Version 0.6.0 - 2023-09-20 - *** Breaking Changes ***
+## Version 0.6.0 - 2023-09-27 - *** Breaking Changes ***
 
 * Resolves #42 - The `$for` index value is `_index` and that can be used inside the `$for` section of the code. (Started code to allow developer to define the name of the index variable, but that was getting complicated. So I will finish it later.)
 * Resolves #40 - `ael` is now imported if it is only used within a `$for` section of code.
