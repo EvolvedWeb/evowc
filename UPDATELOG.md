@@ -2,23 +2,25 @@
 
 ## Version 0.6.0 - 2023-09-20 - *** Breaking Changes ***
 
+* Resolves #42 - The `$for` index value is `_index` and that can be used inside the `$for` section of the code. (Started code to allow developer to define the name of the index variable, but that was getting complicated. So I will finish it later.)
+* Resolves #40 - `ael` is now imported if it is only used within a `$for` section of code.
+* Resolves #36 - Changed from `update(field, oldVal, newVal)` to `update( { cpa, oldVal, newVal } )` to allow future upgrades and to allow getting only the arguments you want.
 * Resolves #34 - Comments are no longer stored in `this.#els`
 * Resolves #33 - `this.#els` is frozen making it read-only.
 * Resolves #32 - I changed the names of the private storage variables from `#_varName` to `#__varName` and from `#varName` to `#_varName` to avoid name collision.
-* Created a new README.md based on https://github.com/othneildrew/Best-README-Template and renamed the previous readme to oldREADME.md
-* Minor cleanup of some of the example components
-* Resolves #36 - Changed from `update(field, oldVal, newVal)` to `update( { cpa, oldVal, newVal } )` to allow future upgrades and to allow getting only the arguments you want.
-* Updated all demo components to handle #36 changes
-* Updated EvoElement.js to handle #36 changes
-* Resolves #10 - Supporting `:checked` in addition to `:value`
-* Updated the README to include a link to the Evo Slack Workspace.
-* Updated the feature compare list
-* Added NoShadowElement.html to test the failings of bug 17. Still needs to be fixed.
-* Corrected the test app to load the correct code.
 * Resolves #13 - Added code to support the new (PSI) event options:
   p: 'evt.preventDefault()',
   s: 'evt.stopPropagation()',
   i: 'evt.stopImmediatePropagation()'
+* Resolves #10 - Supporting `:checked` in addition to `:value`
+* Created a new README.md based on https://github.com/othneildrew/Best-README-Template and renamed the previous readme to oldREADME.md
+* Minor cleanup of some of the example components
+* Updated all demo components to handle #36 changes
+* Updated EvoElement.js to handle #36 changes
+* Updated the README to include a link to the Evo Slack Workspace.
+* Updated the feature compare list
+* Added NoShadowElement.html to test the failings of bug 17. Still needs to be fixed.
+* Corrected the test app to load the correct code.
 * Modified AlertBoxElement.html to test the new event handler (PSI) options
 * Added additional exports and jsDocs types into the generator code.
 * Updated version to 0.6.0
