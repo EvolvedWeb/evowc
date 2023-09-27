@@ -1,13 +1,5 @@
 <a name="readme-top"></a>
 
-<!-- PROJECT SHIELDS -->
-<!--
-*** I'm using markdown "reference style" links for readability.
-*** Reference links are enclosed in brackets [ ] instead of parentheses ( ).
-*** See the bottom of this document for the declaration of the reference variables
-*** for contributors-url, forks-url, etc. This is an optional, concise syntax you may use.
-*** https://www.markdownguide.org/basic-syntax/#reference-style-links
--->
 [![Contributors][contributors-shield]][contributors-url]
 [![Forks][forks-shield]][forks-url]
 [![Stargazers][stars-shield]][stars-url]
@@ -26,10 +18,8 @@
     <a href="https://github.com/EvolvedWeb/evowc/wiki"><strong>Explore the docs »</strong></a>
     <br />
     <br />
-    <a href="https://github.com/EvolvedWeb/evowc">View Demo</a>
-    ·
-    <a href="https://github.com/EvolvedWeb/evowc/issues">Report Bug</a>
-    ·
+    <a href="https://www.evowc.com/examples">View Demo</a> ·
+    <a href="https://github.com/EvolvedWeb/evowc/issues">Report Bug</a> ·
     <a href="https://github.com/EvolvedWeb/evowc/issues">Request Feature</a>
   </p>
 </div>
@@ -163,7 +153,7 @@ Include the generated JavaScript file into your HTML file and add your tag into 
 
 You can learn more on the [Getting Started](https://www.evowc.com/get-started) page or the [Examples](https://www.evowc.com/examples) page.
 
-You can read more about how to use Evo in the [Documentation](https://github.com/EvolvedWeb/evowc/wiki). Or review the [Frequently Asked Questions](https://www.evowc.com/faq).
+You can read more about how to use Evo in the [Documentation](https://www.evowc.com/docs/intro). Or review the [Frequently Asked Questions](https://www.evowc.com/faq).
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -171,10 +161,10 @@ You can read more about how to use Evo in the [Documentation](https://github.com
 
 - [x] Release version 0.5.0
 - [x] Release version 0.6.0
+- [x] Improve documentation
 - [ ] Release version 0.7.0
 - [ ] Release version 0.8.0
 - [ ] Release version 0.9.0
-- [ ] Improve documentation
 - [ ] Improve demo website
     - [ ] Use Router
     - [ ] Add a couple demo pages
@@ -208,7 +198,7 @@ You can also simply open an issue with the tag "enhancement".
 
 ## License
 
-Distributed under the MIT License. See [`LICENSE`](LICENSE) for more information.
+Distributed under the MIT License. See [`LICENSE`](https://www.evowc.com/license) for more information.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
