@@ -257,7 +257,7 @@ export const EvoElement = (baseClass = HTMLElement) => class extends baseClass {
         // TODO: Check to see if element by this itemKey already exists in this.#loopedEls[loopElementKey]
         let el = null;
         if (!item.hasOwnProperty(itemKeyName)) {
-          console.log(`item does not have a key property called "${itemKeyName}"`);
+          console.error(`item does not have a key property named "${itemKeyName}"`);
         }
         const itemKey = item[itemKeyName];
         if(itemKey && loopedEls.length) {
