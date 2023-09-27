@@ -54,7 +54,7 @@ function getOptions(clOptions) {
   }
   /** @type string */ const componentsRoot = wc.paths?.componentsRoot || path.join(publicRoot, 'js/component');
 
-  console.log({});
+  //console.log({});
   /** @type Options */
   const options = {
     addDebug: wc.addDebug ?? false,

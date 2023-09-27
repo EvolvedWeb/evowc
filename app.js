@@ -1,6 +1,6 @@
 const PORT = 5555;
 const path = require('path');
-const evowc = require('./oldFiles/evowc-old.js');
+const evowc = require('./lib/evowc.js');
 const express = require('express');
 const bodyParser = require('body-parser');
 

@@ -174,8 +174,8 @@
       return this.#els.dialog.open();
     }
 
-    update(key, oldVal, newVal) {
-      if(['showText', 'hideText'].includes(key)) {
+    update({cpa}) {
+      if(['showText', 'hideText'].includes(cpa)) {
         if (this.#passwordType === 'text') {
           this.#toggleState = this.hideText;
         }
@@ -230,7 +230,7 @@
         password: this.#password,
       };
 
-      if (this.#showRememberMe) {
+      if (this.showRememberMe) {
         data.rememberMe = this.#rememberMe;
       }
       if(this.#token) {

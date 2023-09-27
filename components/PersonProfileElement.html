@@ -67,8 +67,8 @@
      });
     }
 
-    async update(key) {
-      if (key === 'personId' && this.personId != null) {
+    async update({cpa}) {
+      if (cpa === 'personId' && this.personId != null) {
         this.#loading = true;
         this.#person = await this.#fetchPersonData(this.personId);
         this.#loading = false;

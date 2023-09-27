@@ -164,7 +164,7 @@ export const EvoElement = (baseClass = HTMLElement) => class extends baseClass {
   #forList = {};
   #loopedEls = {};
 
-  createDom({ template='', styles='', shadowMode='open', componentName, commentEls = [] }) {
+  createDom({ template='', styles='', shadowMode='open', componentName }) {
     if (shadowMode === 'none') {
       this.#usingShadow = false;
       this.#rootDom = document.createDocumentFragment();
@@ -207,13 +207,7 @@ export const EvoElement = (baseClass = HTMLElement) => class extends baseClass {
       });
     }
 
-    const els = this.getEls();
-
-    commentEls.forEach(name => {
-      els[`${name}_c`] = comment(name, els[name]);
-    });
-
-    return els;
+    return this.getEls();
   }
 
   /**
@@ -263,7 +257,7 @@ export const EvoElement = (baseClass = HTMLElement) => class extends baseClass {
         // TODO: Check to see if element by this itemKey already exists in this.#loopedEls[loopElementKey]
         let el = null;
         if (!item.hasOwnProperty(itemKeyName)) {
-          console.log(`item does not have a key property called "${itemKeyName}"`);
+          console.error(`item does not have a key property named "${itemKeyName}"`);
         }
         const itemKey = item[itemKeyName];
         if(itemKey && loopedEls.length) {
@@ -324,7 +318,7 @@ export const EvoElement = (baseClass = HTMLElement) => class extends baseClass {
     }
     this.#insertStyles()
     // @ts-ignore
-    if(this.update) this.update();
+    if(this.update) this.update({});
     // @ts-ignore
     if(this.connected) this.connected();
   }

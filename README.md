@@ -1,338 +1,246 @@
-# Evo-WC
+<a name="readme-top"></a>
 
-Evo-WC, also known as Evo, is a web component transpiler designed to simplify the creation of native Web Components with minimal code. It compiles a user-created template file based on HTML/XML into a raw JavaScript Web Component file, relying solely on raw browser JavaScript and the base class `EvoElement`, without the need for additional runtime frameworks or libraries.
+[![Contributors][contributors-shield]][contributors-url]
+[![Forks][forks-shield]][forks-url]
+[![Stargazers][stars-shield]][stars-url]
+[![Issues][issues-shield]][issues-url]
+[![MIT License][license-shield]][license-url]
 
-<div style="background:#311;border:3px dashed #900;margin:20px;padding:10px;color:#FFF">
+<br />
+<div align="center">
+  <a href="https://github.com/EvolvedWeb/evowc">
+    <img src="static/img/Logo1.jpg" alt="Evo-wc logo" width="80" height="80">
+  </a>
 
-## BETA Testing
-
-Welcome to the beta version of our repository! We appreciate your participation and feedback in helping us improve Evo-WC. Below are some guidelines and rules to ensure a smooth experience:
-
-1. **Installation:** Follow the directions on [Evowc.com](https://www.evowc.com/get-started).
-1. **Bug Reporting:** For bug reports, please utilize the [issues section](https://github.com/EvolvedWeb/evowc/issues) in the repository.
-1. **Document Suggestions:** Any suggestions for documentation improvements should also be added to the [issues section](https://github.com/EvolvedWeb/evowc/issues) of the repo.
-1. **Component Testing:** We encourage you to create several components and thoroughly test Evo for any errors in the transpiler or runtime code.
-1. **Explore and Push Boundaries:** Feel free to experiment and push the boundaries with your components. Test Evo's capabilities in various scenarios.
-1. **Contributions:** If you've created example components or bug fixes, please submit a Pull Request to share your work with the community.
-1. **Branch Management:** Remember not to check into the main branch. We prefer that you work in separate branches to keep the main branch clean.
-
-Your valuable contributions and insights will play a crucial role in the development of Evo-WC. Thank you for being part of our beta testing program! If you have any questions or need assistance, feel free to reach out to us. Happy coding!
-
+  <p align="center">
+    Create lightweight, high-performance native custom elements, with minimal boilerplate.
+    <br />
+    <a href="https://github.com/EvolvedWeb/evowc/wiki"><strong>Explore the docs »</strong></a>
+    <br />
+    <br />
+    <a href="https://www.evowc.com/examples">View Demo</a> ·
+    <a href="https://github.com/EvolvedWeb/evowc/issues">Report Bug</a> ·
+    <a href="https://github.com/EvolvedWeb/evowc/issues">Request Feature</a>
+  </p>
 </div>
 
-## Introduction to Evo
+<details>
+  <summary>Table of Contents</summary>
+  <ol>
+    <li>
+      <a href="#about-the-project">About The Project</a>
+      <ul>
+        <li><a href="#built-with">Built With</a></li>
+      </ul>
+    </li>
+    <li>
+      <a href="#getting-started">Getting Started</a>
+      <ul>
+        <li><a href="#prerequisites">Prerequisites</a></li>
+        <li><a href="#installation">Installation</a></li>
+      </ul>
+    </li>
+    <li><a href="#usage">Usage</a></li>
+    <li><a href="#roadmap">Roadmap</a></li>
+    <li><a href="#contributing">Contributing</a></li>
+    <li><a href="#license">License</a></li>
+    <li><a href="#contact">Contact</a></li>
+    <!--li><a href="#acknowledgments">Acknowledgments</a></li -->
+  </ol>
+</details>
 
-<div style="border:4px solid #FFF;background-color: #600;color:white;text-align:center;padding:2rem;font-size:24px;margin-bottom:1rem;">Documentation is slightly out of date. We are working to update it as quickly as possible.</div>
+## About The Project
 
+<!-- [![Product Name Screen Shot][product-screenshot]](https://example.com) -->
 
-Traditional Web Components often involve writing a substantial amount of boilerplate code, which can be cumbersome for developers. However, with Evo, you only need to write the necessary HTML, CSS and JavaScript code within a template file. In the HTML you can easily bind variables to attributes, properties, events, and more.
+Evo-wc, or Evolved Web Components, is a Web Component transpiler. The developer builds simple XML files that are very similar to and HTML with only the code they need. Evo-wc trnaspiles the XMl files into a JavaScript file that contains a native Custom Element.
 
-Unlike most frameworks that use interpolation syntax like `<h3>Current customer: {{currentCustomer}}</h3>`, Evo opts for a different approach. You would add a `<span>` element within the `<h3>` to achieve a similar binding effect. `<h3>Current customer: <span :text="currentCustomer"></span></h3>`. Or, You can combine the entire string into a private CPA, say `#welcome`, and then set the `textContent` or `innerHTML` of an element like `<h3 :text="#welcome"></h3>` and `<h3 :html="#welcome"></h3>`, respectively.
+Evo-wc offers developers a powerful and efficient way to create web components, whether used independently or alongside existing frameworks. The generated elements are standards based and run lightning fast.  Here are several compelling reasons why someone would want to consider using Evo:
 
-Example using a `<span>`:
+1. **Reduced Boilerplate Code:** Evo dramatically reduces the amount of boilerplate code needed to create web components. Traditional web component development often involves writing extensive code for property accessors, event handling, and templating. Evo simplifies this process, allowing developers to focus on the core functionality of their components. This efficiency can save a significant amount of development time.
 
-```html
-<component tag="my-example" :customer>
-  <template>
-    <h3>Current customer: <span :text="customer"></span></h3>
-  </template>
-</component>
-```
+2. **Native Web Components:** Evo leverages the native web component standard, which has gained widespread browser support. This means that Evo-generated components can seamlessly integrate into web applications without relying on additional libraries or frameworks. Developers can enjoy the benefits of web components' encapsulation and reusability without the complexity of custom solutions.
 
-Example using a private CPA:
+3. **Minimal Runtime Overhead:** One of Evo's key strengths is its ability to shift much of the work from runtime to build time. This results in minimal runtime overhead, ensuring that Evo-generated components are highly performant. Faster-loading components lead to a more responsive user experience, making Evo an excellent choice for optimizing web applications.
 
-```html
-<component tag="my-example" :customer :#welcome>
-  <template>
-    <h3 :text="#welcome"></h3>
-  </template>
-  <script>
-    update(property) {
-      if (property === 'customer') {
-        this.#welcome = `Current customer: ${this.customer}`;
-      }
-    }
-  </script>
-</component>
-```
+4. **Versatility with Existing Frameworks:** Evo is not limited to standalone use. Developers can incorporate Evo-generated components into existing web frameworks, such as React, Angular, or Vue.js. This versatility allows for gradual adoption, enabling teams to leverage Evo's benefits in specific areas of their application while maintaining compatibility with their chosen framework.
 
-As you can see from the two example, using a `<span>` takes less code from the developer and happens automatically. Using a private CPA requires using the `update()` member function to set the private CPA each time the `customer` CPA changes.
+5. **Data Binding and Event Handling:** Evo simplifies data binding and event handling within components. With straightforward syntax, developers can bind component properties to elements in the template, facilitating real-time updates. Event handling is equally intuitive, using native DOM events. This streamlines communication between components and ensures seamless interactivity.
 
-### User interactions and Events
+6. **Conditional Rendering and Looping:** Evo introduces conditional directives like $if and $switch for flexible and efficient conditional rendering. It also supports looping through data arrays with the $for directive. These features empower developers to create dynamic user interfaces with ease.
 
-Evo efficiently manages user interactions by utilizing standard HTML events and JavaScript custom events. To implement event handling, a developer simply adds an event handler within the `<script>` section and pairs it with the corresponding event attribute in an HTML element.
+7. **Community and Ongoing Development:** Evo has a growing community of developers and contributors who actively support its development. Regular updates and improvements ensure that Evo remains aligned with evolving web standards and best practices.
 
-```html
-<component tag="my-example">
-  <template>
-    <button .click="#showMessage">Click Me</button>
-  </template>
-  <script>
-    #showMessage(event, data) {
-      alert('The button was clicked');
-    }
-  </script>
-</component>
-```
+In summary, Evo provides a developer-friendly, high-performance solution for creating web components. Whether used independently to harness the full power of native web components or integrated into existing frameworks for enhanced flexibility, Evo simplifies the development process and contributes to the creation of efficient and maintainable web applications.
 
-In this example, we have a custom component named "my-example" that includes a `<button>` element with a .click event attribute. This attribute is bound to the #showMessage event handler defined in the `<script>` section.
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-When the user clicks on the "Click Me" button, the event is triggered, and Evo calls the associated `#showMessage` event handler. In this example, an alert with the message "The button was clicked" will show.
+### Built With
 
-By using this straightforward approach, Evo simplifies event management and enables developers to easily handle user interactions in their web components.
+Built in Raw JavaScript using JSDocs Types. Our build time dependancies are:
 
-Evo's primary goals are to leverage HTML, CSS, and JavaScript standards, simplify developer workflows, enhance performance, and reduce memory consumption. It adheres to native HTML and JavaScript rules and patterns, avoiding unnecessary complexities present in many existing frameworks. Unlike other frameworks that may force extensive amounts of code to interact with the framework itself, Evo encourages developers to write only what is necessary for their components. With Evo you only write what you need.
+* [fast-xml-parser](fast-xml-parser-url)
+* [glob](glob-url)
+* [html-minifier-terser](html-minifier-terser-url)
 
-To help developers get started, Evo provides a variety of sample components in the components folder. These files use the HTML file extension to ensure proper support in most editors, with helpful syntax highlighting in `<script>` and `<style>` tags. By exploring these examples and referring to the documentation, developers can easily create their own custom components.
+> The only runtime code is your transpiled components and a base class that contains all of the common functionality for all of the components. There are optional files for the Evo router.
 
-## The Component Template File
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-The component template file is an XML file that defines the structure and behavior of your web component. For optimal results in your editor, such as VS Code, it's recommended to use the .html file extension for your component file.
+## Getting Started
 
-To create a web component, you begin by defining it with a `<component>` element. This element serves as the starting point for your component's structure and behavior. Within the `<component>` element, you must include the `tag="component-name"` attribute, which provides a unique name for your component. This name will be used to represent your component when you add it to your HTML using the custom element syntax: `<component-name></component-name>`.
+This is an example of how you may give instructions on setting up your project locally. To get a local copy up and running follow these simple example steps.
 
-Inside the `<component>` element, you can use the following valid elements:
+### Prerequisites
 
-* `<template>`: This element holds the HTML markup for your component. It defines the visual appearance and structure of the component.
+To use Evo-wc you will need NodeJs installed. We recommend LTS and have tested with versions between 18 and 20.
 
-* `<style>`: This element contains the CSS rules that apply only to this specific component. This allows for encapsulated and scoped styling using Shadow DOM.
+### Installation
 
-* `<script>`: This element houses custom JavaScript code specific to the component. Here, you can define event handlers, manipulate data, and add other necessary logic for the component's functionality. This code will be incorporated into the generated class, so it should be written as if it were already part of a class, including class properties and methods.
+To install and test Evo follow the steps below. `Evo init` will create a demo server _that is not for use in production_. It also creates a simple website that uses a series of demo web components and the built in `<wc-router>` element for SPA styled routing and the `<wc-a>` to navigate between the SPA pages.
 
-* `<script root>`: This element is used to list necessary imports at the top of the generated JavaScript file. This helps manage dependencies and ensures the required modules are available for the component. You also include anything that is not part of the compiled class in this element.
+1. **Create a Project Folder:**<br>
+  Create a new folder for your Evo project and change directory into it. This will be the root directory for your web components.
+  ```sh
+  # Create the new folder
+  mkdir evo1
 
----
-### `<component>` Element
+  # Go into the newly created folder
+  cd evo1
+  ```
 
-[The `<component>` element](./docs/ComponentElemenet.md) is a fundamental building block in Evo for defining custom web components. It serves as the container for all component-related definitions, including the component's template, styles, and custom JavaScript code.
+2. **Install Evo:**<br>
+  Begin by initializing npmand then installing Evo. Open your terminal and run the following commands:
+  ```sh
+  # Initialize the npm project
+  npm init
 
----
-### `<template>` Element
+  # install EvoWC in your project
+  npm i "https://github.com/EvolvedWeb/evowc.git#v0.6.0"
+  ```
 
-The Evo [`<template>` element](./docs/TemplateElement.md) serves as a concise and readable way to define the structure and behavior of your custom web components. It enables developers to create reusable components with data binding, conditional rendering, and event handling directly within the template.
+3. **Initialize Evo:**<br>
+  Let Evo know where your component template files will be located and where the transpiled components will be placed.
+  ```sh
+  # Initialize EVOWC config and copy the helper files
+  npx evowc init
 
----
-### `<style>` Element
+  # Install the added repos
+  npm i
 
-The [`<style>` element](./docs/StyleElement.md) in Evo is used to define the component's internal CSS, supporting scoped styles within the component's Shadow DOM or globally scoped when not using the shadow DOM.
+  # Transpile the demo Evo component
+  npm run evowc
+  ```
 
----
-### `<script>` Element
+4. **Run your demo server**<br>
+  Start up the demo server. The demo server is <strong>not</strong> a production server.
+  ```sh
+  # Start the demo server
+  npm start
+  ```
 
-The [`<script>` element](./docs/ScriptElement.md) in Evo serves as the container for writing JavaScript code that defines the component's behavior and logic. It allows developers to create class methods and define lifecycle functions, enabling seamless interaction with the component's properties, attributes, and events.
+5. **Browser to the demo server at http://localhost:12345**
 
-## `<script root>` Element
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-The [`<script root>` element](./docs/ScriptRootElement.md) in an Evo component file serves as a container for any imports or code that should be included at the top of the generated JavaScript file.
+## Usage
 
+Evo template files are easy to create. It is recommended that you create HTML files for your code because editors handle them better than XML files.
 
-## Properties and Attributes
+To create a new component you add a new template file into the components folder and then run `npm evowc` to transpile all of the template files.
 
-## Events
+Include the generated JavaScript file into your HTML file and add your tag into the HTML. That is it. Anything else you add will be based on the needs of your components.
 
-### Click event handler example
+You can learn more on the [Getting Started](https://www.evowc.com/get-started) page or the [Examples](https://www.evowc.com/examples) page.
 
-Here is an example component that has a CPA called `message`. Whenever the `message` attribute on this component is set or when the `message` property is set then the text of the `<h1>` tag will be set to that value.
+You can read more about how to use Evo in the [Documentation](https://www.evowc.com/docs/intro). Or review the [Frequently Asked Questions](https://www.evowc.com/faq).
 
-#### Example:
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-Component definition:
+## Roadmap
 
-```xml
-<component tag="my-message" :message>
-  <template>
-    <h1 :text="message"></h1>
-  </template>
-</component>
-```
+- [x] Release version 0.5.0
+- [x] Release version 0.6.0
+- [x] Improve documentation
+- [ ] Release version 0.7.0
+- [ ] Release version 0.8.0
+- [ ] Release version 0.9.0
+- [ ] Improve demo website
+    - [ ] Use Router
+    - [ ] Add a couple demo pages
+    - [ ] Include several of the example components
+- [ ] Fix all errors and enhancements for version 1.0.0
+- [ ] Release version 1.0.0
 
-Here is an example of HTML that uses the component:
+See the [open issues](https://github.com/EvolvedWeb/evowc/issues) for the current list of proposed features (and known issues).
 
-```html
-<html>
-<body>
-  <my-message message="Initial Message"></my-message>
-  <button onclick="changeMessage()">Change message</button>
-  <script>
-    const target = document.querySelector('my-message');
-
-    function changeMessage() {
-      target.message = "Second Message";
-    }
-  </script>
-</body>
-</html>
-```
-
-Both before and after the user clicks on the button the message attribute for the `<my-message>` component will be `"Initial Message"`. But, the value for `target.message` will be `"Initial Message"` before the user clicks the button and `"Second Message"` after they click on the button.
-
-
-## Conditionals
-## Router Component (if applicable)
-## Exported Class and Functions from EvoElement.js File
-## Lifecycle methods
-
-You can enhance the behavior of your component by providing lifecycle functions in your script, which will be called at specific stages during the component's lifecycle.
-
-| Method | Description |
-| --- | --- |
-| init() | Called at the end of the constructor. This function allows you to perform additional setup or initialization steps for your component. Any code in this function must follow all of the [requirements for custom element constructors](https://html.spec.whatwg.org/multipage/custom-elements.html#custom-element-conformance). |
-| update(property, oldVal, newVal) | Called every time any property is updated, as well as when the component is connected to the DOM. You can use this function to adjust any private properties based on the changes in the component's properties. It is also called when the component is reconnected to the DOM after being previously disconnected. The property parameter provides the name of the member property that was updated just before calling this function. |
-| connected() | This function is called by the base class connectedCallback function, which is part of the web component's lifecycle. It is invoked when the component is connected to the DOM. You can use this function to perform actions that need to happen when the component is added to the page's DOM structure. |
-| disconnected() | This function is called by the base class disconnectedCallback function, which is part of the web component's lifecycle. It is invoked when the component is removed from the DOM. You can use this function to perform any cleanup or actions required when the component is no longer part of the page's DOM structure. |
-| adopted() | This function is called by the base class adoptedCallback function, which is part of the web component's lifecycle. It is invoked when the component is moved to a new document. You can use this function to handle any specific actions required when the component is moved between documents. |
-| attrChanged(attr, oldVal, newVal) | This function is called when an attribute has changed, and it is called by the base class attributeChangedCallback function, which is part of the web component's lifecycle. You can use this function to respond to attribute changes and update the component's behavior accordingly. |
-
-By using these lifecycle functions, you can control and manage various aspects of your component's behavior throughout its existence, making your components more dynamic and responsive to changes in the DOM and attribute values.
-
-## Base Class File EvoElement.js
-## Compile Options
-
-```json
-  "evo": {
-    "wc": {
-      "output": "static/js",
-      "outExtname": ".ts",
-      "minify": {
-        "css": true,
-        "html": true
-      }
-    }
-  },
-```
-
-More information soon
-
-## Integration with TypeScript
-
-Evo is designed to work seamlessly without requiring TypeScript. While you have the option to use TypeScript if you prefer, all of our example components are written in raw JavaScript. The generated files include extensive typing information using JSDocs. Most code editors interpret this typing information similar to TypeScript, but the advantage is that the transpiled code can be directly loaded into the browser without additional compilation steps.
-
-If you choose to write your code in the `<script>` tag as TypeScript, you would need Evo to transpile it first before processing it with TypeScript.
-
-> As of August 2023, we have not extensively tested TypeScript integration, and there might be some potential issues. If you encounter any problems, we encourage you to create a Github issue and provide your sample code along with the version of TypeScript you are using and the error message that was generated. This will help us improve and address any potential TypeScript-related issues for a better developer experience.
-
-## VSCode Enhancements
-
-### HTML Snippet
-
-HTML Snippet to generate a skeleton of a template:
-
-```json
-  "evowc": {
-    "prefix": "evowc",
-    "body": [
-      "<component tag=\"${1:tag-name}\">",
-      "  <template>",
-      "    $0",
-      "  </template>",
-      "  <style>",
-      "  </style>",
-      "  <script root>",
-      "  </script>",
-      "  <script>",
-      "  </script>",
-      "</component>"
-    ]
-  }
-```
-
-### JavaScript Snipper
-
-JavaScript snippet for several evo repated class member functions:
-
-```json
-  "evo init function": {
-    "prefix": "evoinit",
-    "body": [
-      "${1:// Called at the end of the constructor",
-      "}init() {",
-      "  $0",
-      "}"
-    ]
-  },
-  "evo update function": {
-    "prefix": "evoupdate",
-    "body": [
-      "${1:// Called after any CPA value is changed",
-      "}update(property, oldVal, newVal) {",
-      "  $0",
-      "}"
-    ]
-  },
-  "evo event handler function": {
-    "prefix": "evoevent",
-    "body": [
-      "${1:// ${2:click} event handler for ${3:save button}",
-      "}${4:#functionName}(${5:event, data}) {",
-      "  $0",
-      "}"
-    ]
-  }
-```
-
-## ATOM enhancements
-
-> The following were converted from the VS Code snippets using chatGPT. If someone can validate that these are valid and let me know.
-
-### HTML Snippet
-
-HTML Snippet to generate a skeleton of a template:
-
-```cson
-'.text.html.basic':
-  'evowc':
-    'prefix': 'evowc'
-    'body': """
-      <component tag="${1:tag-name}">
-        <template>
-          $0
-        </template>
-        <style>
-        </style>
-        <script root>
-        </script>
-        <script>
-        </script>
-      </component>
-    """
-```
-
-### JavaScript Snipper
-
-JavaScript snippet for several evo repated class member functions:
-
-```json
-'.source.js':
-  'evo init function':
-    'prefix': 'evoinit'
-    'body': """
-      ${1:// Called at the end of the constructor
-      }init() {
-        $0
-      }
-    """
-
-  'evo update function':
-    'prefix': 'evoupdate'
-    'body': """
-      ${1:// Called after any CPA value is changed
-      }update(key, oldVal, newVal) {
-        $0
-      }
-    """
-
-  'evo event handler function':
-    'prefix': 'evoevent'
-    'body': """
-      // ${1:click} event handler for ${2:save button}
-      ${3:#functionName}(${4:event, data}) {
-        $0
-      }
-    """
-```
-
-If anyone can convert these snippets to work in other editors, please do and submit a pull request on this file.
-
-## Reference
-
-Comming soon
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+## Contributing
+
+Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
+
+If you have a suggestion that would make this better, please fork the repo and create a pull request.
+
+1. Fork the Project
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Create you amazing feature
+4. Add unit testing _(80% or better coverage)_
+5. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+6. Push to the branch (`git push origin feature/AmazingFeature`)
+7. Open a Pull Request
+
+You can also simply open an issue with the tag "enhancement".
+
+> **Don't forget to give the project a star! Thanks again!**
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+## License
+
+Distributed under the MIT License. See [`LICENSE`](https://www.evowc.com/license) for more information.
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+## Contact
+
+Michael Collins:
+
+* [Linked In](https://www.linkedin.com/in/michael-collins-92b514/)
+* [The Evo Slack Workspace](https://join.slack.com/t/evo-ef36662/shared_invite/zt-23pdcq6td-~s0037B2_YN0vbHfd6G2xA)
+
+Project Links:
+
+* [https://github.com/EvolvedWeb/evowc](https://github.com/EvolvedWeb/evowc)
+* [Documentation](https://github.com/EvolvedWeb/evowc/wiki)
+* [Examples](https://www.evowc.com/examples)
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+<!--
+## Acknowledgments
+
+Use this space to list resources you find helpful and would like to give credit to. I've included a few of my favorites to kick things off!
+
+* [Choose an Open Source License](https://choosealicense.com)
+* [Malven's Flexbox Cheatsheet](https://flexbox.malven.co/)
+* [Malven's Grid Cheatsheet](https://grid.malven.co/)
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+-->
+
+<!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
+[contributors-shield]: https://img.shields.io/github/contributors/EvolvedWeb/evowc.svg?style=for-the-badge
+[contributors-url]: https://github.com/EvolvedWeb/evowc/graphs/contributors
+[forks-shield]: https://img.shields.io/github/forks/EvolvedWeb/evowc.svg?style=for-the-badge
+[forks-url]: https://github.com/EvolvedWeb/evowc/network/members
+[stars-shield]: https://img.shields.io/github/stars/EvolvedWeb/evowc.svg?style=for-the-badge
+[stars-url]: https://github.com/EvolvedWeb/evowc/stargazers
+[issues-shield]: https://img.shields.io/github/issues/EvolvedWeb/evowc.svg?style=for-the-badge
+[issues-url]: https://github.com/EvolvedWeb/evowc/issues
+[license-shield]: https://img.shields.io/github/license/EvolvedWeb/evowc.svg?style=for-the-badge
+[license-url]: https://github.com/EvolvedWeb/evowc/blob/master/LICENSE
+[product-screenshot]: images/screenshot.png
+[fast-xml-parser-url]: https://www.npmjs.com/package/fast-xml-parser
+[glob-url]: https://www.npmjs.com/package/glob
+[html-minifier-terser-url]: https://www.npmjs.com/package/html-minifier-terser

@@ -11,7 +11,7 @@
 >
   <template>
     <div class="main">
-      <div $for="people as item.key" :aria.label="title">
+      <div $for="people as item.key" :aria.label="title" :attr.idx="_index">
         <span text="index"></span>
         <span :text="title" :attr.title="title"></span>
         <span :text="item.name"></span>
