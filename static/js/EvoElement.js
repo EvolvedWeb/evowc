@@ -1,4 +1,7 @@
 /* eslint-env browser */
+// RegExp to find any tag that has the `el` attribute so we can add the `_cid` attribute on a per component basis
+const CID_RE = /(<\b[^>]*\b(?:el\s*=\s*(?:"[^"]*"|'[^']*'|[^ \t\n>]+)))/gi;
+
 /**
  * Convert an attribute name to a property name. Mainly
  * used by the `attributeChangedCallback` method.
@@ -115,7 +118,8 @@ export function cond(el, commentEl, value, compare ) {
       }
     }
     else {
-      isValid = (value === compare);
+      // eslint-disable-next-line
+      isValid = (value == compare); // Do not use === here
     }
 
     if (isValid) {
@@ -155,22 +159,26 @@ export function comment(message, srcEl) {
   return c;
 }
 
+let componentIndex = 0n;
 export const EvoElement = (baseClass = HTMLElement) => class extends baseClass {
+  /** @type {DocumentFragment|ShadowRoot|HTMLElement|null}*/#rootDom = null;
+  #componentId = '0';
   #domAttached = false;
-  #rootDom;
-  #usingShadow;
-  #styles;
-  #componentName;
+  #usingShadow = true;
+  #styles = '';
+  #componentName = '';
   #forList = {};
   #loopedEls = {};
 
   createDom({ template='', styles='', shadowMode='open', componentName }) {
+    this.#componentId = (++componentIndex).toString(36);
     if (shadowMode === 'none') {
       this.#usingShadow = false;
       this.#rootDom = document.createDocumentFragment();
     }
     else {
       this.#usingShadow = true;
+      // @ts-ignore
       this.#rootDom = this.attachShadow({ mode: shadowMode });
       // Indicate that the template is already in the shadow DOM
       this.#domAttached = true;
@@ -186,10 +194,11 @@ export const EvoElement = (baseClass = HTMLElement) => class extends baseClass {
     // We place everything into the real DOM to get all of the components to upgrade.
     if (template) {
       let tempEl = document.createElement('div');
-      tempEl.setAttribute('style', 'visible:hidden;width:0;height:0;');
-      // TODO: 2023-04-23 MGC - WARNING: Putting everything into the DOM may have adverse effects
+      tempEl.setAttribute('style', 'visibility:hidden;width:0;height:0;overflow:hidden;');
+      // TODO: 2023-04-23 MGC - WARNING, Need to research: Putting everything into the DOM may have adverse effects
       document.body.appendChild(tempEl)
-      tempEl.innerHTML = template;
+      // Insert the template that is modified to tag all elements with this components id (issue #17)
+      tempEl.innerHTML = template.replace(CID_RE, `$1 _cid="${this.#componentId}"`);
       [...tempEl.childNodes].forEach(el => this.#rootDom.appendChild(el));
       tempEl.remove();
       tempEl = null;
@@ -216,8 +225,11 @@ export const EvoElement = (baseClass = HTMLElement) => class extends baseClass {
   getEls(root) {
     const checkRoot = !!root;
     root ??= this.#rootDom;
+
+    // Find all elements that are bindable, looped, or conditional that belong to this component only. (issue #17)
+    const selector = `[el][_cid="${this.#componentId}"]`;
     // eslint-disable-next-line no-return-assign, no-sequences
-    const els = [...root.querySelectorAll('[el]')].reduce((o, el) => (o[el.getAttribute('el')] = el, o), {});
+    const els = [...root.querySelectorAll(selector)].reduce((o, el) => (o[el.getAttribute('el')] = el, o), {});
     if(checkRoot) {
       const key = root.getAttribute('el');
       if (key) {
@@ -228,7 +240,8 @@ export const EvoElement = (baseClass = HTMLElement) => class extends baseClass {
   }
 
   allEls(key) {
-    return [...this.#rootDom.querySelectorAll(`[el="${key}"]`)];
+    const selector = `[el="${key}"][_cid="${this.#componentId}"]`;
+    return [...this.#rootDom.querySelectorAll(selector)];
   }
 
   loopItemEls(loopElementKey, idx) {
@@ -338,7 +351,9 @@ export const EvoElement = (baseClass = HTMLElement) => class extends baseClass {
       // @ts-ignore
       if (this.attrChanged) this.attrChanged(attr, oldVal, newVal);
       const prop = propFromAttr(attr);
-      this[prop] = newVal;
+      setTimeout(() => {
+        this[prop] = newVal;
+      }, 1);
     }
   }
 
@@ -381,6 +396,7 @@ export const EvoElement = (baseClass = HTMLElement) => class extends baseClass {
       // If the CSS for the component is not in the correct place then add it.
       // See if there is a style tag with our component name in the component attribute
       // We use the component attribute as a way to track our CSS files.
+      // @ts-ignore
       if (!doc.querySelector(`style[component="${this.#componentName}"]`)) {
         // Add this style tag into the DOM
         doc.appendChild(styleEl);

@@ -106,7 +106,7 @@
     }
   </script>
   <script root>
-    import { router } from "../EvoRrouter.js";
+    import { router } from "../EvoRouter.js";
     import './WcAElement.js';
     import './EvoSlideElement.js';
     import './Example1Element.js';
@@ -190,7 +190,7 @@
       },
       {
         heading: "Web Components - Shadow DOM",
-        sub: "<video> tag shadow DOM",
+        sub: "<video> element shadow DOM",
         content: `<div class="fpimage" style="background-image: url('/img/shadowDOM.jpg')"></div>`
       },
       {
@@ -284,7 +284,7 @@ customElements.define('shadow-component', ShadowComponent);
       {
         heading: "Minimal EVO Web Component",
         sub: "Betcha you can't write just one...",
-        content: `<p>Create a component template file (HTML is easiest)<br/>
+        content: `<p>Create a component template file (HTML file is easiest)<br/>
 Add a <cp><code>&lt;component></code></cp> element.<br/>
 Set the tag attribute to the desired element name.<br/>
 Add <cp><code>&lt;template></code></cp> for HTML, <cp><code>&lt;style></code></cp> for CSS, and <cp><code>&lt;script></code></cp> for JS.</p>
@@ -330,7 +330,7 @@ export class MiniMumElement extends EvoElement() {
 &nbsp;&nbsp;&nbsp;&nbsp;}
 
 &nbsp;&nbsp;&nbsp;&nbsp;get _buildVersion() {
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return '0.6.0';
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return '0.6.1';
 &nbsp;&nbsp;&nbsp;&nbsp;}
 }
 
@@ -341,8 +341,8 @@ customElements.define(tagName, MiniMumElement);</pre></code></div></div>
         heading: "EVO: Setup",
         sub: "Just in case you might want to use it.",
         content: `<ul>
-          <li>Evo will be made public by the end of August.</li>
-          <li>Once it is:
+          <li>Evo was made public by the end of August. (v0.5.0)</li>
+          <li>You can:
             <ul>
           <li>Install Evo from NPM</li>
           <li>Copy base class file & router file to your static JS folder</li>
@@ -352,6 +352,7 @@ customElements.define(tagName, MiniMumElement);</pre></code></div></div>
             </ul>
           </li>
           <li><cy>I am looking for beta testers now.</cy></li>
+          <li>For more info: <wc-a href="https://www.evowc.com/get-started" show-ext="1">Getting Started Page</wc-a>.</li>
           </ul>`
       },
       {
@@ -525,7 +526,7 @@ Usage:
           <li>Evo auto two-way binds to your CPA when you bind to the <cp>:value</cp> or <cp>:checked</cp> properties of an element in your template.</li>
           <li><cp>:value</cp> will set the <cp>element.value</cp> property every time the CPA changes and it auto includes an event handler for the <cp>input</cp> event. This updates the CPA every time the value of the input field changes.</li>
           <li><cp>:checked</cp> will set the element.checked property every time the CPA changes and it auto includes an event handler for the <cp>change</cp> event. This updates the CPA every time the checkbox/radio button is checked or unchecked.</li>
-          <li><i><cy><cp>:checked</cp> is not yet finished.</cy></i></li>
+          <li><i><cy><cp>:checked</cp> is mostly finished.</cy></i></li>
           <li>Your components can support 2-way binding by using the <cp>value</cp> property and dispatching an <cp>input</cp> event every time things change. </li>
         </ul>`
       },
@@ -866,9 +867,9 @@ set #value(newVal) {
         <div><cp>UtahJS Slack:</cp> mike-collins</div>
         <div><cp>Email:</cp> intervalia+evo@gmail.com</div>
         <br/><br/>
-        <h1>Coming Very Soon</h1>
-        <div><cp>Website:</cp> www.EvoWC.com</div>
-        <div><cp>Github Repo</cp></div>
+        <h1>More Information</h1>
+        <div><cp>Website:</cp> <wc-a href="https://www.evowc.com" show-ext="1">https://www.evowc.com</wc-a></div>
+        <div><cp><wc-a href="https://github.com/EvolvedWeb/evowc" show-ext="1">Github Repo</wc-a></cp></div>
         <div>Issues and PRs desired and accepted</div>
         </div>`
       },

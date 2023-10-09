@@ -1,5 +1,29 @@
 # Updates to EVO-WC
 
+## Version 0.6.1 - 2023-10-10
+
+* Updated EvoElement.js
+  * Resolved #17 - Each component now only identifies the elements that belong to that specific component. This is accomplished by each component adding, at runtime, a component ID (denoted by the `_cid` attribute) to each tag that has an `el` attribute. This ensures we only find the elements related to this component and not the child components.
+  * Modified the conditional to operate with `truthy`/`falsey` values, not just `true`/`false`.
+  * The `attributeChangedCallback` now sets properties within a `setTimeout` to avoid infinite loops.
+  * Minor cleanup, added jsdocs types, and included `@ts-ignore`.
+* Updated WcAElement.html
+  * Set `target="_blank"` if it is not already set and we are linking to an external website.
+  * Adopted the use of `--wc-a-color`, `--wc-a-bgcolor`, `--wc-a-decoration`, and `--wc-a-hover-decoration`. All other values can be adjusted using `wc-a::part(a)`.
+  * Integrated an icon to represent an external link. Activate it by setting the attribute `show-ext="1"` or the property `el.showExt = true`.
+  * We now only SET the selected attribute. It is set when the current URL matches the one in the `href` attribute or when the beginning of the current URL aligns with the one in the `starts-with` attribute.
+  * We initiate the check for if this link is the selected link in `connected` and cease in `disconnected`.
+* Fixed the slideshow to function correctly with v0.6.1
+* Refined the event generation code for enhanced compatibility with PSI, including improved handling of `PreventDefault`, `stopPropagation`, and `stopImmediatePropagation`.
+* Corrected `Component.js` to support attributes in both uppercase and lowercase, aligning with SVG's flexibility.
+* Removed outdated Docs files, which have been transferred to the `evowc.com` repository.
+* Enhanced `evowc init` functionality to facilitate the creation of a comprehensive example website with integrated routing.
+* Expanded the list of reserved names that are prohibited for CPA names.
+* Broke the `Generator.js` code into smaller files to enable better testing.
+* Incorporated additional unit tests
+* Added the min and max value specifications for the BigInt CPA type: `:num="BigInt(0n,1234567890n)"` (The trailing `n` is optional).
+* Updated version to 0.6.1
+
 ## Version 0.6.0 - 2023-09-27 - *** Breaking Changes ***
 
 * Resolves #42 - The `$for` index value is `_index` and that can be used inside the `$for` section of the code. (Started code to allow developer to define the name of the index variable, but that was getting complicated. So I will finish it later.)

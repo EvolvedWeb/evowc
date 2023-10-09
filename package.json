@@ -1,6 +1,6 @@
 {
   "name": "@evo/wc",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "description": "Evo-wc transpiler converts a template file based on HTML and XML into a raw JavaScript custom element Web Component.\nOnly write what you need!",
   "keywords": [
     "command-line",
@@ -54,7 +54,7 @@
     "lint": "eslint \"lib/**/*.js\" \"bin/evowc.js\" \"static/js/*.js\"",
     "postinstall": "npm run build",
     "start": "node app",
-    "test-mocha": "nyc --nycrc-path test/.nycrc-mocha.json ./node_modules/.bin/_mocha \"lib/**/*.mocha.js\"",
+    "test-mocha": "nyc --nycrc-path test/.nycrc-mocha.json ./node_modules/.bin/_mocha --reporter-option maxDiffSize=50000 \"lib/**/*.mocha.js\"",
     "test": "npm run lint && npm run test-mocha"
   },
   "evo": {

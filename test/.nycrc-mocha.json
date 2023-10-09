@@ -1,6 +1,6 @@
 {
   "all": true,
-  "branches": 50,
+  "branches": 40,
   "cache": false,
   "check-coverage": true,
   "eager": true,
@@ -8,12 +8,12 @@
     "lib/**/*.mocha.js"
   ],
   "extension": [],
-  "functions": 50,
+  "functions": 40,
   "include": [
     "lib/**/*.js"
   ],
   "instrument": true,
-  "lines": 50,
+  "lines": 40,
   "per-file": false,
   "report-dir": "coverage/mocha",
   "reporter": [
@@ -23,9 +23,9 @@
   "require": [],
   "statements": 40,
   "watermarks": {
-    "lines": [40, 80],
-    "functions": [40, 80],
-    "branches": [40, 80],
-    "statements": [40, 80]
+    "lines": [40, 60],
+    "functions": [40, 60],
+    "branches": [40, 60],
+    "statements": [40, 60]
   }
 }

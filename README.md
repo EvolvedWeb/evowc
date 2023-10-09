@@ -116,7 +116,7 @@ To install and test Evo follow the steps below. `Evo init` will create a demo se
   npm init
 
   # install EvoWC in your project
-  npm i "https://github.com/EvolvedWeb/evowc.git#v0.6.0"
+  npm i "https://github.com/EvolvedWeb/evowc.git#v0.6.1"
   ```
 
 3. **Initialize Evo:**<br>
@@ -162,13 +162,12 @@ You can read more about how to use Evo in the [Documentation](https://www.evowc.
 - [x] Release version 0.5.0
 - [x] Release version 0.6.0
 - [x] Improve documentation
-- [ ] Release version 0.7.0
-- [ ] Release version 0.8.0
-- [ ] Release version 0.9.0
+- [x] Release version 0.6.1
 - [ ] Improve demo website
     - [ ] Use Router
     - [ ] Add a couple demo pages
     - [ ] Include several of the example components
+- [ ] Release version 0.7.0
 - [ ] Fix all errors and enhancements for version 1.0.0
 - [ ] Release version 1.0.0
 
@@ -212,7 +211,7 @@ Michael Collins:
 Project Links:
 
 * [https://github.com/EvolvedWeb/evowc](https://github.com/EvolvedWeb/evowc)
-* [Documentation](https://github.com/EvolvedWeb/evowc/wiki)
+* [Documentation](https://www.evowc.com/docs/intro)
 * [Examples](https://www.evowc.com/examples)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
