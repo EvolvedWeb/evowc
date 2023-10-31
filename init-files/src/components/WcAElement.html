@@ -1,0 +1,108 @@
+<component tag="wc-a" :href :target :show-ext="bool:false" :starts-with>
+  <template>
+    <a part="a" :href="href" .click="#navigate" :attr.target="target" .keydown="#keyHandler" drel="noopener noreferrer">
+      <span class="link-content">
+        <slot></slot>
+        <svg $if="showExt" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
+          <path bg d="M0 0h24v24H0z" fill="none" />
+          <path fg d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z" />
+        </svg>
+      </span>
+    </a>
+  </template>
+  <script root>
+    import { router } from '../EvoRouter.js';
+    const EXTERNAL_RE = /^https?:\/\//;
+  </script>
+  <script>
+    #removeRouterCheck;
+    connected() {
+      this.#removeRouterCheck = router.onUpdate(() => this.#checkPath());
+      this.#checkPath();
+    }
+
+    disconnected() {
+      this.#removeRouterCheck();
+    }
+
+    #checkPath() {
+      let pathName = window.location.pathname
+      if (!pathName.endsWith('/')) {
+        pathName += '/';
+      }
+      const url = new URL(this.href, window.location.href);
+      let href = url.pathname;
+      if (!href.endsWith('/')) {
+        href += '/';
+      }
+
+      const selected = this.startsWith ? pathName.startsWith(this.startsWith) : pathName === href;
+      setAttr(this, 'selected', selected);
+    }
+
+    update({ cpa }) {
+      if (cpa === 'href') {
+        this.#checkPath();
+        if (EXTERNAL_RE.test(this.href) && !this.target) {
+          this.target = "_blank";
+        }
+      }
+      else if (cpa === 'startsWith') {
+        this.#checkPath();
+      }
+    }
+
+    #navigate(evt) {
+      if (this.href && !this.target) {
+        evt.preventDefault();
+        router.navigate(this.href);
+      }
+    }
+
+    #keyHandler(evt) {
+      if (evt.key === 'Enter') {
+        this.#navigate(evt);
+      }
+    }
+  </script>
+  <style>
+    :host,
+    a {
+      background-color: var(--wc-a-bgcolor, transparent);
+      color: var(--wc-a-color, revert);
+      display: inline-block;
+    }
+    a {
+      text-decoration: var(--wc-a-decoration, none);
+    }
+    a:hover {
+      background-color: var(--wc-a-bgcolor-hover, color-mix(in srgb,var(--wc-a-bgcolor, revert),#fff 15%));
+      color: var(--wc-a-color-hover, color-mix(in srgb,var(--wc-a-color, revert),#fff 15%));
+      text-decoration: var(--wc-a-hover-decoration, revert);
+    }
+
+    .link-content {
+      align-items: center;
+      display: flex;
+      gap: .25em;
+      width: fit-content;
+    }
+
+    path[bg] {
+      fill: var(--wc-a-bgcolor, none);
+    }
+
+    path[fg] {
+      fill: currentColor;
+    }
+
+    svg {
+      height: 1em;
+      width: 1em;
+    }
+
+    a:hover svg {
+      scale: var(--wc-a-svg-scale, 1.1);
+    }
+  </style>
+</component>

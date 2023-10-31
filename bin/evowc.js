@@ -9,10 +9,12 @@ const fsp = fs.promises;
 const evowc = require('../lib/evowc.js')
 const getFileArrayFromGlob = require('../lib/getFileArrayFromGlob.js');
 const initEvo = require('../lib/initEvo.js');
+const updateEvo = require('../lib/updateEvo.js');
 const loadJson = require('../lib/loadJson.js');
 const getClOptions = require('../lib/getClOptions.js');
+const watch = require('../lib/watch.js');
 
-const TOTAL_TIME = 'Total processing time';
+const TOTAL_TIME = '  * Total processing time';
 const FILE_OPTIONS = {
   encoding: 'utf8'
 }
@@ -22,6 +24,8 @@ const MKDIR_OPTIONS = {
 
 /**
 * @typedef {Object} Options
+* @property {string} version - The version of the transpiler.
+* @property {boolean} force - If 'true' then force the building of all files.
 * @property {boolean | string | string[] } addDebug - Not implamented yet
 * @property {string} outExtname - File extention to use on the transpiled files.
 * @property {boolean} saveDebugJson - If 'true' then output the debug json files.
@@ -38,7 +42,13 @@ const MKDIR_OPTIONS = {
 * @property {boolean} minify.html - Should the HTML be minified?
 */
 
-function getOptions(clOptions) {
+function getEvoVersion() {
+  // @ts-ignore
+  const { version } = loadJson(path.join(__dirname, "../package.json"));
+  return version;
+}
+
+function getOptions(clOptions, version) {
   // @ts-ignore
   const { evo: { wc = {} } = {} } = loadJson(path.join(process.cwd(), "package.json"));
 
@@ -57,6 +67,8 @@ function getOptions(clOptions) {
   //console.log({});
   /** @type Options */
   const options = {
+    version,
+    force: clOptions.force,
     addDebug: wc.addDebug ?? false,
     // The code to use addDebug is not written yet
     // valid values for addDebug:
@@ -87,19 +99,37 @@ function getOptions(clOptions) {
 }
 
 async function run(args) {
+  // @ts-ignore
+  const version = getEvoVersion();
+  console.log(`\n\x1B[93mEvo-wc v${version}\x1B[0m\n`);
   console.time(TOTAL_TIME);
 
   let errors = [];
 
-  const clOptions = getClOptions(args);
+  const clOptions = getClOptions(args, version);
   if (clOptions.command.toLowerCase() === 'init') {
     initEvo(clOptions);
     return;
   }
 
+  if (clOptions.command.toLowerCase() === 'update') {
+    updateEvo(clOptions);
+    return;
+  }
+
+  if (clOptions.command.toLowerCase() === 'watch') {
+    await watch();
+    return;
+  }
+
+  let transpileCounts = {
+    done: 0,
+    skipped: 0
+  };
+
   if (args.length > 0) {
     /** @type Options */
-    const options = getOptions(clOptions);
+    const options = getOptions(clOptions, version);
     const { templateRoot, componentsToBuild, componentsRoot } = options.paths;
 
     // @ts-ignore
@@ -107,9 +137,10 @@ async function run(args) {
 
     for(let i=0; i < files.length; i++) {
       const componentFileName = files[i];
+      let beforeTime;
+      let skipped = false;
       try {
-        console.info(`\n\x1B[49m\x1B[36mProcessing Component file: "${componentFileName}"\x1B[39m`);
-        console.time('  time');
+        beforeTime = performance.now();
         const srcName = path.join(templateRoot, componentFileName);
         const extname = path.extname(componentFileName);
         const dirname = path.dirname(componentFileName);
@@ -119,24 +150,39 @@ async function run(args) {
         //console.log({ srcName, extname, dirname, tempName, outputPath });
 
         let source = fs.readFileSync(srcName, FILE_OPTIONS);
-        const component = await evowc(source, options);
+        const { fileExt, transpile } = evowc(source, options);
 
-        const outExtname = component.fileExt || options.outExtname;
+        const outExtname = fileExt || options.outExtname;
         fs.mkdirSync(outputPath, MKDIR_OPTIONS);
         const outputScriptName = path.join(outputPath, tempName + outExtname);
-        console.info(`   * Saving "${component.tag}" as ${outputScriptName}`);
-        await fsp.writeFile(outputScriptName, component.html, FILE_OPTIONS)
+        const srcModified = getModifiedDate(srcName);
+        const dstModified = getModifiedDate(outputScriptName);
 
-        if (options.saveDebugJson) {
-          const componentDataFilename = outputScriptName + '.json';
-          console.info(`   + Saving component data as ${componentDataFilename}`);
-          // @ts-ignore
-          let componentDataJson = JSON.stringify(component,0,2);
-          await fsp.writeFile(componentDataFilename, componentDataJson, FILE_OPTIONS)
+        // We will generate the output file if we are forcing all files to be rebuilt
+        //  or if the source file timestamp is newer than then output file timestamp.
+        if (options.force || srcModified >= dstModified) {
+          const component = await transpile(outputPath);
+
+          transpileCounts.done++;
+          console.info(`\x1B[36mProcessing Component file: \x1B[96m${componentFileName}\x1B[0m`);
+          console.info(`  * Saving \x1B[93m<${component.tag}>\x1B[0m as \x1B[92m${outputScriptName}\x1B[0m`);
+          await fsp.writeFile(outputScriptName, component.html, FILE_OPTIONS)
+
+          if (options.saveDebugJson) {
+            const componentDataFilename = outputScriptName + '.json';
+            console.info(`  + Saving component data as ${componentDataFilename}`);
+            // @ts-ignore
+            let componentDataJson = JSON.stringify(component,0,2);
+            await fsp.writeFile(componentDataFilename, componentDataJson, FILE_OPTIONS)
+          }
+
+          // scriptOutput = JSON.stringify(sourceObj, 0, 2);
+          // await fsp.writeFile(outputScriptName + '.orig.json', scriptOutput, FILE_OPTIONS)
         }
-
-        // scriptOutput = JSON.stringify(sourceObj, 0, 2);
-        // await fsp.writeFile(outputScriptName + '.orig.json', scriptOutput, FILE_OPTIONS)
+        else {
+          transpileCounts.skipped++;
+          skipped = true;
+        }
       }
 
       catch(ex) {
@@ -145,7 +191,11 @@ async function run(args) {
       }
 
       finally {
-        console.timeEnd('  time');
+        if (!skipped) {
+          const afterTime = performance.now();
+          const delta = afterTime - beforeTime;
+          console.info(`  time: ${delta.toFixed(3)}ms`);
+        }
       }
     }
   }
@@ -153,7 +203,9 @@ async function run(args) {
     console.log('No source files specified. Nothing to process');
   }
 
-  console.log('\n');
+  console.log('\nFinished.');
+  console.log(`  * ${transpileCounts.done} components have changed and were transpiled.`);
+  console.log(`  * ${transpileCounts.skipped} components were not changed and skipped.`);
   console.timeEnd(TOTAL_TIME);
 
   if(errors.length) {
@@ -163,6 +215,12 @@ async function run(args) {
     });
     console.log('\n');
   }
+}
+
+function getModifiedDate(fname) {
+  if (!fs.existsSync(fname)) return 0;
+
+  return fs.statSync(fname).mtimeMs;
 }
 
 // @ts-ignore

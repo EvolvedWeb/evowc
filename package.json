@@ -1,6 +1,6 @@
 {
   "name": "@evo/wc",
-  "version": "0.6.1",
+  "version": "0.7.0",
   "description": "Evo-wc transpiler converts a template file based on HTML and XML into a raw JavaScript custom element Web Component.\nOnly write what you need!",
   "keywords": [
     "command-line",
@@ -49,7 +49,7 @@
     "build:debug": "node --inspect-brk ./bin/evowc.js \"components/**/*.html\"",
     "build": "npm run evowc",
     "debug-mocha": "node --inspect-brk node_modules/mocha/bin/_mocha --reporter tap \"lib/**/*.mocha.js\"",
-    "evowc": "node ./bin/evowc.js \"**/*.html\"",
+    "evowc": "node ./bin/evowc.js -f \"**/*.html\"",
     "evowc1": "node ./bin/evowc.js WcLoopElement.html",
     "lint": "eslint \"lib/**/*.js\" \"bin/evowc.js\" \"static/js/*.js\"",
     "postinstall": "npm run build",
@@ -86,14 +86,16 @@
   "homepage": "https://www.evowc.com",
   "dependencies": {
     "express": "4.18.2",
-    "fast-xml-parser": "4.3.1",
+    "fast-xml-parser": "4.3.2",
     "glob": "10.3.10",
-    "html-minifier-terser": "7.2.0"
+    "html-minifier-terser": "7.2.0",
+    "keypress": "^0.2.1",
+    "micromatch": "^4.0.5",
+    "node-watch": "^0.7.4"
   },
   "devDependencies": {
-    "@types/mocha": "10.0.2",
-    "chai": "4.3.9",
-    "eslint": "8.50.0",
+    "chai": "4.3.10",
+    "eslint": "8.52.0",
     "mocha": "10.2.0",
     "nyc": "15.1.0"
   }

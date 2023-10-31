@@ -1,12 +1,49 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Evo Test</title>
+  <title>Evo Demo App</title>
 </head>
 <body>
-  <test-app></test-app>
+  <demo-app></demo-app>
   <script type="module">
-    import "js/TestApp.js";
+    import "/js/components/DemoApp.js";
   </script>
+  <style>
+    :root {
+      font-size: clamp(12px, 1.4vw, 18px);
+      --color-dark: #00171f;
+      --color-dark-2: #003459;
+      --color-dark-3: #004372;
+      --color-dark-4: #050509;
+      --color-bright: #FFFFFF;
+      --color-bright-2: #e5ebc3;
+      --color-bright-3: #e9e2bb;
+      --color-bright-4: #FFAC33;
+      --wc-a-color: #c9dcff;
+      --wc-a-color-hover: #94c2ec;
+      --wc-a-bgcolor-hover: var(--color-dark-4);
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    * {
+      box-sizing: border-box;
+      font-family: Roboto, Monaco, 'Courier New', Courier, monospace;
+      font-size: 1.2rem;
+    }
+
+    body {
+      background: var(--color-dark-4);
+      margin: 0 auto;
+      max-width: 1200px;
+      padding: 0;
+    }
+
+    wc-a[selected] {
+      --wc-a-bgcolor: var(--color-dark);
+    }
+  </style>
 </body>
 </html>

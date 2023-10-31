@@ -1,9 +1,9 @@
 # Updates to EVO-WC
 
-## Version 0.6.1 - 2023-10-10
+## Version 0.7.0 - 2023-10-31
 
 * Updated EvoElement.js
-  * Resolved #17 - Each component now only identifies the elements that belong to that specific component. This is accomplished by each component adding, at runtime, a component ID (denoted by the `_cid` attribute) to each tag that has an `el` attribute. This ensures we only find the elements related to this component and not the child components.
+  * Resolves #17 - Each component now only identifies the elements that belong to that specific component. This is accomplished by each component adding, at runtime, a component ID (denoted by the `_cid` attribute) to each tag that has an `el` attribute. This ensures we only find the elements related to this component and not the child components.
   * Modified the conditional to operate with `truthy`/`falsey` values, not just `true`/`false`.
   * The `attributeChangedCallback` now sets properties within a `setTimeout` to avoid infinite loops.
   * Minor cleanup, added jsdocs types, and included `@ts-ignore`.
@@ -13,16 +13,23 @@
   * Integrated an icon to represent an external link. Activate it by setting the attribute `show-ext="1"` or the property `el.showExt = true`.
   * We now only SET the selected attribute. It is set when the current URL matches the one in the `href` attribute or when the beginning of the current URL aligns with the one in the `starts-with` attribute.
   * We initiate the check for if this link is the selected link in `connected` and cease in `disconnected`.
-* Fixed the slideshow to function correctly with v0.6.1
+* Fixed the slideshow to function correctly with v0.7.0
 * Refined the event generation code for enhanced compatibility with PSI, including improved handling of `PreventDefault`, `stopPropagation`, and `stopImmediatePropagation`.
 * Corrected `Component.js` to support attributes in both uppercase and lowercase, aligning with SVG's flexibility.
 * Removed outdated Docs files, which have been transferred to the `evowc.com` repository.
-* Enhanced `evowc init` functionality to facilitate the creation of a comprehensive example website with integrated routing.
 * Expanded the list of reserved names that are prohibited for CPA names.
 * Broke the `Generator.js` code into smaller files to enable better testing.
-* Incorporated additional unit tests
+* Partial for #21 - Incorporated additional unit tests.
+* Changed the code to only compile the source files that have changed.
+* Added exception handling to lib/formatDate.js
+* Big fixes and some minor improvements to lib/pathToRegEx.js based on adding tests for that file.
 * Added the min and max value specifications for the BigInt CPA type: `:num="BigInt(0n,1234567890n)"` (The trailing `n` is optional).
-* Updated version to 0.6.1
+* Resolves #27 - Added `evowc watch` command to start server and watch for changes. Currently does a recompile, but does not auto reload the browser.
+* Resolves #19 - Added versioning that creates a folder called `Evo-1.2.3` in which the `Evo*.js` files are placed. The value for `1.2.3` will be the current version of Evo.
+* Resolves #38 - Enhanced `evowc init` functionality to facilitate the creation of a comprehensive example website with integrated routing.
+* Resolves #39 - Added `evowc update` to supply new versions of the Evo*.js files.
+* Updated all dependancies.
+* Updated version to 0.7.0
 
 ## Version 0.6.0 - 2023-09-27 - *** Breaking Changes ***
 
@@ -33,9 +40,9 @@
 * Resolves #33 - `this.#els` is frozen making it read-only.
 * Resolves #32 - I changed the names of the private storage variables from `#_varName` to `#__varName` and from `#varName` to `#_varName` to avoid name collision.
 * Resolves #13 - Added code to support the new (PSI) event options:
-  p: 'evt.preventDefault()',
-  s: 'evt.stopPropagation()',
-  i: 'evt.stopImmediatePropagation()'
+  * p: 'evt.preventDefault()',
+  * s: 'evt.stopPropagation()',
+  * i: 'evt.stopImmediatePropagation()'
 * Resolves #10 - Supporting `:checked` in addition to `:value`
 * Created a new README.md based on https://github.com/othneildrew/Best-README-Template and renamed the previous readme to oldREADME.md
 * Minor cleanup of some of the example components

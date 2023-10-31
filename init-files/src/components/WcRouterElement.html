@@ -1,0 +1,96 @@
+<component tag="wc-router" :#hide-all="bool:false">
+  <template>
+    <div el="container"></div>
+  </template>
+  <style>
+    :host {
+      display: block;
+      height: fit-content;
+      margin: 0;
+      padding: 0;
+      width: 100%;
+    }
+  </style>
+  <script root>
+    import { router } from "../EvoRouter.js";
+    const mutationConfig = {
+      childList: true,
+      subtree: true
+    };
+  </script>
+  <script>
+    #routes = [];
+    #observer;
+
+    #updateSelection() {
+      let found = false;
+      let unusedElements = [];
+      let okToRemove = true;
+      this.#routes.forEach(route => {
+        const show = route.re.exec(window.location.pathname);
+        if (found || !show) {
+          unusedElements.push(route.el);
+        }
+        else {
+          if(route.importFile) {
+            okToRemove = false;
+            import(route.importFile).then((...args) => {
+              delete route.importFile; // Remove this so it does not attempt to load a second time.
+              // TODO: 2023-06-20: Pass params into element.params
+              this.#els.container.append(route.el);
+
+              unusedElements.forEach(el => el.remove()); // Only hide the unused elements AFTER the one that is showing has loaded.
+            }).catch(ex => {
+              console.log(ex.stack);
+            });
+          }
+          else {
+            // TODO: 2023-06-20: Pass params into element.params
+            this.#els.container.append(route.el);
+          }
+
+          found = true;
+        }
+      });
+
+      if (okToRemove) {
+        unusedElements.forEach(el => el.remove());
+      }
+    }
+
+    #processRoutes() {
+      this.#routes = [];
+
+      const children = [...this.children];
+      children.forEach(el => {
+        if (el.localName === 'wc-route') {
+          const href = el.getAttribute('href');
+          const element = el.getAttribute('element');
+          const importFile = el.getAttribute('import');
+          this.#routes.push({
+            href,
+            importFile,
+            re: router.pathToRegex(href),
+            el: document.createElement(element),
+            element,
+          });
+        }
+      });
+
+      this.#updateSelection();
+    }
+
+    #mutationCallback(mutationsList) {
+      console.log(mutationsList);
+      //TODO: 2023-07-03 MGC - this.#processRoutes();
+      // But make sure to keep all elements that already exist
+    };
+
+    init() {
+      router.onUpdate(() => this.#updateSelection());
+      this.#processRoutes();
+      this.#observer = new MutationObserver((...args) => this.#mutationCallback(...args));
+      this.#observer.observe(this, mutationConfig);
+    }
+  </script>
+</component>

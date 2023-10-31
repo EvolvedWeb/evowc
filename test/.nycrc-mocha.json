@@ -5,7 +5,8 @@
   "check-coverage": true,
   "eager": true,
   "exclude": [
-    "lib/**/*.mocha.js"
+    "lib/**/*.mocha.js",
+    "lib/watch.js"
   ],
   "extension": [],
   "functions": 40,
