@@ -77,13 +77,23 @@ In summary, Evo provides a developer-friendly, high-performance solution for cre
 
 ### Built With
 
-Built in Raw JavaScript using JSDocs Types. Our build time dependancies are:
+Built in Raw JavaScript using JSDocs Types.
+
+Our build time dependancies are:
 
 * [fast-xml-parser](fast-xml-parser-url)
 * [glob](glob-url)
 * [html-minifier-terser](html-minifier-terser-url)
 
-> The only runtime code is your transpiled components and a base class that contains all of the common functionality for all of the components. There are optional files for the Evo router.
+The run-time dependancies for running the demo server:)
+
+* [express](express-url)
+* [keypress](keypress-url)
+* [micromatch](micromatch-url)
+* [node-watch](node-watch-url)
+
+
+> None of these dependencies are used at runtime by the generated components. The only code executed at runtime consists of your transpiled components and a base class that encapsulates all the common functionality shared by all of the components. Additionally, there are optional files available specifically for the Evo router.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -97,47 +107,49 @@ To use Evo-wc you will need NodeJs installed. We recommend LTS and have tested w
 
 ### Installation
 
-To install and test Evo follow the steps below. `Evo init` will create a demo server _that is not for use in production_. It also creates a simple website that uses a series of demo web components and the built in `<wc-router>` element for SPA styled routing and the `<wc-a>` to navigate between the SPA pages.
+To install and test Evo follow the steps below. `Evo init` will create a demo server that is great for development but _is not recommended for use in production_. It also creates a simple website that uses a series of demo web components and the built in `<wc-router>` element for SPA styled routing and the `<wc-a>` to navigate between the SPA pages.
 
-1. **Create a Project Folder:**<br>
-  Create a new folder for your Evo project and change directory into it. This will be the root directory for your web components.
-  ```sh
-  # Create the new folder
-  mkdir evo1
+1. **Install Nodejs if needed**<br>
+  Download and install from [https://nodejs.org/](https://nodejs.org/).
 
-  # Go into the newly created folder
-  cd evo1
-  ```
+    There are many good sites that describe the process in details. [Look here](https://www.google.com/search?q=best+way+to+install+node+js+on+Mac,+windows+and+Linux) for more details.
 
-2. **Install Evo:**<br>
-  Begin by initializing npmand then installing Evo. Open your terminal and run the following commands:
-  ```sh
-  # Initialize the npm project
-  npm init
+2. **Create a Project Folder:**<br>
+  Create a new folder for your Evo project and change directory into it. This will be the root directory for your web components. Open your terminal application and enter the following commands:
 
-  # install EvoWC in your project
-  npm i "https://github.com/EvolvedWeb/evowc.git#v0.6.0"
-  ```
+    ```sh
+    # Create the new folder
+    mkdir evo1
 
-3. **Initialize Evo:**<br>
-  Let Evo know where your component template files will be located and where the transpiled components will be placed.
-  ```sh
-  # Initialize EVOWC config and copy the helper files
-  npx evowc init
+    # Go into the newly created folder
+    cd evo1
+    ```
 
-  # Install the added repos
-  npm i
+3. **Install Evo:**<br>
+  Begin by initializing npm and then installing Evo. In your terminal run the following commands:
 
-  # Transpile the demo Evo component
-  npm run evowc
-  ```
+    ```sh
+    # Initialize the npm project
+    npm init
 
-4. **Run your demo server**<br>
-  Start up the demo server. The demo server is <strong>not</strong> a production server.
-  ```sh
-  # Start the demo server
-  npm start
-  ```
+    # Press enter multiple times until the init has finished
+
+    # install EvoWC in your project
+    npm i "https://github.com/EvolvedWeb/evowc.git#v0.7.0"
+    ```
+
+4. **Initialize Evo:**<br>
+  Let Evo know ceate a demo server and where your component template and the transpiled components will be placed.
+    ```sh
+    # Initialize EVOWC config and copy the helper files
+    npx evowc init
+
+    # Install the added repos for the demo server
+    npm i
+
+    # Transpile the demo Evo components and start the demo server
+    npm run watch
+    ```
 
 5. **Browser to the demo server at http://localhost:12345**
 
@@ -159,18 +171,23 @@ You can read more about how to use Evo in the [Documentation](https://www.evowc.
 
 ## Roadmap
 
-- [x] Release version 0.5.0
-- [x] Release version 0.6.0
-- [x] Improve documentation
-- [ ] Release version 0.7.0
-- [ ] Release version 0.8.0
-- [ ] Release version 0.9.0
-- [ ] Improve demo website
-    - [ ] Use Router
-    - [ ] Add a couple demo pages
-    - [ ] Include several of the example components
-- [ ] Fix all errors and enhancements for version 1.0.0
-- [ ] Release version 1.0.0
+- ☑ Release version 0.5.0
+- ☑ Fix errors and enhancements for v0.6.0
+  - ☑ Improve documentation.
+- ☑ Release version 0.6.0
+- ☑ Fix errors and enhancements for v0.7.0
+  - ☑ Increase unit tests to over 40%
+  - ☑ Add hot-transpile. Components will auto-transpile when changed in the Evo demo app.
+  - ☑ Improve demo website.
+    - ☑ Use the Evo router.
+    - ☑ Add a couple demo pages.
+    - ☑ Include several of the example components.
+- ☑ Release version 0.7.0
+- ☐ Fix all errors and enhancements for version 1.0.0
+  - ☐ All docs up to date.
+  - ☐ Unit tests over 60%.
+  - ☐ Add hot-reload in browser.
+- ☐ Release version 1.0.0
 
 See the [open issues](https://github.com/EvolvedWeb/evowc/issues) for the current list of proposed features (and known issues).
 
@@ -212,7 +229,7 @@ Michael Collins:
 Project Links:
 
 * [https://github.com/EvolvedWeb/evowc](https://github.com/EvolvedWeb/evowc)
-* [Documentation](https://github.com/EvolvedWeb/evowc/wiki)
+* [Documentation](https://www.evowc.com/docs/intro)
 * [Examples](https://www.evowc.com/examples)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
@@ -244,3 +261,7 @@ Use this space to list resources you find helpful and would like to give credit 
 [fast-xml-parser-url]: https://www.npmjs.com/package/fast-xml-parser
 [glob-url]: https://www.npmjs.com/package/glob
 [html-minifier-terser-url]: https://www.npmjs.com/package/html-minifier-terser
+[express-url]: https://www.npmjs.com/package/express
+[keypress-url]: https://www.npmjs.com/package/keypress
+[micromatch-url]: https://www.npmjs.com/package/micromatch
+[node-watch-url]: https://www.npmjs.com/package/node-watch

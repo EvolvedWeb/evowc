@@ -1,0 +1,82 @@
+<component tag="demo-app">
+  <script root>
+    import "./WcAElement.js"
+  </script>
+  <template>
+    <header>
+      <nav>
+        <wc-a href="/">Home</wc-a>
+        <wc-a href="/examples">Examples</wc-a>
+        <wc-a href="/contact">Contact Us</wc-a>
+        <wc-a href="https://www.evowc.com/get-started" show-ext="1">Evo Getting Started</wc-a>
+      </nav>
+    </header>
+    <wc-router>
+      <wc-route href="/" element="home-page" import="./HomePage.js"></wc-route>
+      <wc-route href="/examples" element="examples-page" import="./ExamplesPage.js"></wc-route>
+      <wc-route href="/contact" element="contact-page" import="./ContactPage.js"></wc-route>
+      <wc-route href="(.*)" element="not-found" import="./NotFound.js"></wc-route>
+    </wc-router>
+    <footer>
+      <div class="footer-section">
+        <wc-a href="/">Home</wc-a>
+        <wc-a href="/examples/">Examples</wc-a>
+        <wc-a href="/contact/">Contact</wc-a>
+      </div>
+      <div class="footer-section">
+        <wc-a href="https://www.evowc.com/get-started" show-ext="1">Evo Getting Started</wc-a>
+        <wc-a href="https://github.com/EvolvedWeb/evowc" show-ext="1">Github Repo</wc-a>
+        <wc-a href="https://join.slack.com/t/evo-ef36662/shared_invite/zt-23pdcq6td-~s0037B2_YN0vbHfd6G2xA" show-ext="1">Evo Slack Workgroup</wc-a>
+      </div>
+    </footer>
+  </template>
+  <style>
+    :host {
+      background-color: #55555522;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    header, footer {
+      background: var(--color-dark-2);
+      color: var(--color-bright);
+    }
+
+    nav {
+      align-items: center;
+      display: flex;
+      justify-content: space-around;
+    }
+
+    nav wc-a::part(a) {
+      padding: .5em 1em;
+    }
+
+    nav wc-a[selected] {
+      --wc-a-bgcolor: var(--color-dark);
+    }
+
+    footer {
+      display: flex;
+      justify-content: space-around;
+      padding: 4rem;
+    }
+
+    .footer-section {
+      display: flex;
+      flex-direction: column;
+      gap: .5em;
+    }
+  </style>
+  <script root>
+    import "./WcRouterElement.js"
+  </script>
+  <script>
+  </script>
+</component>

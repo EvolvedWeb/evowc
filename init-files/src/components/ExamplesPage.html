@@ -1,0 +1,101 @@
+<component tag="examples-page">
+  <script root>
+    import "./HighlightCodeElement.js"
+    import "./ExampleCodeElement.js"
+    import "./LocaleDateElement.js"
+  </script>
+  <template>
+    <div class="hero" small>
+      <div class="hero-text">
+        <h1>EVO-WC</h1>
+      </div>
+    </div>
+    <div class="examples">
+      <h2>Examples</h2>
+      <p>Below is an example component. Both the Evo component file and the compiled JavaScript files are 
+        included. There are many other examples in the <wc-a show-ext="1" href="https://github.com/EvolvedWeb/evowc/tree/main/components">components
+        folder</wc-a> of the Evowc repo.</p>
+      <example-code>
+        <h3 slot="title">LocaleDateElement.html - <code>&lt;locale-date&gt;</code></h3>
+        <div slot="description">
+          <p>The Locale Date example component displays a date and allows the user to choose between several locale or the
+            output.</p>
+          <p>The <code>timestamp</code> CPA is a Date object. The default is set to the variable <code>today</code> which
+            is defined and initialized in the <code>&lt;script root</code> tag.</p>
+          <p>The <code>#localtime</code> CPA is set in the <code>update() function</code> which is called every time a CPA
+            is updated.</p>
+          <p>All of the buttons bind to the same private event handler (<code>#setLocale</code>). This function used the
+            <code>data-locale</code> value on each button to know what locale is to be used.</p>
+          <p>Since <code>this.locale</code> is a CPA, the update function is also called every time the user clicks on one
+            of the buttons.</p>
+        </div>
+        <div slot="example"><locale-date></locale-date></div>
+        <highlight-code wide show-copy lang="html" slot="html-code" src="/components/LocaleDateElement.html"></highlight-code>
+        <highlight-code wide show-copy lang="js" slot="js-code" src="/js/components/LocaleDateElement.js"></highlight-code>
+      </example-code>
+    </div>
+  </template>
+  <style>
+    :host {
+      box-sizing: border-box;
+      display: block;
+      width: 100%;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    .hero {
+      background-color: var(--color-dark);
+      color: var(--color-bright);
+      display: flex;
+      flex-direction: row;
+      flex: 0 0 auto;
+      gap: 3rem;
+      padding: 4rem;
+      place-content: space-around;
+    }
+
+    .hero[small] {
+      padding: 1rem;
+    }
+
+    .examples {
+      background-color: var(--color-dark-2);
+      border-block: 2px solid color-mix(in srgb, var(--color-dark-2) 30%, black);
+      color: var(--color-bright);
+      display: flex;
+      flex-direction: column;
+      flex: 0 0 auto;
+      font: bold 1.25rem Roboto, Monaco, 'Courier New', Courier, monospace;
+      gap: 0;
+      padding: 4rem;
+      place-content: space-between;
+    }
+
+    highlight-code {
+      font-size: .75rem;
+      height: 20rem;
+      max-height: 20rem;
+    }
+
+    code {
+      background-color: #00000040;
+    }
+
+    code[nowrap] {
+      white-space: nowrap;
+    }
+
+    example-code {
+      border-top: 3px solid white;
+      margin-top: 3rem;
+      padding-top: 1rem;
+    }
+
+    p {
+      font-size: 1rem;
+    }
+  </style>
+</component>

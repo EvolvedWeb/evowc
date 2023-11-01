@@ -24,6 +24,8 @@ You can use them as is or make changes to them to suit your needs.
 * Calendar -
 * Dialog *
   * Change Password -
+  * Login -
+  * System Dialogs *
   * Side Dialog
 * Drop Combo/Auto Complete
 * Drop Menu
@@ -34,6 +36,7 @@ You can use them as is or make changes to them to suit your needs.
 * Image Cropper
 * Pagination
 * Progress Bar
+* Round Progress Bar *
 * Quote
 * Rich Text Editor
 * Social Media - Person Card
@@ -42,7 +45,6 @@ You can use them as is or make changes to them to suit your needs.
 * Toggle Checkbox
 * Tool Tip
 * Word Count Text Area
-
 * Color Picker?
 * Icons? - https://github.com/lekoala/last-icon
 

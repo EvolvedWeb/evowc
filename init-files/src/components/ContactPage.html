@@ -1,0 +1,63 @@
+<component tag="contact-page">
+  <script root>
+  </script>
+  <script>
+  </script>
+  <template>
+    <div class="hero" small>
+      <div class="hero-text">
+        <h1>EVO-WC</h1>
+      </div>
+    </div>
+    <div class="contact">
+      <h2>Contact Us</h2>
+      <p>How can I stay informed?</p>
+      <p>We invite you to <wc-a
+          href="https://join.slack.com/t/evo-ef36662/shared_invite/zt-23pdcq6td-~s0037B2_YN0vbHfd6G2xA"
+          show-ext="1">join the Evo Slack Workgroup</wc-a>.</p>
+    </div>
+  </template>
+  <style>
+    :host {
+      box-sizing: border-box;
+      display: block;
+      width: 100%;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    .hero {
+      background-color: var(--color-dark);
+      color: var(--color-bright);
+      display: flex;
+      flex-direction: row;
+      flex: 0 0 auto;
+      gap: 3rem;
+      padding: 4rem;
+      place-content: space-around;
+    }
+
+    .hero[small] {
+      padding: 1rem;
+    }
+
+    .contact {
+      background-color: var(--color-dark-2);
+      border-block: 2px solid color-mix(in srgb, var(--color-dark-2) 30%, black);
+      color: var(--color-bright);
+      display: flex;
+      flex-direction: column;
+      flex: 0 0 auto;
+      font: bold 1.25rem Roboto, Monaco, 'Courier New', Courier, monospace;
+      gap: 0;
+      padding: 4rem;
+      place-content: space-between;
+    }
+
+    .wide {
+      width: 100%;
+    }
+  </style>
+</component>

@@ -62,7 +62,7 @@
   </script>
   <script>
     #changePwHandler(event, data) {
-      console.log('changepw called');
+      // console.log('changepw called');
       event.preventDefault();
       const el = event.target;
       el.errorMessage = '';
@@ -74,12 +74,12 @@
     }
 
     #signupHandler(event, data) {
-      console.log('signup called');
+      // console.log('signup called');
       //event.preventDefault();
     }
 
     async #signinHandler(event, data) {
-      console.log('signin called');
+      // console.log('signin called');
       event.preventDefault();
       const el = event.target;
       el.errorMessage = '';
@@ -97,23 +97,23 @@
       // };
     }
     #forgotPwHandler(event, data) {
-      console.log('forgotpw called');
+      // console.log('forgotpw called');
       //event.preventDefault();
     }
     // this.#els.login.addEventListener('gettoken', (event, data) => {
-    //   console.log('gettoken called');
-    //   event.detail.token = '01A838F1E';
+      // console.log('gettoken called');
+      // event.detail.token = '01A838F1E';
     // });
     async #openLogin() {
       const resp = await this.#els.login.open();
-      console.log('dialog closed');
-      console.log(resp);
+      // console.log('dialog closed');
+      // console.log(resp);
     }
 
     async #openChangePW() {
       const resp = await this.#els.changepw.open();
-      console.log('dialog closed');
-      console.log(resp);
+      // console.log('dialog closed');
+      // console.log(resp);
     }
   </script>
 </component>
