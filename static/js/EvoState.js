@@ -97,6 +97,7 @@ export function createState(stateName, defaultState) {
   }, stateProxyHandler);
 }
 
+// eslint-disable-next-line no-unused-vars
 export function getState(stateName) {
-
+  
 }

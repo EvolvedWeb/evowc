@@ -107,19 +107,23 @@ async function run(args) {
   let errors = [];
 
   const clOptions = getClOptions(args, version);
-  if (clOptions.command.toLowerCase() === 'init') {
+  const options = getOptions(clOptions, version);
+
+  switch (clOptions.command.toLowerCase()) {
+    case 'init':
     initEvo(clOptions);
     return;
-  }
 
-  if (clOptions.command.toLowerCase() === 'update') {
-    updateEvo(clOptions);
+    case 'update':
+    updateEvo(options);
     return;
-  }
 
-  if (clOptions.command.toLowerCase() === 'watch') {
+    case 'watch':
     await watch();
     return;
+
+    default:
+      break;
   }
 
   let transpileCounts = {
@@ -129,7 +133,6 @@ async function run(args) {
 
   if (args.length > 0) {
     /** @type Options */
-    const options = getOptions(clOptions, version);
     const { templateRoot, componentsToBuild, componentsRoot } = options.paths;
 
     // @ts-ignore
