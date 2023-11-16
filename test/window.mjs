@@ -1,11 +1,21 @@
 import fs from "fs";
 
-export function after() {
-  fs.unlinkSync('/static/js/EvoRouter.mjs')
+export function afterAll() {
+  try {
+    fs.unlinkSync('static/js/EvoRouter.mjs');
+  }
+  catch(ex) {
+    console.log(ex.stack);
+  }
 }
 
-export function before() {
-  fs.copyFileSync('/static/js/EvoRouter.js', '/static/js/EvoRouter.mjs')
+export function beforeAll() {
+  fs.copyFileSync('static/js/EvoRouter.js', 'static/js/EvoRouter.mjs')
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve();
+    }, 100);
+  });
 }
 const events = {};
 global.window = {

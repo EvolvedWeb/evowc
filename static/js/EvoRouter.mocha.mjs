@@ -1,10 +1,17 @@
 /* eslint-env mocha */
-import '../../test/window.mjs';
+import { afterAll, beforeAll } from '../../test/window.mjs';
 import { expect } from 'chai';
-import { router } from './EvoRouter.mjs';
-const { pathToRegex } = router;
+let pathToRegex;
 
 describe.only('pathToRegex conversion tests', () => {
+  after(() => {
+    afterAll();
+  });
+  before(async () => {
+    await beforeAll();
+    const module = await import('./EvoRouter.mjs');
+    pathToRegex = module.router.pathToRegex;
+  });
   it('should properly handle "/"', () => {
     const expected = /^\/$/;
     expect(pathToRegex('/')).to.eql(expected);
