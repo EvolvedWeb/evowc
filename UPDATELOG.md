@@ -1,5 +1,18 @@
 # Updates to EVO-WC
 
+## Version 1.0.0 - 2023-11-20
+
+* Resolved #60 - Improved Docs on Evowc.com website.
+* Resolves #59 - Corrected and Improved `evowc update` command line.
+* Resolves #63 - Got unit testing to over 60%.
+* Many small fixes based on added tests.
+* Removed lots of `console.log` from codebase.
+* Removed the inaccurate CSS minifier code that could have produced invalid CSS.
+* Fixed EvoRouter.js to properly perform pathToRegex based on testing.
+* Moved dependencies to devDependencies that are not needed when Evowc is loaded as a dependency in another project.
+* Change the package name from "@evo/wc" to "@evolvedweb/wc" to avoid conflict with the many existing "@evo" projects on NPM.
+* Added .npmignore file to prepare to deploying to npmjs.com.
+
 ## Version 0.7.0 - 2023-10-31
 
 * Updated EvoElement.js

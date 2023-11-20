@@ -203,20 +203,20 @@ async function run(args) {
     }
   }
   else {
-    console.log('No source files specified. Nothing to process');
+    console.info('No source files specified. Nothing to process');
   }
 
-  console.log('\nFinished.');
-  console.log(`  * ${transpileCounts.done} components have changed and were transpiled.`);
-  console.log(`  * ${transpileCounts.skipped} components were not changed and skipped.`);
+  console.info('\nFinished.');
+  console.info(`  * ${transpileCounts.done} components have changed and were transpiled.`);
+  console.info(`  * ${transpileCounts.skipped} components were not changed and skipped.`);
   console.timeEnd(TOTAL_TIME);
 
   if(errors.length) {
-    console.log(errors.length === 1 ? `There was 1 error during compile.\n` : `There were ${errors.length} errors during compile.\n`);
+    console.info(errors.length === 1 ? `There was 1 error during compile.\n` : `There were ${errors.length} errors during compile.\n`);
     errors.forEach(err => {
-      console.log(err);
+      console.info(err);
     });
-    console.log('\n');
+    console.info('\n');
   }
 }
 
