@@ -130,15 +130,15 @@
     import './js/components/WcDialogElement.js';
 
     async function openDialog() {
-      console.log(`openDialog called`);
+      //console.log(`openDialog called`);
       try {
         const resp = await els.dialog.open();
-        console.log('dialog closed');
-        console.log(resp);
+        //console.log('dialog closed');
+        //console.log(resp);
       }
 
       catch(ex) {
-        console.log(ex);
+        console.warn(ex);
       }
     }
 

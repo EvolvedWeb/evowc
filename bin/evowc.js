@@ -107,19 +107,23 @@ async function run(args) {
   let errors = [];
 
   const clOptions = getClOptions(args, version);
-  if (clOptions.command.toLowerCase() === 'init') {
+  const options = getOptions(clOptions, version);
+
+  switch (clOptions.command.toLowerCase()) {
+    case 'init':
     initEvo(clOptions);
     return;
-  }
 
-  if (clOptions.command.toLowerCase() === 'update') {
-    updateEvo(clOptions);
+    case 'update':
+    updateEvo(options);
     return;
-  }
 
-  if (clOptions.command.toLowerCase() === 'watch') {
+    case 'watch':
     await watch();
     return;
+
+    default:
+      break;
   }
 
   let transpileCounts = {
@@ -129,7 +133,6 @@ async function run(args) {
 
   if (args.length > 0) {
     /** @type Options */
-    const options = getOptions(clOptions, version);
     const { templateRoot, componentsToBuild, componentsRoot } = options.paths;
 
     // @ts-ignore
@@ -200,20 +203,20 @@ async function run(args) {
     }
   }
   else {
-    console.log('No source files specified. Nothing to process');
+    console.info('No source files specified. Nothing to process');
   }
 
-  console.log('\nFinished.');
-  console.log(`  * ${transpileCounts.done} components have changed and were transpiled.`);
-  console.log(`  * ${transpileCounts.skipped} components were not changed and skipped.`);
+  console.info('\nFinished.');
+  console.info(`  * ${transpileCounts.done} components have changed and were transpiled.`);
+  console.info(`  * ${transpileCounts.skipped} components were not changed and skipped.`);
   console.timeEnd(TOTAL_TIME);
 
   if(errors.length) {
-    console.log(errors.length === 1 ? `There was 1 error during compile.\n` : `There were ${errors.length} errors during compile.\n`);
+    console.info(errors.length === 1 ? `There was 1 error during compile.\n` : `There were ${errors.length} errors during compile.\n`);
     errors.forEach(err => {
-      console.log(err);
+      console.info(err);
     });
-    console.log('\n');
+    console.info('\n');
   }
 }
 

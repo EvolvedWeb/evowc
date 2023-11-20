@@ -79,13 +79,13 @@ In summary, Evo provides a developer-friendly, high-performance solution for cre
 
 Built in Raw JavaScript using JSDocs Types.
 
-Our build time dependancies are:
+Our build-time dependencies are:
 
 * [fast-xml-parser](fast-xml-parser-url)
 * [glob](glob-url)
 * [html-minifier-terser](html-minifier-terser-url)
 
-The run-time dependancies for running the demo server:)
+The runtime dependencies for running the demo server:
 
 * [express](express-url)
 * [keypress](keypress-url)
@@ -93,13 +93,20 @@ The run-time dependancies for running the demo server:)
 * [node-watch](node-watch-url)
 
 
+The developer dependencies for testing Evowc are:
+
+* [chai](chai-url)
+* [eslint](eslint-url)
+* [mocha](mocha-url)
+* [nyc](nyc-url)
+* [proxyquire](proxyquire-url)
+* [sinon](sinon-url)
+
 > None of these dependencies are used at runtime by the generated components. The only code executed at runtime consists of your transpiled components and a base class that encapsulates all the common functionality shared by all of the components. Additionally, there are optional files available specifically for the Evo router.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ## Getting Started
-
-This is an example of how you may give instructions on setting up your project locally. To get a local copy up and running follow these simple example steps.
 
 ### Prerequisites
 
@@ -107,7 +114,7 @@ To use Evo-wc you will need NodeJs installed. We recommend LTS and have tested w
 
 ### Installation
 
-To install and test Evo follow the steps below. `Evo init` will create a demo server that is great for development but _is not recommended for use in production_. It also creates a simple website that uses a series of demo web components and the built in `<wc-router>` element for SPA styled routing and the `<wc-a>` to navigate between the SPA pages.
+To install and test Evo follow the steps below. `Evo init` will create a demo server that works well for development but _is not recommended for use in production_. It also creates a simple website that uses a series of demo web components and the built in `<wc-router>` element for SPA styled routing and the `<wc-a>` to navigate between the SPA pages.
 
 1. **Install Nodejs if needed**<br>
   Download and install from [https://nodejs.org/](https://nodejs.org/).
@@ -135,7 +142,7 @@ To install and test Evo follow the steps below. `Evo init` will create a demo se
     # Press enter multiple times until the init has finished
 
     # install EvoWC in your project
-    npm i "https://github.com/EvolvedWeb/evowc.git#v0.7.0"
+    npm install @evolvedweb/wc
     ```
 
 4. **Initialize Evo:**<br>
@@ -183,11 +190,28 @@ You can read more about how to use Evo in the [Documentation](https://www.evowc.
     - ☑ Add a couple demo pages.
     - ☑ Include several of the example components.
 - ☑ Release version 0.7.0
-- ☐ Fix all errors and enhancements for version 1.0.0
-  - ☐ All docs up to date.
-  - ☐ Unit tests over 60%.
-  - ☐ Add hot-reload in browser.
-- ☐ Release version 1.0.0
+- ☑ Fix all errors and enhancements for version 1.0.0
+  - ☑ All docs up to date.
+  - ☑ Unit tests over 60%.
+- ☑ Release version 1.0.0
+- ☐ Get all Issues related to 2.0.0 finished
+  - ☐ callbacks for onUpdate should be passed the current path
+  - ☐ Upgrade the router onUpdate to take a startsWith string
+  - ☐ Add auto-browser refresh when any component file auto-rebuilds
+  - ☐ Consider how to support fragments inside the template
+  - ☐ Support external JS files for the `<script>` tag
+  - ☐ Support external CSS files
+  - ☐ Support Scoped Styles: the @scope rule for non-shadow-dom elements
+  - ☐ Support form-associated custom elements
+  - ☐ Work with html-minifier-terser to define custom pre-formatted tags
+  - ☐ Need to support this.attachInternals()
+  - ☐ Fix browser refresh to load updated transpiled component files.
+  - ☐ Create a new logo
+  - ☐ Add onUpdate function to allow for monitoring specific property changes
+  - ☐ Add unit testing for all files that are part of the transpiler
+  - ☐ Add event binding to the `<template>` tag
+  - ☐ Event Handlers - Support Capture, Passive, Once
+- ☐ Release version 2.0.0
 
 See the [open issues](https://github.com/EvolvedWeb/evowc/issues) for the current list of proposed features (and known issues).
 
@@ -202,12 +226,12 @@ If you have a suggestion that would make this better, please fork the repo and c
 1. Fork the Project
 2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
 3. Create you amazing feature
-4. Add unit testing _(80% or better coverage)_
+4. Add unit testing _(90% or better coverage for the new code)_
 5. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
 6. Push to the branch (`git push origin feature/AmazingFeature`)
 7. Open a Pull Request
 
-You can also simply open an issue with the tag "enhancement".
+You can also open an issue with the tag "enhancement".
 
 > **Don't forget to give the project a star! Thanks again!**
 
@@ -265,3 +289,9 @@ Use this space to list resources you find helpful and would like to give credit 
 [keypress-url]: https://www.npmjs.com/package/keypress
 [micromatch-url]: https://www.npmjs.com/package/micromatch
 [node-watch-url]: https://www.npmjs.com/package/node-watch
+[chai-url]: https://www.npmjs.com/package/chai
+[eslint-url]: https://www.npmjs.com/package/eslint
+[mocha-url]: https://www.npmjs.com/package/mocha
+[nyc-url]: https://www.npmjs.com/package/nyc
+[proxyquire-url]: https://www.npmjs.com/package/proxyquire
+[sinon-url]: https://www.npmjs.com/package/sinon

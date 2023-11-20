@@ -75,7 +75,7 @@
     document.addEventListener('keydown', evt => {
       const { altKey, code, metaKey } = evt;
       if (altKey && metaKey && ['KeyP'].includes(code)) {
-        console.log('KeyP');
+        //console.log('KeyP');
         evt.preventDefault();
         document.body.requestFullscreen();
       }

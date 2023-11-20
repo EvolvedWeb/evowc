@@ -1,0 +1,20 @@
+.git
+.github
+.nyc_output
+.coverage
+node_modules
+
+# Test files
+*.mocha.js
+
+envinfo.txt
+oldREADME.md
+
+# Other unnecessary files
+*.example
+*.bak
+*.tmp
+
+# Hidden system files
+.DS_Store
+Thumbs.db

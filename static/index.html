@@ -108,7 +108,6 @@ th {
 </div>
 <script type="module">
   import { ${info.name} } from '/js/components/${info.name}.js';
-  console.log('HERE!!');
 
   const form = document.querySelector('form');
   const testEl = document.querySelector('${info.tag}');
@@ -116,7 +115,6 @@ th {
   form.addEventListener('input', (evt) => {
     const el = evt.target;
     const t = el.dataset.varType;
-    console.log(el.value, t);
     if (t === 'boolean') {
       testEl[el.name] = el.checked;
     }
@@ -197,7 +195,7 @@ th {
       try {
         const resp = await fetch(url, options);
         const json = await resp.json();
-        console.log(json);
+        //console.log(json);
       }
 
       catch(ex) {
