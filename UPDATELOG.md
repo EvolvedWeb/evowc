@@ -1,5 +1,10 @@
 # Updates to EVO-WC
 
+
+## Version 1.1.0 - 2024-02-??
+
+* Resolves #48 - Add a way to define additional element tags that should not be minified.
+
 ## Version 1.0.0 - 2023-11-20
 
 * Resolved #60 - Improved Docs on Evowc.com website.

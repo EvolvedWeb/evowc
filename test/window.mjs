@@ -1,4 +1,5 @@
-import fs from "fs";
+// @ts-ignore
+import fs from "node:fs";
 
 export function afterAll() {
   try {

@@ -12,6 +12,16 @@
   :#resolve="null"
   :#dialog-style
   >
+  <script root>
+    import './WcButtonElement.js';
+
+    export const DIALOG_BUTTONS = {
+      OK: 'OK',
+      CANCEL: 'CANCEL',
+      CLOSE: 'CLOSE',
+      ESCAPE: 'ESCAPE'
+    };
+  </script>
   <template>
     <dialog el="dialog" .cancel="#dialogCancel" :style="#dialogStyle" role="dialog"
       :attr.show-footer="showFooter" :aria.label="title"
@@ -30,112 +40,6 @@
       </footer>
     </dialog>
   </template>
-  <style>
-    :host {
-      --dialog-border: 1px solid #333;
-      --dialog-border-radius: 10px;
-      --dialog-header-bgcolor: #dee6ff;
-      --dialog-header-font: 18px Tahoma;
-      --dialog-header-justify: start;
-      display: inline-block;
-      height: fit-content;
-      width: fit-content;
-    }
-    dialog {
-      border: var(--dialog-border);
-      border-radius: var(--dialog-border-radius);
-      left: 50%;
-      margin: 0;
-      padding: 0;
-      position: fixed;
-      top: 50%;
-      transform: translate(-50%, -50%);
-    }
-    dialog[open] {
-      display: flex;
-      filter: drop-shadow(6px 6px 6px #0006);
-      flex-direction: column;
-    }
-    dialog::backdrop {
-      background-color: #0006;
-    }
-    #changeDialogDesc {
-      margin-top: 0;
-      padding-top: 0;
-    }
-    #changeDialogDesc:empty {
-      display: none;
-    }
-    header {
-      align-items: center;
-      background-color: var(--dialog-header-bgcolor, #dee6ff);
-      background-image: linear-gradient(top, rgba(255,255,255,.3), rgba(255,255,255,0));
-      display: flex;
-      font: var(--dialog-header-font, 18px Tahoma);
-      height: fit-content;
-      justify-content: var(--dialog-header-justify);
-      padding: 10px;
-      position: relative;
-    }
-    section {
-      flex: 2 1 auto;
-      padding: 20px;
-    }
-    footer {
-      border-top: 1px solid #666;
-      font: 18px Tahoma;
-      height: fit-content;
-      padding: 10px;
-    }
-    .closeX {
-      background: transparent;
-      border-radius: 3px;
-      border: 1px solid #0001;
-      display: inline-block;
-      height: 25px;
-      margin: -10px -5px 0 10px;
-      padding: 0;
-      position: absolute;
-      right: 20px;
-      top: 20px;
-      width: 25px;
-    }
-    .closeX::before {
-      background-color: #000;
-      content: '';
-      display: inline-block;
-      height: 15px;
-      left: 11px;
-      position: absolute;
-      top: 4px;
-      transform: rotate(-45deg);
-      width: 1px;
-    }
-    .closeX::after {
-      background-color: #000;
-      content: '';
-      display: inline-block;
-      height: 15px;
-      left: 11px;
-      position: absolute;
-      top: 4px;
-      transform: rotate(45deg);
-      width: 1px;
-    }
-    .closeX:hover {
-      background: #FFF9;
-    }
-  </style>
-  <script root>
-    import './WcButtonElement.js';
-
-    export const DIALOG_BUTTONS = {
-      OK: 'OK',
-      CANCEL: 'CANCEL',
-      CLOSE: 'CLOSE',
-      ESCAPE: 'ESCAPE'
-    };
-  </script>
   <script>
     #dialogCancel(event) {
       event.preventDefault();
@@ -173,4 +77,226 @@
       this.closeDialog(DIALOG_BUTTONS.CANCEL);
     }
   </script>
+  <style>
+    :host {
+      --dialog-border: 1px solid #333;
+      --dialog-border-radius: 10px;
+      --dialog-header-bgcolor: #dee6ff;
+      --dialog-header-font: 18px Tahoma;
+      --dialog-header-justify: start;
+      display: inline-block;
+      height: fit-content;
+      width: fit-content;
+    }
+
+    dialog {
+      border: var(--dialog-border);
+      border-radius: var(--dialog-border-radius);
+      left: 50%;
+      margin: 0;
+      padding: 0;
+      position: fixed;
+      top: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    dialog[open] {
+      display: flex;
+      filter: drop-shadow(6px 6px 6px #0006);
+      flex-direction: column;
+    }
+
+    dialog::backdrop {
+      background-color: #0006;
+    }
+
+    #changeDialogDesc {
+      margin-top: 0;
+      padding-top: 0;
+    }
+
+    #changeDialogDesc:empty {
+      display: none;
+    }
+
+    header {
+      align-items: center;
+      background-color: var(--dialog-header-bgcolor, #dee6ff);
+      background-image: linear-gradient(top, rgba(255, 255, 255, .3), rgba(255, 255, 255, 0));
+      display: flex;
+      font: var(--dialog-header-font, 18px Tahoma);
+      height: fit-content;
+      justify-content: var(--dialog-header-justify);
+      padding: 10px;
+      position: relative;
+    }
+
+    section {
+      flex: 2 1 auto;
+      padding: 20px;
+    }
+
+    footer {
+      border-top: 1px solid #666;
+      font: 18px Tahoma;
+      height: fit-content;
+      padding: 10px;
+    }
+
+    .closeX {
+      background: transparent;
+      border-radius: 3px;
+      border: 1px solid #0001;
+      display: inline-block;
+      height: 25px;
+      margin: -10px -5px 0 10px;
+      padding: 0;
+      position: absolute;
+      right: 20px;
+      top: 20px;
+      width: 25px;
+    }
+
+    .closeX::before {
+      background-color: #000;
+      content: '';
+      display: inline-block;
+      height: 15px;
+      left: 11px;
+      position: absolute;
+      top: 4px;
+      transform: rotate(-45deg);
+      width: 1px;
+    }
+
+    .closeX::after {
+      background-color: #000;
+      content: '';
+      display: inline-block;
+      height: 15px;
+      left: 11px;
+      position: absolute;
+      top: 4px;
+      transform: rotate(45deg);
+      width: 1px;
+    }
+
+    .closeX:hover {
+      background: #FFF9;
+    }
+  </style>
+  <!--
+https://www.joshwcomeau.com/css/center-a-div/ - Centering that could improve the dialog display
+
+Your modal implementation strategy offers both flexibility and encapsulation, essential for creating reusable and modular dialog components in web applications. Here are some thoughts and potential enhancements based on the two approaches you've described:
+
+### Direct Modal Element Usage
+
+- **Pros**: Direct interaction with the modal element offers straightforward integration for cases where the modal is a permanent part of the page structure. It allows for more declarative setups in HTML and can be beneficial for modals that are frequently used or need to be preloaded.
+- **Consistency and Accessibility**: Ensure each modal component implements focus management and traps focus within the open modal for accessibility. Consistently handling these aspects in the modal's `open` method can improve user experience across different parts of the application.
+- **State Management**: Consider how the modal's state is managed, especially in relation to the rest of the application's state. For SPAs, it might be valuable to tie the modal's visibility state to the URL (e.g., through query parameters or dedicated routes) for deep linking and navigation purposes.
+
+### Modal Creation via Helper Code
+
+- **Pros**: This approach abstracts away the modal's DOM manipulation, making it easier to use programmatically. It's particularly useful for modals that are used infrequently or require dynamic instantiation based on user actions or application state.
+- **Cleanup and Memory Management**: Automatically removing the modal from the DOM upon closure is good practice for memory management. Ensure that all event listeners or references are also cleaned up to prevent memory leaks.
+- **Integration Flexibility**: By colocating the helper code with the modal component, you provide a clear pathway for extending the modal's functionality. Developers can customize how modals are initialized, opened, and how data is passed without affecting the modal's internal implementation.
+
+### Potential Enhancements
+
+- **Unified API for Modals**: Consider defining a common interface or base class for all modal components, standardizing methods like `open`, `close`, and event names. This can simplify how modals are used and extended across your application.
+- **Promise-based Interaction**: Your approach of using promises for the `open` method is a modern and effective way to handle asynchronous behavior. You might also standardize how modals return data or indicate which action was taken upon closing, using a structured object or specific event details.
+- **Documentation and Examples**: Provide comprehensive documentation and examples for both modal usage patterns. Highlight best practices for accessibility, state management, and dynamic instantiation to guide developers in creating user-friendly dialogs.
+- **Design Patterns for Common Scenarios**: Offer design patterns or ready-to-use solutions for common modal scenarios, such as confirmation dialogs, form inputs, or informational modals. This can help developers quickly implement consistent user experiences across different parts of their application.
+
+Your modal system's flexibility, especially with the promise-based approach and the removal of dialogs from the DOM post-use, aligns well with modern web development practices. It offers a robust foundation for handling dialog interactions, with significant potential for further enhancements to usability and developer experience.
+
+
+Some points:
+* I do standardize how modals return data or indicate which action was taken upon closing, using a structured object or specific event details.
+* Having the modal in the DOM limits that modal to only showing one. Opening it through the helper function allows multiple of the same dialog to open.
+* I have created standard modals for alert, confirm, and prompt. These can be placed in the DOM but our recommendation is to open them through the helper functions since this allows code anywhere to open the dialog without needed to know where it exists in the DOM.
+* All of the modals use a common base class and this handled many of the common features like focus, etc. Also when a model opens it adds the inert attribute to all sibling elements and removes the inert attribute from the same list of elements.
+* If the dialog has a form in it then the base class will take an object and use it to populate all of the fields based on the name attribute of the elements. When the dialog closes it grabs all of the data from the form using the same name attributes to generate the return object.
+* tying the modal's visibility state to the URL is currently up to the developer. But we will document HOW to make this happen. This will have to happen as an option of the parent element since it will need to call the open function.
+* The modals already remove any event listeners and release data when the disconnectedCallback is called. We will document best practices to help developers continue this practice.
+* We want to leave the arguments that can be passed into the open method up to the developer and the dialog. We do have recommendations in the docs. But, since every dialog is different we do not want to limit what they pass in or what is returned in he promise. We do have a fixed format for the top layer of the return data. Inside that data we indicate which button was used to close the dialog and we have a data value that is whatever the dialog needs to return.
+* We are planning to create several code snippets for Evo. A base dialog will be one of those. The snippet will generate the basic source file including the helper function as well as most of the common internals for a dialog.
+
+
+Your comprehensive approach to managing modals in your system is well-thought-out and robust, striking a good balance between flexibility for developers and providing a solid, standardized foundation. Here are some additional thoughts and affirmations based on the points you've shared:
+
+### Standardized Data Return and Event Details
+- **Affirmation**: Standardizing the structure for return data and event details is excellent practice. It ensures consistency across different modals and simplifies handling modal outcomes for developers.
+
+### Multiple Instances and Helper Functions
+- **Affirmation**: Allowing multiple instances of the same dialog through helper functions is a flexible design choice that caters to complex application needs. It avoids the limitations of modals that are statically placed in the DOM.
+
+### Standard Modals and Recommendations
+- **Affirmation**: Providing standard modals for common use cases like alert, confirm, and prompt, along with recommendations for their use, is a valuable resource for developers. It accelerates development and ensures a consistent user experience across applications.
+
+### Common Base Class and Accessibility Features
+- **Affirmation**: Utilizing a common base class for modals that handles focus management and accessibility (e.g., using the `inert` attribute) is a best practice that enhances the overall accessibility of applications using your system.
+
+### Form Integration
+- **Affirmation**: The automatic population and retrieval of form data based on element names offer a seamless integration for modals containing forms, making it easier to collect and return structured data.
+
+### URL Tied Visibility State
+- **Consideration**: Documenting how to tie a modal's visibility state to the URL enhances SPA functionality, providing deep linking and stateful navigation. Guidance on implementing this in a way that doesn't compromise the modal's encapsulation will be crucial.
+
+### Clean-up and Best Practices
+- **Affirmation**: Ensuring modals clean up event listeners and data on `disconnectedCallback` is crucial for performance and memory management. Documenting these best practices supports developers in maintaining these standards in custom modals.
+
+### Flexible `open` Method Arguments
+- **Consideration**: Keeping the `open` method's arguments flexible respects the diverse needs of different modals. Documenting recommended patterns for passing arguments and structuring return data can help developers utilize this flexibility effectively.
+
+### Code Snippets and Base Dialog
+- **Consideration**: Offering code snippets and a base dialog template is an excellent way to support developers, providing them with a quick start and ensuring consistency in modal implementation across the ecosystem.
+
+Your system's modal component strategy reflects a deep understanding of web application needs, balancing flexibility for developers with a strong, accessible, and consistent foundation. Continuing to offer detailed documentation, examples, and best practices will be key to helping developers effectively leverage these capabilities in their applications.
+
+ChatGPT
+Given the detailed framework you've established for modals, how do you plan to handle modals that are inherently part of a specific route's UI, ensuring they're properly managed or cleaned up when the route changes?
+
+User
+I honestly had not planned on a modal being the result of a route change. Is that what you were asking?
+ChatGPT
+Yes, that was the essence of my question, considering scenarios where navigating to a specific route might directly open a modal (e.g., for deep linking purposes or when modals represent a significant part of the application's flow, such as login or detail views presented in modals on larger screens). Given your response, it seems this use case might not have been a primary consideration in the current design.
+
+Would you be interested in exploring strategies to integrate modals more closely with routing, potentially enabling route-based modal management, or do you prefer to keep these aspects of the application separate?
+
+User
+My current plan is to have all navigation enable/show a specific element. That element can supply the navParams setter. It could then use the values of the params to determine that it needs to open a modal. But I was not planning to have navigation just open a dialog on top of the existing route component.
+
+As additional details. Many of the modals will likely just be given an id. They will then load the appropriate data using fetch or some other form of state management that I still need to define. When the user makes changes and clicks on Save or OK then the dialog can save that data back through the state management or using a fetch POST or PUT call.
+
+Some dialogs, like alert, need to be told what they will show. So, some dialogs COULD be opened on their own, but I still see the page/route component passing through the ID, message, or any other data.
+
+Do you see this as a limitation and, if so, what would you recommend?
+
+
+Your approach to handling modals within the context of web components and routing is pragmatic and aligns well with the goals of keeping the application structure straightforward and modular. Let's explore the considerations and potential enhancements to this strategy:
+
+### Your Strategy's Strengths:
+- **Decoupling of Modals from Routing**: Keeping modals decoupled from direct routing changes (i.e., not opening modals solely based on a URL change) simplifies the routing logic and maintains clear boundaries between different parts of the application.
+- **Flexibility in Modal Usage**: Allowing route components to decide when to open a modal based on `navParams` provides flexibility. It enables complex application flows without overcomplicating the routing system.
+- **Data Handling Consistency**: Using a consistent method for loading and submitting data through modals, regardless of their trigger source, supports a unified data management strategy.
+
+### Consideration: Enhancing Deep Linking and State Management
+While your current plan effectively addresses many use cases, considering additional support for deep linking to modals could further enhance your application's navigational capabilities and user experience, especially for sharing links or bookmarking.
+
+### Recommendations:
+1. **Optional Modal Route Integration**: For use cases where directly linking to a modal could be beneficial (e.g., a detailed view within a modal on a larger screen), consider offering optional support for modal-specific routes. This can be implemented in a way that doesn't interfere with your existing modal management strategy:
+   - Define special route patterns or flags that indicate a modal should be opened upon navigation.
+   - Use the route's component to manage opening the modal, as you've described, but with the route itself indicating this necessity.
+
+2. **State Management for Modal Data**: As you plan to define a state management strategy, consider how modal states and data could be integrated. For modals that perform data fetching or submission, integrating with a global state management solution can help manage data consistency and accessibility across the application.
+
+3. **Documentation and Best Practices**: Clearly document how developers should handle modals in relation to routes, including examples of modals triggered by `navParams` and guidelines for data handling within modals. Emphasize best practices for maintaining application state coherence when modals are involved.
+
+4. **Enhanced Bookmarking and Sharing Support**: For modals that could benefit from direct access via URLs, provide guidance on implementing this in a way that respects your design principles. This could involve using query parameters or dedicated route segments to trigger modal logic within the route component.
+
+### Conclusion:
+Your approach does not inherently limit the application's functionality or user experience; rather, it provides a solid foundation for modal management within a component-driven architecture. By considering additional routing integration for specific modal use cases and enhancing state management documentation, you can offer developers the tools to create intuitive and robust application flows while adhering to your goals of simplicity and modularity.
+-->
 </component>

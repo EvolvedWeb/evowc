@@ -22,21 +22,33 @@
     }
 
     disconnected() {
-      this.#removeRouterCheck();
+      if (this.#removeRouterCheck) {
+        this.#removeRouterCheck();
+        this.#removeRouterCheck = null;
+      }
+    }
+
+    #fixPath(pathname) {
+      if (!pathname.endsWith('/')) {
+        pathname += '/';
+      }
+      return pathname;
     }
 
     #checkPath() {
-      let pathName = window.location.pathname
-      if (!pathName.endsWith('/')) {
-        pathName += '/';
+      const { location } = window;
+      let selected = false;
+      const pathname = this.#fixPath(location.pathname);
+
+      if (this.startsWith) {
+        selected = pathname.startsWith(this.startsWith)
       }
-      const url = new URL(this.href, window.location.href);
-      let href = url.pathname;
-      if (!href.endsWith('/')) {
-        href += '/';
+      else {
+        const url = new URL(this.href, location.href);
+        const href = this.#fixPath(url.pathname);
+        selected = pathname === href;
       }
 
-      const selected = this.startsWith ? pathName.startsWith(this.startsWith) : pathName === href;
       setAttr(this, 'selected', selected);
     }
 
@@ -103,4 +115,55 @@
       scale: var(--wc-a-svg-scale, 1.1);
     }
   </style>
+  <!--
+    Working with chatGPT for improvements:
+
+    To update the `<wc-a>` element to handle named routes effectively, you'll need to introduce a
+    mechanism that allows it to recognize and process named route references in addition to
+    traditional `href` paths. Here's a strategy to incorporate named routes into your `<wc-a>`
+    element:
+
+    ### 1. **Introduce a New Attribute for Named Routes**
+
+    Add a new attribute to `<wc-a>`, such as `route-name`, to specify the name of the route. This
+    attribute would be used instead of `href` when you want to navigate by the name of the route.
+
+    ```html
+    <wc-a route-name="userProfile">Profile</wc-a>
+    ```
+
+    ### 2. **Handling Parameters for Named Routes**
+
+    Since passing complex data via attributes in HTML is not straightforward, consider the
+    following approach:
+
+    - **Data Attributes**: Use data attributes for each parameter. This approach is more
+    HTML-native but might require more parsing logic.
+
+    ```html
+    <wc-a route-name="userProfile" data-id="123">Profile</wc-a>
+    ```
+
+    ### 3. **Updating `<wc-a>` to Navigate by Route Name**
+
+    Modify the `<wc-a>` component's logic to check for the presence of the `route-name`
+    attribute and use it to determine navigation behavior. If `route-name` is present,
+    resolve the named route to its URL, applying any parameters specified, and then use
+    `EvoRouter.navigate` to perform the navigation.
+
+    ### 4. **Considerations**
+
+    - **Fallback Handling**: Decide how `<wc-a>` should behave if a named route is not
+      found. You could log a warning, fall back to a default route, or leave the link
+      inactive.
+    - **Parameter Parsing**: Ensure robust error handling when parsing parameters, especially
+      for the JSON attribute approach, to gracefully handle syntax errors.
+    - **Documentation and Examples**: Clearly document how to use named routes with `<wc-a>`,
+      including examples of passing parameters. Highlight the benefits of using named routes
+      for maintainability and readability.
+
+    By introducing the concept of named routes to your `<wc-a>` element, you provide developers
+    with a more declarative and flexible way to handle navigation in their applications. This
+    enhances the power of your routing system and aligns with modern web development practices.
+  -->
 </component>

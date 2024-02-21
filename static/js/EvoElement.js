@@ -3,99 +3,118 @@
 const CID_RE = /(<\b[^>]*\b(?:el\s*=\s*(?:"[^"]*"|'[^']*'|[^ \t\n>]+)))/gi;
 
 /**
- * Convert an attribute name to a property name. Mainly
+ * Convert a kebab case attribute name to a Camel Case property name. Mainly
  * used by the `attributeChangedCallback` method.
  *
- * @param {string} attr - Snake case attribute name
- * @returns string - Camel case property name
+ * @param {string} attr - Kebab case attribute name
+ * @returns {string} - Camel case property name
  */
 export const propFromAttr = attr => attr.replace(/-[a-z]/g, (key) => key[1].toUpperCase());
 
 /**
- * Check to see if the passesd in value is an object and not null
+ * Check to see if the passed in value is an object and not null
  * @param {any} value - value to be checked
- * @returns boolean - `true` is the value is an object and not null
+ * @returns {boolean} - `true` is the value is an object and not null
  */
 export const isObject = value => !!(value && typeof value === 'object');
 
 /**
  * Convert an attribute value to a boolean value.
- * If the attribute is defined with no value or if the value is
- * either 'true' or '1' then this function returns `true` otherwise
- * this function returns false.
+ * Returns `null` if the attribute is defined as `null` or `undefined`
+ * Returns `true` if the attribute is defined with no value, 'true', '1' or can be coerced to `true`.
+ * Returns `false` if the attribute is defined with a value of 'false', '0' or can be coerced to `false`.
  *
- * @param {string} val - Attribute value to be checked
- * @returns boolean - boolean version of the attribute value
+ * @param {any} val - Attribute value to be checked.
+ * @returns {boolean | null} - Boolean version of the attribute value.
  */
-export const boolFromVal = (val) => ['', 'true', '1'].includes(val) ? true : ['false', '0'].includes(val) ? false : val == null ? null : Boolean(val);
+export const boolFromVal = (val) => {
+  // Explicitly handle the most common representations of true and false
+  if (['', 'true', '1'].includes(val)) {
+    return true;
+  }
+  else if (['false', '0'].includes(val)) {
+    return false;
+  }
+  else if (val == null) {
+    return null;
+  }
+
+  // Convert any other value to its boolean equivalent
+  return Boolean(val);
+};
 
 /**
  * Set an attribute on the DOM element `el`. If the value passed in
- * is `true` then the attribute will be set with no value.
- * If the value passed in is `false`, `null`, or `undefined` then
- * the atribute will be removed from `el`.
+ * is `true`, then the attribute will be set with no value.
+ * If the value passed in is `false`, `null`, or `undefined`, then
+ * the attribute will be removed from `el`.
  *
- * @param {HTMLElement} el - The DOM element to be affected
- * @param {string} attr - The name of the attribute
- * @param {string|boolean} value - The value to set for the attribute
+ * @param {HTMLElement} el - The DOM element to be affected.
+ * @param {string} attr - The name of the attribute.
+ * @param {string | boolean | null | undefined} value - The value to set for the attribute.
+ * @throws {Error} If `el` is not a valid HTMLElement.
  */
 export function setAttr(el, attr, value) {
-  if(el instanceof Element) {
-    if (value == null || value === false) {
-      el.removeAttribute(attr);
-    }
-    else if (value === true) {
-      el.setAttribute(attr, '');
-    }
-    else {
-      el.setAttribute(attr, value);
-    }
+  if (!(el instanceof HTMLElement)) {
+    throw new Error('Invalid element provided to setAttr');
+  }
+
+  if (value === false || value == null) {
+    el.removeAttribute(attr);
+  }
+  else if (value === true) {
+    el.setAttribute(attr, '');
   }
   else {
-    console.error(`Invalid element when calling setAttr:`);
-    console.info(el);
+    el.setAttribute(attr, value.toString());
   }
 }
 
 /**
- * Compare two objects deeply equal
+ * Compare two objects for deep equality.
  *
- * @param {object} obj1 - first object to compare
- * @param {object} obj2 - second object to compare
- * @returns boolean - `true` if the objects have the same content
+ * @param {object} obj1 - The first object to compare.
+ * @param {object} obj2 - The second object to compare.
+ * @returns {boolean} - `true` if the objects have the same content.
  */
 export function sameObjs(obj1, obj2) {
-  // If both objects are null then they are the same
-  if (obj1 == null && obj2 == null) {
+  // If both are exactly the same reference, they are equal
+  if (obj1 === obj2) {
     return true;
   }
 
-  // If either of these value are not objects the compare them
-  if(typeof obj1 !== 'object' || typeof obj2 !== 'object') {
-    return obj1 === obj2;
+  // If either is not an object or if either is null, compare directly
+  if (!isObject(obj1) || !isObject(obj2)) {
+    return false
   }
 
-  const entries = Object.entries(obj1);
+  const entries1 = Object.entries(obj1);
   const len2 = Object.keys(obj2).length;
-  return (entries.length === len2) && entries.every(([k,nv]) => {
-    const ov = obj2[k];
-    if (isObject(nv) && isObject(ov)) {
-      return sameObjs(nv, ov);
-    }
 
-    return nv === ov;
+  // Check if both objects have the same number of properties and all properties are equal
+  return entries1.length === len2 && entries1.every(([key, val1]) => {
+    const val2 = obj2[key];
+    // If both values are objects (and not null), compare them recursively
+    if (isObject(val1) && isObject(val2)) {
+      return sameObjs(val1, val2);
+    }
+    // Direct comparison for non-object values or null
+    return val1 === val2;
   });
 }
 
 /**
- * Compare if two dates are equal
- * @param {Array} date1 First date to compare
- * @param {Array} date1 Second date to compare
- * @returns boolean - `true` if the dates have the same value
+ * Compare if two dates are equal.
+ * @param {Date} date1 - First date to compare.
+ * @param {Date} date2 - Second date to compare.
+ * @returns {boolean} - `true` if both date1 and date2 are Date objects and they both have the same value, `false` otherwise.
  */
 export function sameDates(date1, date2) {
-  return (date1?.valueOf && date2?.valueOf) &&
-    date1.valueOf() !== date2.valueOf();
+  // Check if both arguments are Date objects
+  const areBothDates = date1 instanceof Date && date2 instanceof Date;
+
+  // Ensure both dates are valid Date objects and compare their valueOf() results
+  return areBothDates && date1.valueOf() === date2.valueOf();
 }
 
 export function cond(el, commentEl, value, compare ) {
@@ -132,18 +151,32 @@ export function cond(el, commentEl, value, compare ) {
 }
 
 /**
- * Add an event listener to `element`
- * @param {HTMLElement} element The DOM element to monitor
- * @param {string} type - The event type to attach to `element`
- * @param {*} listener - The event listener function
- * @returns function - The function to remove this event listener
+ * Adds an event listener to an element with options for once, passive, and capture.
+ * Returns a function to remove the event listener.
+ *
+ * @param {EventTarget} element - The target element to attach the event listener to.
+ * @param {string} type - The type of event to listen for.
+ * @param {(evt: Event) => void} listener - The callback function for the event. It takes an Event object as its argument and returns nothing.
+ * @param {Object} [options={}] - Optional parameters for the event listener (once, passive, capture).
+ * @returns {() => void} A function to remove the attached event listener.
  */
-export function ael(element, type, listener) {
-  if (!element || !type || typeof listener !== 'function') {
-    throw new Error('Please provide proper arguments when calling ael(element, type, listener');
+export function ael(element, type, listener, options = {}) {
+  if (!(element instanceof EventTarget) || !type || typeof listener !== 'function' || typeof options !== 'object') {
+    throw new Error('Please provide proper arguments when calling ael(element, type, listener, options)');
   }
-  element.addEventListener(type, listener);
-  return () => element.removeEventListener(type, listener);
+  const addOptions = {
+    once: !!options.once,
+    passive: !!options.passive,
+    capture: !!options.capture
+  }
+
+  // @ts-ignore
+  element.addEventListener(type, listener, addOptions);
+  const removeOptions = { capture: addOptions.capture};
+  return () => {
+    // @ts-ignore
+    element.removeEventListener(type, listener, removeOptions);
+  }
 }
 
 /**
@@ -404,3 +437,19 @@ export const EvoElement = (baseClass = HTMLElement) => class extends baseClass {
     }
   }
 }
+/*
+  For possible future use:
+  hasSetter(propName) {
+    let obj = this;
+    while (obj) {
+      const proto = obj.constructor.prototype;
+      let descriptor = Object.getOwnPropertyDescriptor(proto, propName);
+      if (descriptor) {
+        return typeof descriptor.set === 'function';
+      }
+      // Traverse the prototype chain
+      obj = Object.getPrototypeOf(proto);
+    }
+    return false;
+  }
+*/
