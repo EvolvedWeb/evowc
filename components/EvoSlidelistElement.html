@@ -143,7 +143,7 @@
         heading: "Web Frameworks & Libraries",
         sub: "Trying to solve the hard things.",
         content: `<ul>
-          <li>JavaScript before jQuery was extreamly complicated with few standards.</li>
+          <li>JavaScript before jQuery was extremely complicated with few standards.</li>
           <li>Frameworks &amp; libraries are designed to solve the hard things in web development.</li>
           <li>Often they do this at a steep cost.
             <ul>
@@ -453,7 +453,7 @@ Usage:
         </ul>
         <code><pre>&lt;img :src="#imgUrl"/></pre></code>
         or
-        <code><pre>&lt;img :src="img | addEnding" /> </pre></code>`
+        <code><pre>&lt;img :src="img | addEnding" /></pre></code>`
       },
       {
         example: true,
@@ -486,7 +486,7 @@ Usage:
         heading: "Evo: Data binding - Options",
         sub: "Binding to more than just setters.",
         content: `<ul>
-          <li>CPAs are created using kabab-case.</li>
+          <li>CPAs are created using kebab-case.</li>
           <li>CPAs are used in the template and JavaScript as camelCase.</li>
           <li>Data binding is <i>normally</i> done through property setters.</li>
           <li>Existing elements and components may support an attribute and not a property.</li>
@@ -660,7 +660,7 @@ set #value(newVal) {
           <locale-date style="font-size:2.5rem"></locale-date>
           <code><pre class="smaller">&lt;component tag="locale-date" shadow="closed"
 &nbsp;&nbsp;:format="object:{weekday:'long',year:'numeric',month:'long',day:'numeric'}"
-&nbsp;&nbsp;:timestamp="date:var:today" :locale :#localetime>
+&nbsp;&nbsp;:timestamp="date:var:today" :locale :#localeTime>
 &nbsp;&nbsp;&lt;template>
 &nbsp;&nbsp;&nbsp;&nbsp;&lt;button .click="#setLocale" data-locale="en">EN&lt;/button>
 &nbsp;&nbsp;&nbsp;&nbsp;&lt;button .click="#setLocale" data-locale="fr">FR&lt;/button>
@@ -668,7 +668,7 @@ set #value(newVal) {
 &nbsp;&nbsp;&nbsp;&nbsp;&lt;button .click="#setLocale" data-locale="es">ES&lt;/button>
 &nbsp;&nbsp;&nbsp;&nbsp;&lt;button .click="#setLocale" data-locale="cs">CS&lt;/button>
 &nbsp;&nbsp;&nbsp;&nbsp;&lt;button .click="#setLocale" data-locale="ja">JA&lt;/button>&lt;br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&lt;span :text="#localetime">&lt;/span>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;span :text="#localeTime">&lt;/span>
 &nbsp;&nbsp;&lt;/template>
 &nbsp;&nbsp;&lt;style>
 &nbsp;&nbsp;&nbsp;&nbsp;:host { display: inline-block; }
@@ -682,7 +682,7 @@ set #value(newVal) {
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;const locale = this.locale || document.documentElement.lang || navigator.language;
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;const format = this.format || { month: '2-digit', day: '2-digit', year: 'numeric' };
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;const formatter = new Intl.DateTimeFormat(locale, format);
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this.#localetime = formatter.format(this.timestamp);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this.#localeTime = formatter.format(this.timestamp);
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
 &nbsp;&nbsp;&nbsp;&nbsp;}
 
@@ -877,7 +877,7 @@ set #value(newVal) {
         heading: "Is it Evo?",
         sub: "What was this presentation written in?",
         content: `<p style="padding-top:8rem">Yes, this presentation was written in Evo.<p>
-          <p>I started out using Apple Keynote. But I didn't like jumping between apps. So, I <cp>hacked</cp> together a few components, transfered all of my text, and added some of my example components.</p>
+          <p>I started out using Apple Keynote. But I didn't like jumping between apps. So, I <cp>hacked</cp> together a few components, transferred all of my text, and added some of my example components.</p>
           <p>This presentation will be included in the Evo repo once it is public.</p>
           <p class="smaller"><i>The font <cy><span style="font-family: kingvoon">Kingvoon</span></cy>, is not included, but is available <a href="https://www.creativefabrica.com/product/kingvoon/" target="_blank">here.</a></i></p>`
       },

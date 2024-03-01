@@ -75,9 +75,9 @@ function getOptions(clOptions, version) {
     // The code to use addDebug is not written yet
     // valid values for addDebug:
     //   true/false - add or not to every component
-    //   'SystemDialogElement' - classname of the component to add debug code
+    //   'SystemDialogElement' - class name of the component to add debug code
     //   ['SystemDialogElement','MyComponentElement'] - Array of classnames of the components to add debug code
-    saveDebugJson: wc.saveDebugJson || false, // true - Ouput the debug JSON files
+    saveDebugJson: wc.saveDebugJson || false, // true - Output the debug JSON files
     minify: {
       css: Boolean(wc.minify?.css ?? true),
       html: Boolean(wc.minify?.html ?? true),
@@ -221,6 +221,7 @@ async function run(args) {
       console.info(err);
     });
     console.info('\n');
+    process.stdout.write('\x07');
   }
 }
 

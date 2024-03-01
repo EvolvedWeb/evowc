@@ -1,4 +1,17 @@
 <component tag="route-three">
+  <script root>
+    import './AlertMessageElement.js';
+    import './WcBadgeElement.js';
+    import './WcButtonElement.js';
+    import './WcButtonGroupElement.js';
+    import './WcCalendarElement.js';
+    import './WcDialogElement.js';
+    import './WcHrElement.js';
+    import './ChangepwDialogElement.js';
+    import './LoginDialogElement.js';
+    import './PipeMeElement.js';
+    import './NoShadowElement.js';
+  </script>
   <template>
     <h1>Section Three</h1>
     <wc-hr></wc-hr>
@@ -47,29 +60,16 @@
       change-pw-href="/dogs"
       .changepw="#changePwHandler"></changepw-dialog>
   </template>
-  <script root>
-    import './AlertMessageElement.js';
-    import './WcBadgeElement.js';
-    import './WcButtonElement.js';
-    import './WcButtonGroupElement.js';
-    import './WcCalendarElement.js';
-    import './WcDialogElement.js';
-    import './WcHrElement.js';
-    import './ChangepwDialogElement.js';
-    import './LoginDialogElement.js';
-    import './PipeMeElement.js';
-    import './NoShadowElement.js';
-  </script>
   <script>
     #changePwHandler(event, data) {
       // console.log('changepw called');
       event.preventDefault();
       const el = event.target;
       el.errorMessage = '';
-      el.busy = true;
+      el.setBusy();
       setTimeout(() => {
         el.errorMessage = 'Crazy things happened';
-        el.busy = false;
+        el.setBusy(false);
       }, 3000);
     }
 
@@ -83,10 +83,10 @@
       event.preventDefault();
       const el = event.target;
       el.errorMessage = '';
-      el.busy = true;
+      el.setBusy();
       setTimeout(() => {
         el.errorMessage = 'Invalid username or password';
-        el.busy = false;
+        el.setBusy(false);
       }, 3000);
       // const options = {};
       // const resp = fetch('/api/login', options);

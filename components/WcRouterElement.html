@@ -35,8 +35,16 @@
   <script>
     #routes = [];
     #observer;
+    init() {
+      router.onChange(() => this.#updateRouteSelection());
+      this.#processRouteTags();
+      /*
+      this.#observer = new MutationObserver((...args) => this.#mutationCallback(...args));
+      this.#observer.observe(this, mutationConfig);
+      */
+    }
 
-    #sendNavParams(el, params) {
+    #sendNavParamsToRouteComponent(el, params) {
       return new Promise((resolve) => {
         if (typeof el.navParams === 'function') {
           setTimeout(async () => {
@@ -46,106 +54,105 @@
             resolve();
           }, 1);
         }
+        else {
+          resolve();
+        }
       });
     }
 
     #removeAndDeleteUnusedElements(unusedRoutes) {
       unusedRoutes.forEach(route => {
-        const { element, autoDelete } = route;
         if(!route.el) {
-          // If we don't have an element for this route
+          // If this route doesn't have an element then clear any pending timeout
           if (route.deleteTimeout) {
-            // console.log(`Delete for ${element} canceled`);
-            // Clear any pending timeout
             clearTimeout(route.deleteTimeout);
             route.deleteTimeout = null;
           }
-        }
-
-        if (route.el.parentElement) {
-          route.el.remove();
-          // console.log(`Removed ${element}`);
-        }
-
-        if (autoDelete === true) {
-          route.el = null;
-          // console.log(`Deleted ${element}`);
+          // And return
           return;
         }
 
-        if (autoDelete > 0 && !route.deleteTimeout) {
-          // console.log(`Delete for ${element} scheduled for ${autoDelete}`);
+        // Remove the route element from the DOM
+        route.el.remove();
 
+        if (route.autoDelete === true) {
+          // This element is to be deleted right away
+          route.el = null;
+          return;
+        }
+
+        if (route.autoDelete > 0 && !route.deleteTimeout) {
           route.deleteTimeout = setTimeout(() => {
             route.deleteTimeout = null
             route.el = null;
-            // console.log(`Timed delete of ${element}`);
-          }, autoDelete);
+          }, route.autoDelete);
         }
       });
     }
 
-    async #showRoute(route, params) {
-      const { el } = route;
-      this.#els.container.append(el);
-      await this.#sendNavParams(el, params)
-    }
-
-    #updateSelection() {
+    async #updateRouteSelection() {
       const { pathname } = window.location
-      let found = false;
-      let unusedRoutes = [];
-      let okToRemoveNow = true;
+      const listOfUnusedRoutes = [];
+      let theRouteWasFound = false;
+      let theRouteToShow;
+      let paramsToSendToVisibleRoute;
 
       this.#routes.forEach(route => {
-        let { el } = route;
-        const { deleteTimeout, element, importFile, re } = route;
-        const show = !found && re.exec(pathname);
-        if (found || !show) {
-          if (el) {
-            unusedRoutes.push(route);
+        if(!theRouteWasFound) {
+          const thisIsTheMatchingRoute = route.re.exec(pathname);
+          if (thisIsTheMatchingRoute) {
+            theRouteToShow = route;
+            paramsToSendToVisibleRoute = thisIsTheMatchingRoute.groups;
+            theRouteWasFound = true;
+            return;
           }
         }
-        else {
-          if (deleteTimeout) {
-            // console.log(`Delete for ${element} canceled`);
-            clearTimeout(deleteTimeout);
-            delete route.deleteTimeout;
-          }
-          if (!el) {
-            el = document.createElement(element);
-            if (el == null) {
-              throw new Error(`Unable to render the element "<${element}>" on "${pathname}"`);
-            }
-            route.el = el;
-            // console.log(`Component ${element} created`);
-          }
 
-          if(importFile) {
-            okToRemoveNow = false;
-            import(importFile).then(async () => {
-              delete route.importFile; // Remove this so it does not attempt to load a second time.
-              await this.#showRoute(route, show.groups);
-              this.#removeAndDeleteUnusedElements(unusedRoutes);
-            }).catch(ex => {
-              console.error(`Failed to import file ${element}`)
-              console.info(ex.stack);
-            });
-          }
-          else {
-            /*await??*/ this.#showRoute(route, show.groups)
-          }
-
-          found = true;
-        }
+        listOfUnusedRoutes.push(route);
       });
 
-      if (okToRemoveNow) {
-        this.#removeAndDeleteUnusedElements(unusedRoutes);
+      if (theRouteWasFound) {
+        // If this element was scheduled to be deleted then stop that scheduling
+        if (theRouteToShow.deleteTimeout) {
+          // console.log(`Delete for ${newRoute.element} canceled`);
+          clearTimeout(theRouteToShow.deleteTimeout);
+          delete theRouteToShow.deleteTimeout;
+        }
+
+        // If we need to import the file for this element then do so.
+        if (theRouteToShow.importFile) {
+          try {
+            await import(theRouteToShow.importFile); // Import the import file.
+            delete theRouteToShow.importFile; // Remove to prevent loading a second time.
+          }
+          catch(ex) {
+            console.error(`Failed to import file ${element}`)
+            console.info(ex.stack);
+          }
+        }
+
+        // If we don't currently have an element for this route then create one
+        if (!theRouteToShow.el) {
+          theRouteToShow.el = document.createElement(theRouteToShow.element);
+          if (theRouteToShow.el == null) {
+            throw new Error(`Unable to render the element "<${theRouteToShow.element}>" on "${pathname}"`);
+          }
+          // console.log(`Component ${route.element} created`);
+        }
+
+        this.#removeAndDeleteUnusedElements(listOfUnusedRoutes);
+        this.#els.container.append(theRouteToShow.el);
+        try {
+          await this.#sendNavParamsToRouteComponent(theRouteToShow.el, paramsToSendToVisibleRoute);
+        }
+
+        catch(ex) {
+          console.log(ex.stack);
+        }
       }
     }
 
-    #processRoutes() {
+    #processRouteTags() {
       this.#routes = [];
 
       const children = [...this.children];
@@ -180,21 +187,16 @@
         }
       });
 
-      this.#updateSelection();
+      this.#updateRouteSelection();
     }
 
+    /*
     #mutationCallback(mutationsList) {
       // console.log(mutationsList);
-      //TODO: 2023-07-03 MGC - this.#processRoutes();
+      //TODO: 2023-07-03 MGC - this.#processRouteTags();
       // But make sure to keep all elements that already exist
     };
-
-    init() {
-      router.onUpdate(() => this.#updateSelection());
-      this.#processRoutes();
-      this.#observer = new MutationObserver((...args) => this.#mutationCallback(...args));
-      this.#observer.observe(this, mutationConfig);
-    }
+    */
   </script>
   <!--
     Things to add:

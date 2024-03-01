@@ -49,6 +49,7 @@
   </script>
   <script>
     init() {
+      // cspell: disable
       /** @type {Person[]} */
       const temp = [
         { name: 'Isaac Newton', age: 84 },
@@ -273,6 +274,7 @@
         { name: 'Daniel Martinez', age: 80 },
         { name: 'Ashley White', age: 89 },*/
       ];
+      // cspell: enable
       const temp2 = structuredClone(temp.toReversed());
       temp2.forEach(person => person.name = person.name.split('').reverse().join(''));
       const people = [...temp/*, ...temp2*/];
@@ -285,7 +287,7 @@
     }
     #removeRouterCheck;
     connected() {
-      this.#removeRouterCheck = router.onUpdate((...args) => this.#checkPath(...args));
+      this.#removeRouterCheck = router.onChange((...args) => this.#checkPath(...args));
       this.#checkPath();
     }
     disconnected() {

@@ -1,9 +1,13 @@
-<component tag="locale-date" shadow="closed" :dog="array:[1,2,3,4]"
-  :timestamp="date" :locale="string"
+<component tag="locale-date" shadow="closed"
+  :dog="array:[1,2,3,4]"
+  :timestamp="date"
+  :locale="string"
   :format="object:{weekday:'long',year:'numeric',month:'long',day:'numeric'}"
-  :#localetime :#classes>
+  :#localeTime
+  :#classes
+>
   <template>
-    <span :text="#localetime" :style="locale" :class="#classes"></span>
+    <span :text="#localeTime" :style="locale" :class="#classes"></span>
     <button is="wc-button" small .click="#setLocale" data-locale="en">EN</button>
     <button is="wc-button" small .click="#setLocale" data-locale="fr">FR</button>
     <button is="wc-button" small .click="#setLocale" data-locale="ru">RU</button>
@@ -21,8 +25,8 @@
         const format = this.format || { month: '2-digit', day: '2-digit', year: 'numeric' };
         const formatter = new Intl.DateTimeFormat(locale, format);
         const newStr = formatter.format(this.timestamp);
-        if (this.#localetime !== newStr) {
-          this.#localetime = newStr;
+        if (this.#localeTime !== newStr) {
+          this.#localeTime = newStr;
         }
       }
     }
@@ -33,7 +37,7 @@
 
     toString() {
       this.update();
-      return this.#localetime;
+      return this.#localeTime;
     }
   </script>
 </component>
@@ -111,7 +115,7 @@
     <div>this.state is currently set to <span :text="state"></span></div>
     <button .click="#toggleState">Toggle</button>
     <div class="red" $if="state">TRUE - This shows if this.state is set to true.
-      <p>Go watcha fun movie!</p>
+      <p>Go watch a fun movie!</p>
     </div>
     <div class="blue" $if="!state">FALSE - If this.state is set to false then this shows.
       <p>Listen to an audio book.</p>

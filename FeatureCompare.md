@@ -4,14 +4,14 @@
 | Component-Based Architecture | ✓ | ✓ |
 | One-Way Data Flow (Uni-directional) | ✓ | ✓ |
 | Uses native brower events | ✗ | ✓ |
-| Conditional and Iteration Directives | JS code in JSX | `$if`, `$switch`, `$for` attributes |
+| Conditional and Iteration Directives | JS code in JSX | `$if`, `$switch`, `$for` attribute directives |
 | Simplicity  | ✓ | ✓ |
 | Readability | ✓ | ✓ |
 | Performance | ✓ | ✓ (*) |
 | No `this`  | ✓ | ✗ |
 | Easy testing | - | ✓ |
 | Code reusability | ✓ | ✓ |
-| Hot Reloading | ✓ | Not Yet (*) |
+| Hot Reloading | ✓ | Partial (*) |
 | Fragments | ✓ | Not Yet (*) |
 | One-way binding | ✓ | ✓ |
 | Two-way binding for form elements | ✓ | ✓ |
@@ -20,7 +20,7 @@
 | Application State | Redux | Not yet (*)  |
 | Side effects | useEffect | standard and lifecycle methods |
 | Redux-like reducer behavior  | useReducer | ✗ |
-| Access DOM nodes directly  | useRef | `el="yourName"` attribute and `this.#els.yourName` |
+| Access DOM nodes directly  | useRef | `el="yourName"` attribute and `this.#els.yourName` in code |
 | Memoized version of callback function  | useCallback | Manual (*) |
 | Avoids expensive calculations on every render  | useMemo | Manual (*) |
 | Expose child methods to parents  | useImperativeHandle | Public Methods |
@@ -38,10 +38,10 @@
 | Web standards-based | ✗ | ✓ |
 | Framework agnostic | ✗ | ✓ |
 | Encapsulation with Shadow DOM | ✗ | ✓ |
-| Native performance | ✗ | ✓ |
+| Near Native performance | ✗ | ✓ |
 | Interoperability | ✗ | ✓ |
 | Easy adoption and learning curve | ✗ | ✓ |
-| Extreamly small runtime dependencies | ✗ | ✓ |
+| Extremely small runtime dependencies | ✗ | ✓ |
 | No virtual DOM diffing | ✗ | ✓ |
 | Lightweight and minimalistic | ✗ | ✓ |
 | Simplified architecture | ✗ | ✓ |

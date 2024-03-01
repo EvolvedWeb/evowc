@@ -1,11 +1,10 @@
 <component tag="login-dialog"
-  :busy="bool:false"
   :description="str:To log in, enter your email address and password."
   :error-message
   :forgot-pw-href // href for forgot password page
   :forgot-pw-text="str:Forgot password?"
   :hide-text="str:hide"
-  :not-a-member-text="str:Not a member yet?" // 
+  :not-a-member-text="str:Not a member yet?"
   :password-aria-label="str:Enter your password"
   :password-label="str:Password:"
   :remember-me-text="str:Remember Me"
@@ -15,7 +14,7 @@
   :sign-in-method="str:post" // `get` or `post` for submitting sign in form
   :sign-in-text="str:Sign in"
   :sign-up-href // href for sign up page
-  :sign-up-text="str:Sign Up" //
+  :sign-up-text="str:Sign Up"
   :title="str:Sign in"
   :username-aria-label="str:Enter your email address"
   :username-label="str:Email:"
@@ -26,6 +25,10 @@
   :#token
   :#username
 >
+  <script root>
+    import { DIALOG_BUTTONS } from './WcDialogElement.js';
+    import { toLower } from '../EvoPipes.js';
+  </script>
   <template>
     <wc-dialog el="dialog" :title="title" :description="description" show-footer="false">
       <div>
@@ -53,117 +56,8 @@
         </form>
         <div class="sign-up" $if="signUpHref"><span :text="notAMemberText"></span> <a :href="signUpHref" .click="#signUp" :text="signUpText"></a></div>
       </div>
-      <div class="spinner-holder" $if="busy">
-        <wc-spinner></wc-spinner>
-      </div>
     </wc-dialog>
   </template>
-  <style>
-    :host {
-      --login-dialog-text-color: #334;
-      --login-dialog-link-color: #33A;
-      --login-dialog-font-size: 18px;
-      color:var(--login-dialog-text-color);
-      font-size: var(--login-dialog-font-size);
-      height: 0;
-      margin: 0;
-      padding: 0;
-      width: 0;
-    }
-    :host([size=small]) {
-      --login-dialog-font-size: 14px;
-    }
-    :host([size=large]) {
-      --login-dialog-font-size: 24px;
-    }
-    label, input, button {
-      font: 1em Calibri, Candara, Segoe, Segoe UI, Optima, Arial, sans-serif;
-    }
-    wc-dialog {
-      --dialog-border: none;
-      --dialog-border-radius: 5px;
-      --dialog-header-bgcolor: #fff;
-      --dialog-header-font: bold 1.6em Calibri, Candara, Segoe, Segoe UI, Optima, Arial, sans-serif;
-      --dialog-header-justify: center;
-      position: relative;
-    }
-    section {
-      margin: 0;
-      padding: 8px;
-      width: 20em;
-    }
-    form {
-      margin: 0;
-      padding: 0;
-    }
-    input[type=text], input[type=email], input[type=password] {
-      border-width: 1px;
-      box-sizing: border-box;
-      display: block;
-      margin: 4px 0;
-      padding: 10px 8px;
-      width: 100%;
-    }
-    div {
-      position: relative;
-    }
-    button.sign-in {
-      margin-top: 16px;
-      width: 100%;
-    }
-    button.show-pw {
-      color:var(--login-dialog-link-color);
-      position: absolute;
-      bottom: 13px;
-      right: 7px;
-    }
-    .password-block {
-      align-items:baseline;
-      display: flex;
-      justify-content: space-between;
-      margin-top: 12px;
-    }
-    .forgot-pw {
-      font-size: clamp(10px, .75em, 16px);
-      margin: 0;
-      padding: 0;
-    }
-    .sign-up {
-      font-size:  clamp(9px, .61em, 14px);
-      margin-top: 12px;
-      text-align: center;
-    }
-    .error-message {
-      background-color: #F99;
-      border: 1px solid #E66;
-      margin-bottom: 12px;
-      padding: 6px;
-      text-align: center;
-    }
-    a {
-      color:var(--login-dialog-link-color);
-      text-decoration: none;
-    }
-    a:hover {
-      text-decoration: underline;
-    }
-    .spinner-holder {
-      align-items: center;
-      background-color: #3335;
-      display:flex;
-      justify-content: center;
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-    }
-  </style>
-  <script root>
-    import { DIALOG_BUTTONS } from './WcDialogElement.js';
-    import { toLower } from '../EvoPipes.js';
-    import './WcSpinnerElement.js';
-  </script>
   <script>
     open() {
       this.#username = this.#password = '';
@@ -173,7 +67,9 @@
       }, 1);
       return this.#els.dialog.open();
     }
-
+    setBusy(isBusy = true) {
+      this.#els.dialog.setBusy(isBusy);
+    }
     update({cpa}) {
       if(['showText', 'hideText'].includes(cpa)) {
         if (this.#passwordType === 'text') {
@@ -199,13 +95,11 @@
         this.#passwordType = 'text';
       }
     }
-
     #clearError() {
       if (this.errorMessage) {
         this.errorMessage = '';
       }
     }
-
     //******************************************
     // Events
     #getToken() {
@@ -250,4 +144,95 @@
       }
     }
   </script>
+  <style>
+    :host {
+      --login-dialog-text-color: #334;
+      --login-dialog-link-color: #33A;
+      --login-dialog-font-size: 18px;
+      color: var(--login-dialog-text-color);
+      font-size: var(--login-dialog-font-size);
+      height: 0;
+      margin: 0;
+      padding: 0;
+      width: 0;
+    }
+    :host([size=small]) {
+      --login-dialog-font-size: 14px;
+    }
+    :host([size=large]) {
+      --login-dialog-font-size: 24px;
+    }
+    label,
+    input,
+    button {
+      font: 1em Calibri, Candara, Segoe, Segoe UI, Optima, Arial, sans-serif;
+    }
+    wc-dialog {
+      --dialog-border: none;
+      --dialog-header-font: bold 1.6em Calibri, Candara, Segoe, Segoe UI, Optima, Arial, sans-serif;
+      position: relative;
+    }
+    section {
+      margin: 0;
+      padding: 8px;
+      width: 20em;
+    }
+    form {
+      margin: 0;
+      padding: 0;
+    }
+    input[type=text],
+    input[type=email],
+    input[type=password] {
+      border-width: 1px;
+      box-sizing: border-box;
+      display: block;
+      margin: 4px 0;
+      padding: 10px 8px;
+      width: 100%;
+    }
+    div {
+      position: relative;
+    }
+    button.sign-in {
+      margin-top: 16px;
+      width: 100%;
+    }
+    button.show-pw {
+      color: var(--login-dialog-link-color);
+      position: absolute;
+      bottom: 13px;
+      right: 7px;
+    }
+    .password-block {
+      align-items: baseline;
+      display: flex;
+      justify-content: space-between;
+      margin-top: 12px;
+    }
+    .forgot-pw {
+      font-size: clamp(10px, .75em, 16px);
+      margin: 0;
+      padding: 0;
+    }
+    .sign-up {
+      font-size: clamp(9px, .61em, 14px);
+      margin-top: 12px;
+      text-align: center;
+    }
+    .error-message {
+      background-color: #F99;
+      border: 1px solid #E66;
+      margin-bottom: 12px;
+      padding: 6px;
+      text-align: center;
+    }
+    a {
+      color: var(--login-dialog-link-color);
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
 </component>

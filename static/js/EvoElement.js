@@ -9,7 +9,7 @@ const CID_RE = /(<\b[^>]*\b(?:el\s*=\s*(?:"[^"]*"|'[^']*'|[^ \t\n>]+)))/gi;
  * @param {string} attr - Kebab case attribute name
  * @returns {string} - Camel case property name
  */
-export const propFromAttr = attr => attr.replace(/-[a-z]/g, (key) => key[1].toUpperCase());
+export const propFromAttr = (attr='') => attr.replace(/-[a-z]/g, (key) => key[1].toUpperCase());
 
 /**
  * Check to see if the passed in value is an object and not null
@@ -57,6 +57,9 @@ export const boolFromVal = (val) => {
 export function setAttr(el, attr, value) {
   if (!(el instanceof HTMLElement)) {
     throw new Error('Invalid element provided to setAttr');
+  }
+  if (typeof attr != 'string' || attr.length == 0) {
+    throw new Error('Invalid attr provided to setAttr');
   }
 
   if (value === false || value == null) {
@@ -122,6 +125,10 @@ export function cond(el, commentEl, value, compare ) {
     let isValid = false;
     if (Array.isArray(compare)) {
       const [ neg, min, max ] = compare;
+      if (min == null && max == null) {
+        throw new Error('A min, max, or both values must be provided. They can not both be null');
+      }
+
       if (max == null) {
         isValid = (value >= min);
       }
@@ -172,7 +179,7 @@ export function ael(element, type, listener, options = {}) {
 
   // @ts-ignore
   element.addEventListener(type, listener, addOptions);
-  const removeOptions = { capture: addOptions.capture};
+  const removeOptions = { capture: addOptions.capture };
   return () => {
     // @ts-ignore
     element.removeEventListener(type, listener, removeOptions);
@@ -385,6 +392,9 @@ export const EvoElement = (baseClass = HTMLElement) => class extends baseClass {
       if (this.attrChanged) this.attrChanged(attr, oldVal, newVal);
       const prop = propFromAttr(attr);
       setTimeout(() => {
+        // TODO: 2024-02-29 MGC - Need to look at this timeout again.
+        // It should not really be here. I need a better way to prevent
+        // an infinite loop when the property also sets the attribute.
         this[prop] = newVal;
       }, 1);
     }

@@ -1,4 +1,4 @@
-/* eslint-env browser */
+/* c8 ignore start */
 const states = {};
 
 const ERRORS = {
@@ -6,6 +6,7 @@ const ERRORS = {
     message: (stateName, line, created) => `You attempted to create a duplicate Evo state named "${stateName}". The state you attempted to create here: "${line}" was already created here: "${created}"`,
     created: (createdAt) => `The original code that created this state is found ${createdAt}`
   },
+  // cspell:disable
   fr: {
     message: (stateName, line, created) => `Vous avez tenté de créer un état Evo en double nommé "${stateName}". L'état que vous avez tenté de créer ici : "${line}" a déjà été créé ici : "${created}"`,
     created: (createdAt) => `Le code original qui a créé cet état se trouve ${createdAt}`
@@ -42,6 +43,7 @@ const ERRORS = {
     message: (stateName, line, created) => `이름이 "${stateName}"인 중복 Evo 상태를 생성하려고 시도했습니다. 여기에서 만들려고 한 상태: "${line}"은(는) 이미 여기에서 만들어졌습니다: "${created}"`,
     created: (createdAt) => `이 상태를 생성한 원본 코드가 여기에 있습니다: ${createdAt}`
   }
+  // cspell:enable
 }
 
 const isSafari = navigator.userAgent.includes('Safari') && !navigator.userAgent.includes('Chrome');
@@ -101,3 +103,4 @@ export function createState(stateName, defaultState) {
 export function getState(stateName) {
   
 }
+/* c8 ignore stop */

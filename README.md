@@ -9,11 +9,11 @@
 <br />
 <div align="center">
   <a href="https://github.com/EvolvedWeb/evowc">
-    <img src="static/img/Logo1.jpg" alt="Evo-wc logo" width="80" height="80">
+    <img src="static/img/Logo1.jpg" alt="Evo-wc logo" width="276.2" height="107">
   </a>
 
   <p align="center">
-    Create lightweight, high-performance native custom elements, with minimal boilerplate.
+    Create blazing fast, lightweight, native, custom elements, with minimal boilerplate and almost no runtime libraries.
     <br />
     <a href="https://github.com/EvolvedWeb/evowc/wiki"><strong>Explore the docs »</strong></a>
     <br />
@@ -53,7 +53,7 @@
 
 <!-- [![Product Name Screen Shot][product-screenshot]](https://example.com) -->
 
-Evo-wc, or Evolved Web Components, is a Web Component transpiler. The developer builds simple XML files that are very similar to and HTML with only the code they need. Evo-wc trnaspiles the XMl files into a JavaScript file that contains a native Custom Element.
+Evo-wc, or Evolved Web Components, is a Web Component transpiler. The developer builds simple XML files that are very similar to and HTML with only the code they need. Evo-wc transpiles the XMl files into a JavaScript file that contains a native Custom Element.
 
 Evo-wc offers developers a powerful and efficient way to create web components, whether used independently or alongside existing frameworks. The generated elements are standards based and run lightning fast.  Here are several compelling reasons why someone would want to consider using Evo:
 
@@ -77,7 +77,7 @@ In summary, Evo provides a developer-friendly, high-performance solution for cre
 
 ### Built With
 
-Built in Raw JavaScript using JSDocs Types.
+Built in Raw JavaScript using JSDOC Types.
 
 <details>
   <summary>Dependencies</summary>
@@ -91,7 +91,7 @@ Built in Raw JavaScript using JSDocs Types.
       </ul>
     </li>
     <li>
-      Node runtime dependencies for running the demo server:
+      Node runtime dependencies that are only for running the demo server:
       <ul>
         <li><a href="https://www.npmjs.com/package/express">express</a></li>
         <li><a href="https://www.npmjs.com/package/keypress">keypress</a></li>
@@ -100,14 +100,16 @@ Built in Raw JavaScript using JSDocs Types.
       </ul>
     </li>
     <li>
-      Developer dependencies for testing Evo-wc are:
+      Developer dependencies for developing and testing Evo-wc are:
       <ul>
+        <li><a href="https://www.npmjs.com/package/@types/mocha">@types/mocha</a></li>
+        <li><a href="https://www.npmjs.com/package/@types/node">@types/node</a></li>
+        <li><a href="https://www.npmjs.com/package/c8">c8</a></li>
         <li><a href="https://www.npmjs.com/package/chai">chai</a></li>
         <li><a href="https://www.npmjs.com/package/eslint">eslint</a></li>
+        <li><a href="https://www.npmjs.com/package/esmock">esmock</a></li>
         <li><a href="https://www.npmjs.com/package/mocha">mocha</a></li>
-        <li><a href="https://www.npmjs.com/package/nyc">nyc</a></li>
-        <li><a href="https://www.npmjs.com/package/proxyquire">proxyquire</a></li>
-        <li><a href="https://www.npmjs.com/package/sinon">sinon</a></li>
+        <li><a href="https://www.npmjs.com/package/nock">nock</a></li>
       </ul>
     </li>
   </ol>
@@ -115,7 +117,10 @@ Built in Raw JavaScript using JSDocs Types.
 <br/>
 
 
-> None of these dependencies are used at runtime by the generated components. The only code executed at runtime consists of your transpiled components and a base class that encapsulates all the common functionality shared by all of the components. Additionally, there are optional files available specifically for the Evo router.
+> None of these dependencies are used at runtime by the generated components. The only code
+executed at runtime consists of your transpiled components and a base class that encapsulates
+all the common functionality shared by all of the components. Additionally, there are optional
+files available specifically for the Evo router.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -159,7 +164,7 @@ To install and test Evo follow the steps below. `Evo init` will create a demo se
     ```
 
 4. **Initialize Evo:**<br>
-  Let Evo know ceate a demo server and where your component template and the transpiled components will be placed.
+  Let Evo know create a demo server and where your component template and the transpiled components will be placed.
     ```sh
     # Initialize Evo-wc config and copy the helper files
     npx evowc init
@@ -236,23 +241,43 @@ You can also open an issue with the tag "enhancement".
   - ☑ All docs up to date.
   - ☑ Unit tests over 60%.
 - ☑ Release version 1.0.0
+- ☑ Get all Issues related to 1.1.0 finished
+  - ☑ Work with html-minifier-terser to define custom pre-formatted tags.
+  - ☑ Create a new logo.
+  - ☑ Unit testing over 80%.
+  - ☑ Event Handlers - Support Capture, Passive, Once.
+  - ☑ Improve WcDialogElement to handle a common busy state with aria-busy and inert attributes.
+  - ☑ Add a filter to the router.onUpdate method
+  - ☑ Add new Evo pipes: toJson, toCurrency, toDate, toDecimal, toPercent
+  - ☑ Improve the router:
+    - ☑ Bug fixes
+    - ☑ Add ability to auto-delete a routing component immediately or after a specified time of no use.
+    - ☑ Ability to send routing information to routing component through optional public method navParams method
+      - ☑ Include Query string, hash string and query object
+    - ☑ Provide an exported function to convert the query string into a query object
+  - ☑ Convert all code to ESM.
+  - ☑ Convert all tests to ESM.
+  - ☑ Bug fixes.
+  - ☑ Drop `proxyquire` for `esmock`.
+  - ☑ Drop `sinon` for `nock`.
+  - ☑ Drop `nyc` for `c8`.
+  - ☐ Add onUpdate function to allow for monitoring specific property changes.
 - ☐ Get all Issues related to 2.0.0 finished
-  - ☐ callbacks for onUpdate should be passed the current path
-  - ☐ Upgrade the router onUpdate to take a startsWith string
-  - ☐ Add auto-browser refresh when any component file auto-rebuilds
-  - ☐ Consider how to support fragments inside the template
-  - ☐ Support external JS files for the `<script>` tag
-  - ☐ Support external CSS files
-  - ☐ Support Scoped Styles: the @scope rule for non-shadow-dom elements
-  - ☐ Support form-associated custom elements
-  - ☐ Work with html-minifier-terser to define custom pre-formatted tags
-  - ☐ Need to support this.attachInternals()
+  - ☐ callbacks for onUpdate should be passed the current path.
+  - ☐ Add auto-browser refresh when any component file auto-rebuilds.
+  - ☐ Consider how to support fragments inside the template.
+  - ☐ Support external JS files for the `<script>` tag.
+  - ☐ Support external CSS files for the `<style>` tag.
+  - ☐ Support Scoped Styles: the @scope rule for non-shadow-dom elements.
+  - ☐ Support form-associated custom elements.
+  - ☐ Need to support this.attachInternals().
   - ☐ Fix browser refresh to load updated transpiled component files.
-  - ☐ Create a new logo
-  - ☐ Add onUpdate function to allow for monitoring specific property changes
-  - ☐ Add unit testing for all files that are part of the transpiler
-  - ☐ Add event binding to the `<template>` tag
-  - ☐ Event Handlers - Support Capture, Passive, Once
+  - ☐ Add unit testing for all files that are part of the transpiler.
+  - ☐ Add event binding to the `<template>` tag.
+  - ☐ Add hooks for router (BeforeUnload, BeforeLoad, AfterLoad, Guard, and possibly others).
+  - ☐ Finish EvoState for both Evo components and React. Angular support is a plus.
+  - ☐ Create simple React app with Evo integration points.
+  - ☐ Bug fixes.
 - ☐ Release version 2.0.0
 
 See the [open issues](https://github.com/EvolvedWeb/evowc/issues) for the current list of proposed features (and known issues).

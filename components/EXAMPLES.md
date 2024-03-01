@@ -11,7 +11,7 @@ You can use them as is or make changes to them to suit your needs.
   * Login Dialog *
   * Alert *
   * Prompt *
-  * Confim *
+  * Confirm *
 * HR-like Divider *
 * Star Ranking * - Needs to dispatch change event
 * Round Progress Bar *

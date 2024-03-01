@@ -1,23 +1,3 @@
-// @ts-ignore
-import fs from "node:fs";
-
-export function afterAll() {
-  try {
-    fs.unlinkSync('static/js/EvoRouter.mjs');
-  }
-  catch(ex) {
-    console.log(ex.stack);
-  }
-}
-
-export function beforeAll() {
-  fs.copyFileSync('static/js/EvoRouter.js', 'static/js/EvoRouter.mjs')
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve();
-    }, 100);
-  });
-}
 const events = {};
 global.window = {
   location: null,
@@ -25,6 +5,7 @@ global.window = {
     events[name] ??= [];
     events[name].push(cb);
   },
+  // @ts-ignore
   dispatchEvent(name) {
     if (events[name]) {
       events[name].forEach(cb => cb());
@@ -39,9 +20,11 @@ function setPath(path) {
   if (!path.startsWith('http')) {
     path = `https://www.test.com${path}`;
   }
+  // @ts-ignore
   global.window.location = new URL(path);
 }
 setPath('/');
+// @ts-ignore
 global.history = {
   replaceState(newState, skip, url) {
     setPath(url);

@@ -1,6 +1,22 @@
 <component tag="route-two" shadow="none"
   :#progress1="num:97"
   :#progress2="num:65">
+  <script root>
+    import './AlertBoxElement.js';
+    import './MiniMumElement.js';
+    import './AlertMessageElement.js';
+    import './IfOneElement.js';
+    import './LocaleDateElement.js';
+    import './RoundProgressElement.js';
+    import './SomeFaceElement.js';
+    import './WcButtonElement.js';
+    import './WcButtonGroupElement.js';
+    import './WcCalendarElement.js';
+    import './WcHrElement.js';
+    import './WcRankElement.js';
+    import './WcSpinnerElement.js';
+    import { prompt, alert } from './SystemDialogElement.js';
+  </script>
   <template>
     <div style="display:flex;flex-direction:column;margin-bottom:10px;">
       <div style="display:flex;margin-bottom:40px;gap:10px;justify-content:space-between;">
@@ -29,7 +45,7 @@
         Normal:&nbsp;<alert-box message="This is a message with no state" state=""></alert-box>
         Info:&nbsp;<alert-box message="This is an info message" state="info"></alert-box>
         Warn:&nbsp;<alert-box message="This is a warning message" title="WARNING!" state="warn"></alert-box>
-        Alert:&nbsp;<alert-box message="This is an error" state="alert" dpopup></alert-box>
+        Alert:&nbsp;<alert-box message="This is an error" state="alert"></alert-box>
       </div>
       <div>
         Normal: <alert-message message="This is a non-types message" state=""></alert-message>
@@ -78,22 +94,6 @@
       </wc-button-group>
     </div>
   </template>
-  <script root>
-    import './AlertBoxElement.js';
-    import './MiniMumElement.js';
-    import './AlertMessageElement.js';
-    import './IfOneElement.js';
-    import './LocaleDateElement.js';
-    import './RoundProgressElement.js';
-    import './SomeFaceElement.js';
-    import './WcButtonElement.js';
-    import './WcButtonGroupElement.js';
-    import './WcCalendarElement.js';
-    import './WcHrElement.js';
-    import './WcRankElement.js';
-    import './WcSpinnerElement.js';
-    import  './SystemDialogElement.js';
-  </script>
   <script>
     #inc1 = 1;
     #inc2 = .5;
@@ -119,8 +119,10 @@
     }
 
     async #showAlert() {
-      const resp = await promptwc('What is your favorite language?');
-      await alertwc(`Your favorite language is: ${resp}`)
+      const resp = await prompt('What is your favorite language?');
+      if (resp) {
+        await alert(`Your favorite language is: ${resp}`)
+      }
     }
 
     init() {

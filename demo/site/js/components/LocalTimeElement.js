@@ -22,7 +22,7 @@ export class LocalTimeElement extends EvoElement() {
   #timestamp;
   #locale;
   #format;
-  #_localetime;
+  #_localeTime;
   #_classes;
 
   //**********************************************************************************
@@ -40,7 +40,7 @@ export class LocalTimeElement extends EvoElement() {
     this.timestamp = null;
     this.locale = '';
     this.format = {weekday:'long',year:'numeric',month:'long',day:'numeric'};
-    this.#localetime = '';
+    this.#localeTime = '';
     this.#classes = '';
 
     // Event handlers
@@ -112,16 +112,16 @@ export class LocalTimeElement extends EvoElement() {
     }
   }
 
-  get #localetime() {
-    return this.#_localetime;
+  get #localeTime() {
+    return this.#_localeTime;
   }
-  set #localetime(newVal) {
+  set #localeTime(newVal) {
     newVal = newVal==null?null:''+newVal;
-    if (newVal !== this.#_localetime) {
-      const oldVal = this.#_localetime;
-      this.#_localetime = newVal;
+    if (newVal !== this.#_localeTime) {
+      const oldVal = this.#_localeTime;
+      this.#_localeTime = newVal;
       this.#els.el0.textContent = newVal;
-      this.#callUpdate('#localetime', oldVal, newVal);
+      this.#callUpdate('#localeTime', oldVal, newVal);
     }
   }
 
@@ -146,8 +146,8 @@ export class LocalTimeElement extends EvoElement() {
       const format = this.format || { month: '2-digit', day: '2-digit', year: 'numeric' };
       const formatter = new Intl.DateTimeFormat(locale, format);
       const newStr = formatter.format(this.timestamp);
-      if (this.#localetime !== newStr) {
-        this.#localetime = newStr;
+      if (this.#localeTime !== newStr) {
+        this.#localeTime = newStr;
       }
     }
   }
@@ -158,7 +158,7 @@ export class LocalTimeElement extends EvoElement() {
 
   toString() {
     this.update();
-    return this.#localetime;
+    return this.#localeTime;
   }
   // End of your code
   //**********************************************************************************

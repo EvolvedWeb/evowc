@@ -30,7 +30,7 @@
       <span $switch="num:6,8">Below Nine</span>
       <span $switch="!num:0,8">Above Nine</span>
     </div>
-    <button .click="#clickHander" :text="#dogFood"></button>
+    <button .click="#clickHandler" :text="#dogFood"></button>
   </template>
   <style>
     .thing > dog {
@@ -63,9 +63,9 @@
 
     /**
      * @param {MouseEvent} event - MouseEvent
-     * @param {object} data - event.target.datset
+     * @param {object} data - event.target.dataset
      */
-    #clickHander(event, data) {
+    #clickHandler(event, data) {
       this.num = Math.abs(Math.random() * 12);
     }
 

@@ -1,6 +1,6 @@
 <component tag="wc-a" :href :target :show-ext="bool:false" :starts-with>
   <template>
-    <a part="a" :href="href" .click="#navigate" :attr.target="target" .keydown="#keyHandler" drel="noopener noreferrer">
+    <a part="a" :href="href" .click="#navigate" :attr.target="target" .keydown="#keyHandler" rel="noopener noreferrer">
       <span class="link-content">
         <slot></slot>
         <svg $if="showExt" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">

@@ -9,11 +9,14 @@
   :show-footer="bool:true"
   :ok-button-text="str:OK"
   :cancel-button-text="str:Cancel"
-  :#resolve="null"
   :#dialog-style
+  :#ariaBusy="str:false"
+  :#busyCount="int:0";
+  :#inert="bool:false"
   >
   <script root>
     import './WcButtonElement.js';
+    import './WcSpinnerElement.js';
 
     export const DIALOG_BUTTONS = {
       OK: 'OK',
@@ -23,24 +26,34 @@
     };
   </script>
   <template>
-    <dialog el="dialog" .cancel="#dialogCancel" :style="#dialogStyle" role="dialog"
-      :attr.show-footer="showFooter" :aria.label="title"
-      :aria.description="description">
+    <dialog el="dialog" role="dialog" .cancel="#dialogCancel" :style="#dialogStyle"
+      :attr.show-footer="showFooter" :attr.inert="#inert" :aria.label="title"
+      :aria.description="description" :aria.busy="#ariaBusy">
       <header>
         <div :html="title"></div>
-        <button class="closeX" $if="showX" .click="#clickClose"></button>
+        <button class="closeX" $if="showX" .click="#clickButton" data-button="CLOSE"></button>
       </header>
       <section>
         <p id="changeDialogDesc" :html="description"></p>
         <slot></slot>
       </section>
       <footer $if="showFooter">
-        <button autofocus is="wc-button" .click="#clickOk" :text="okButtonText"></button>
-        <button $if="showCancel" is="wc-button" minor .click="#clickCancel" :text="cancelButtonText"></button>
+        <button is="wc-button" .click="#clickButton" :text="okButtonText" data-button="OK" autofocus></button>
+        <button is="wc-button" .click="#clickButton" :text="cancelButtonText" minor data-button="CANCEL" $if="showCancel"></button>
       </footer>
+      <div class="busy">
+        <wc-spinner></wc-spinner>
+      </div>
     </dialog>
   </template>
   <script>
+    #resolve = null;
+    // Called after any CPA value is changed
+    update({cpa, newVal, oldVal}) {
+      if (['minHeight','minWidth'].includes(cpa)) {
+        this.#dialogStyle = `min-height:${this.minHeight}px;min-width:${this.minWidth}px`;
+      }
+    }
     #dialogCancel(event) {
       event.preventDefault();
       event.stopImmediatePropagation();
@@ -48,16 +61,68 @@
         this.closeDialog(DIALOG_BUTTONS.ESCAPE);
       }
     }
+    #findFocusedElement(startingElement) {
+      // Check if the starting element is actually a shadowRoot, adjust if necessary
+      const startNode = startingElement.shadowRoot || startingElement;
 
+      // Try to find the active element in the current context
+      let activeElement = startNode.activeElement;
+
+      // If there's no active element found and the starting node is a shadow DOM
+      // or we can move up (the starting element could be in a shadow DOM or not),
+      // then try to move up to the host or parent
+      while (!activeElement && startingElement) {
+        // If the starting element is a shadow root, move to its host
+        if (startingElement instanceof ShadowRoot) {
+          startingElement = startingElement.host;
+        } else {
+          // Otherwise, try to move up to the parent node if it exists
+          startingElement = startingElement.parentNode;
+        }
+
+        // Attempt to find the active element again in the new context
+        if (startingElement) {
+          activeElement = (startingElement.shadowRoot || startingElement).activeElement;
+        }
+      }
+
+      // Return the active element found, or null if none was found
+      return activeElement;
+    }
     open(data) {
       return new Promise((resolve, reject) => {
         if (this.#els.dialog.open) {
           return reject('ALREADY_OPEN');
         }
         this.#resolve = resolve;
-        this.#dialogStyle = `min-height:${this.minHeight}px;min-width:${this.minWidth}px`;
         this.#els.dialog.showModal();
       });
+    }
+    #previousActiveElement = null;
+    setBusy(toBusy = true) {
+      const wasBusy = this.#inert;
+      // Increment or decrement the busy count and do not let it go below 0
+      this.#busyCount = Math.max(0, this.#busyCount + (toBusy ? 1 : -1));
+      const isBusy = this.#busyCount > 0;
+      // Set the private #inert CPA to affect the dialog inert attribute
+      this.#inert = isBusy;
+      // Set the private #ariaBusy CPA to affect the dialog aria-busy attribute
+      this.#ariaBusy = isBusy.toString();
+
+      if (!wasBusy && isBusy) {
+        this.#previousActiveElement = this.#findFocusedElement(this);
+      }
+      if (this.#previousActiveElement && wasBusy && !isBusy) {
+        try {
+          this.#previousActiveElement.focus();
+        }
+        catch(ex) {
+          //console.info(ex.stack);
+        }
+        finally {
+          this.#previousActiveElement = null
+        }
+      }
     }
 
     closeDialog(button, data) {
@@ -65,33 +130,19 @@
       this.#resolve({ button, data });
     }
 
-    #clickOk(event) {
-      this.closeDialog(DIALOG_BUTTONS.OK);
-    }
-
-    #clickClose(event) {
-      this.closeDialog(DIALOG_BUTTONS.CLOSE);
-    }
-
-    #clickCancel(event) {
-      this.closeDialog(DIALOG_BUTTONS.CANCEL);
+    #clickButton(event, data) {
+      this.closeDialog(data.button);
     }
   </script>
   <style>
     :host {
-      --dialog-border: 1px solid #333;
-      --dialog-border-radius: 10px;
-      --dialog-header-bgcolor: #dee6ff;
-      --dialog-header-font: 18px Tahoma;
-      --dialog-header-justify: start;
       display: inline-block;
       height: fit-content;
       width: fit-content;
     }
-
     dialog {
-      border: var(--dialog-border);
-      border-radius: var(--dialog-border-radius);
+      border: var(--dialog-border, 1px solid #333);
+      border-radius: var(--dialog-border-radius, 10px);
       left: 50%;
       margin: 0;
       padding: 0;
@@ -99,50 +150,45 @@
       top: 50%;
       transform: translate(-50%, -50%);
     }
-
     dialog[open] {
       display: flex;
       filter: drop-shadow(6px 6px 6px #0006);
       flex-direction: column;
     }
-
     dialog::backdrop {
       background-color: #0006;
     }
-
     #changeDialogDesc {
       margin-top: 0;
       padding-top: 0;
     }
-
     #changeDialogDesc:empty {
       display: none;
     }
-
     header {
       align-items: center;
-      background-color: var(--dialog-header-bgcolor, #dee6ff);
-      background-image: linear-gradient(top, rgba(255, 255, 255, .3), rgba(255, 255, 255, 0));
+      background-color: var(--dialog-header-bgcolor, #ffffff);
+      background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0));
       display: flex;
-      font: var(--dialog-header-font, 18px Tahoma);
+      font: var(--dialog-header-font, bold 18px/1.5 Tahoma);
       height: fit-content;
-      justify-content: var(--dialog-header-justify);
+      justify-content: var(--dialog-header-justify, center);
       padding: 10px;
       position: relative;
     }
-
+    header div:empty::before {
+      content: "\\00A0";
+    }
     section {
       flex: 2 1 auto;
       padding: 20px;
     }
-
     footer {
-      border-top: 1px solid #666;
+      border-top: var(--dialog-footer-border, 1px solid #666);
       font: 18px Tahoma;
       height: fit-content;
       padding: 10px;
     }
-
     .closeX {
       background: transparent;
       border-radius: 3px;
@@ -156,8 +202,8 @@
       top: 20px;
       width: 25px;
     }
-
-    .closeX::before {
+    .closeX::before,
+    .closeX::after {
       background-color: #000;
       content: '';
       display: inline-block;
@@ -168,24 +214,29 @@
       transform: rotate(-45deg);
       width: 1px;
     }
-
-    .closeX::after {
-      background-color: #000;
-      content: '';
-      display: inline-block;
-      height: 15px;
-      left: 11px;
-      position: absolute;
-      top: 4px;
-      transform: rotate(45deg);
-      width: 1px;
+    .closeX::before {
+      transform: rotate(-45deg);
     }
-
+    .closeX::after {
+      transform: rotate(45deg);
+    }
     .closeX:hover {
       background: #FFF9;
     }
+    [aria-busy="false"] .busy {
+      display: none;
+    }
+    [aria-busy="true"] .busy {
+      align-items: center;
+      background-color: rgba(0, 0, 0, 0.35);
+      display: flex;
+      inset: 0;
+      justify-content: center;
+      position: absolute;
+    }
   </style>
-  <!--
+</component>
+<!--
 https://www.joshwcomeau.com/css/center-a-div/ - Centering that could improve the dialog display
 
 Your modal implementation strategy offers both flexibility and encapsulation, essential for creating reusable and modular dialog components in web applications. Here are some thoughts and potential enhancements based on the two approaches you've described:
@@ -200,7 +251,7 @@ Your modal implementation strategy offers both flexibility and encapsulation, es
 
 - **Pros**: This approach abstracts away the modal's DOM manipulation, making it easier to use programmatically. It's particularly useful for modals that are used infrequently or require dynamic instantiation based on user actions or application state.
 - **Cleanup and Memory Management**: Automatically removing the modal from the DOM upon closure is good practice for memory management. Ensure that all event listeners or references are also cleaned up to prevent memory leaks.
-- **Integration Flexibility**: By colocating the helper code with the modal component, you provide a clear pathway for extending the modal's functionality. Developers can customize how modals are initialized, opened, and how data is passed without affecting the modal's internal implementation.
+- **Integration Flexibility**: By collocating the helper code with the modal component, you provide a clear pathway for extending the modal's functionality. Developers can customize how modals are initialized, opened, and how data is passed without affecting the modal's internal implementation.
 
 ### Potential Enhancements
 
@@ -299,4 +350,3 @@ While your current plan effectively addresses many use cases, considering additi
 ### Conclusion:
 Your approach does not inherently limit the application's functionality or user experience; rather, it provides a solid foundation for modal management within a component-driven architecture. By considering additional routing integration for specific modal use cases and enhancing state management documentation, you can offer developers the tools to create intuitive and robust application flows while adhering to your goals of simplicity and modularity.
 -->
-</component>

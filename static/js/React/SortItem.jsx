@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import "./styles.css";
 const enCollator = new Intl.Collator("en");
 
+// cspell:disable
 const initialData = [
   { name: "Harry Potter", age: 27, key: 1001 },
   { name: "Hermione Granger", age: 30, key: 1002 },
@@ -104,6 +105,7 @@ const initialData = [
   { name: "Thorin Oakenshield", age: 195, key: 1099 },
   { name: "Balin", age: 202, key: 1100 }*/
 ];
+// cspell:enable
 
 export default function App() {
   const [sal, setSal] = useState("Mrs");

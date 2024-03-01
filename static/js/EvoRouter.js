@@ -1,4 +1,3 @@
-/* eslint-env browser */
 //const PART_RE = /^(?<before>[^\:\(\n]+)?(?:(?<key>\:[\w]+)(?<size>[\?\+\*])?)?(?<re>\([^)\n]+\))?(?<after>[^\n]+)?$/;
 const PART_RE = /^(?<before>[^\:\(\n]+)?(?:(?<key>\:[\w]+)(?<size>[\?\+\*])?)?(?<re>\([^)\n]+\))?(?<after>[^\n]+)?$/;
 const RE_ESCAPE = /[\\\^$.*+?|()[\]{}]/g
@@ -6,6 +5,7 @@ const reEscape = str => (str || '').replace(RE_ESCAPE, (key) => `\\${key}`);
 const reEscapeCharClasses = char => (['^', '\\', ']', '-'].includes(char)) ? `\\${char}` : char;
 let evoStateIndex = 0;
 let handlerId = 0n;
+let debugMode = false;
 const handlers = {}
 
 /**
@@ -14,20 +14,23 @@ const handlers = {}
  * @returns {object}
  */
 export function parseQueryParams(qs = '') {
-  if (typeof qs !== 'string' || qs.length === 0) {
-    return {};
+  const params = {};
+  if (typeof qs !== 'string') {
+    return params;
   }
 
-  const params = {};
-  qs = qs[0] === '?' ? qs.substring(1) : qs;
+  qs = (qs[0] === '?' ? qs.substring(1) : qs).replace(/\+/g, ' ').trim();
+  if(qs.length === 0) {
+    return params;
+  }
 
   qs.split('&').forEach(pair => {
     /** @type {string} */ let key;
     /** @type {string|boolean|number} */ let value;
-    ([key, value] = pair.split('='));
+    ([key, value = 'true'] = pair.split('='));
 
-    key = decodeURIComponent(key.replace(/\+/g, ' ')).trim();
-    value = decodeURIComponent(value.replace(/\+/g, ' '));
+    key = decodeURIComponent(key).trim();
+    value = decodeURIComponent(value);
 
     const valueLc = value.toLowerCase()
     if (['true', 'false'].includes(valueLc)) {
@@ -90,19 +93,28 @@ export function parseQueryParams(qs = '') {
   return params;
 }
 
-function processRoute() {
+/**
+ * Indicate if you want debug mode on or off. Debug mode will output extra
+ * information to the console.
+ * @param {boolean} mode - `true` to enable debug mode. `false` to disable debug mode.
+ * @returns {void}
+ */
+export function setDebugMode(mode = true) {
+  debugMode = !!mode;
+}
+
+function processRouteChanges() {
   const { location } = window;
   const { pathname, search, hash } = location;
   const query = parseQueryParams(search);
 
   // Check to see which callbacks need to be called and call them
   Object.values(handlers).forEach(handler => {
-    const { callback, filter/*, from*/ } = handler;
+    const { callback, filter, from } = handler;
     try {
       let canCallCallback = true;
       if (filter) {
         if (filter instanceof RegExp) {
-          //console.log({filter});
           canCallCallback = filter.test(location.pathname);
         }
         else {
@@ -111,7 +123,9 @@ function processRoute() {
       }
 
       if (canCallCallback) {
-        //console.log(`onUpdate called from "${from}"`);
+        if (debugMode) {
+          console.log(`onChange called from "${from}"`);
+        }
         callback({ pathname, search, query, hash: hash.slice(1) });
       }
     }
@@ -122,19 +136,19 @@ function processRoute() {
   })
 }
 
-window.addEventListener("evoPushState", processRoute);
-window.addEventListener("popstate", processRoute);
-window.addEventListener("hashchange", processRoute);
+window.addEventListener("evoPushState", processRouteChanges);
+window.addEventListener("popstate", processRouteChanges);
+window.addEventListener("hashchange", processRouteChanges);
 
 // Export the router
 export const router = {
   /**
    * @param {string} url - relative url to navigate to via pushState().
-   * @param {object} state - An object which is associated with the history entry passed to pushState() or replaceState().
+   * @param {object} [state={}] - An object which is associated with the history entry passed to pushState() or replaceState().
    * @param {boolean} [replace=false] - `true` call replaceState() instead of pushState().
    */
-  navigate(url, state, replace = false) {
-    const newState = { ...(state ?? {}), evoStateIndex };
+  navigate(url, state = {}, replace = false) {
+    const newState = { ...state, evoStateIndex };
     evoStateIndex++;
     if (replace) {
       history.replaceState(newState, '', url)
@@ -215,12 +229,41 @@ export const router = {
     //console.log(re);
     return re;
   },
+  /* c8 ignore start */
+  /**
+   * Subscribe to changes to the routes
+   * @deprecated since version 1.1.0
+   * @param {Function} callback - Function to call when a route has changed
+   * @param {*} filter 
+   * @returns 
+   * This is deprecated. Please use onChange instead. onUpdate will be removed in version 2.0.0
+   */
   onUpdate(callback, filter = '') {
+    console.error('onUpdate is deprecated since version 1.1.0. Please use onChange instead.')
     if (typeof callback !== 'function') {
       throw new TypeError('The "callback" must be a function');
     }
 
-    const key = `h${handlerId++}`;
+    const key = `h${(handlerId++).toString(36)}`;
+    const from = (new Error()).stack.split(/\r*\n/g)[2].replace('    at ', '');
+    handlers[key] = { callback, filter, from };
+    return () => {
+      delete handlers[key];
+    }
+  },
+  /* c8 ignore stop */
+  /**
+   * Subscribe to changes to the routes
+   * @param {Function} callback - Function to call when a route has changed
+   * @param {*} filter 
+   * @returns 
+   */
+  onChange(callback, filter = '') {
+    if (typeof callback !== 'function') {
+      throw new TypeError('The "callback" must be a function');
+    }
+
+    const key = `h${(handlerId++).toString(36)}`;
     const from = (new Error()).stack.split(/\r*\n/g)[2].replace('    at ', '');
     handlers[key] = { callback, filter, from };
     return () => {

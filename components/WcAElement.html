@@ -17,7 +17,7 @@
   <script>
     #removeRouterCheck;
     connected() {
-      this.#removeRouterCheck = router.onUpdate(() => this.#checkPath());
+      this.#removeRouterCheck = router.onChange(() => this.#checkPath());
       this.#checkPath();
     }
 
