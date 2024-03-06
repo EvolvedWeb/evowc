@@ -238,7 +238,7 @@ HTML Snippet to generate a skeleton of a template:
 
 ### JavaScript Snipper
 
-JavaScript snippet for several evo repated class member functions:
+JavaScript snippet for several evo repeated class member functions:
 
 ```json
   "evo init function": {
@@ -299,7 +299,7 @@ HTML Snippet to generate a skeleton of a template:
 
 ### JavaScript Snipper
 
-JavaScript snippet for several evo repated class member functions:
+JavaScript snippet for several evo repeated class member functions:
 
 ```json
 '.source.js':
@@ -335,4 +335,4 @@ If anyone can convert these snippets to work in other editors, please do and sub
 
 ## Reference
 
-Comming soon
+Coming soon

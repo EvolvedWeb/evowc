@@ -9,11 +9,11 @@
 <br />
 <div align="center">
   <a href="https://github.com/EvolvedWeb/evowc">
-    <img src="static/img/Logo1.jpg" alt="Evo-wc logo" width="80" height="80">
+    <img src="static/img/Logo1.jpg" alt="Evo-wc logo" width="276.2" height="107">
   </a>
 
   <p align="center">
-    Create lightweight, high-performance native custom elements, with minimal boilerplate.
+    Create blazing fast, lightweight, native, custom elements, with minimal boilerplate and almost no runtime libraries.
     <br />
     <a href="https://github.com/EvolvedWeb/evowc/wiki"><strong>Explore the docs »</strong></a>
     <br />
@@ -41,19 +41,19 @@
       </ul>
     </li>
     <li><a href="#usage">Usage</a></li>
-    <li><a href="#roadmap">Roadmap</a></li>
     <li><a href="#contributing">Contributing</a></li>
+    <li><a href="#roadmap">Roadmap</a></li>
     <li><a href="#license">License</a></li>
     <li><a href="#contact">Contact</a></li>
     <!--li><a href="#acknowledgments">Acknowledgments</a></li -->
   </ol>
 </details>
 
-## About The Project
+## About The Evo-wc Project
 
 <!-- [![Product Name Screen Shot][product-screenshot]](https://example.com) -->
 
-Evo-wc, or Evolved Web Components, is a Web Component transpiler. The developer builds simple XML files that are very similar to and HTML with only the code they need. Evo-wc trnaspiles the XMl files into a JavaScript file that contains a native Custom Element.
+Evo-wc, or Evolved Web Components, is a Web Component transpiler. The developer builds simple XML files that are very similar to and HTML with only the code they need. Evo-wc transpiles the XMl files into a JavaScript file that contains a native Custom Element.
 
 Evo-wc offers developers a powerful and efficient way to create web components, whether used independently or alongside existing frameworks. The generated elements are standards based and run lightning fast.  Here are several compelling reasons why someone would want to consider using Evo:
 
@@ -77,32 +77,50 @@ In summary, Evo provides a developer-friendly, high-performance solution for cre
 
 ### Built With
 
-Built in Raw JavaScript using JSDocs Types.
+Built in Raw JavaScript using JSDOC Types.
 
-Our build-time dependencies are:
+<details>
+  <summary>Dependencies</summary>
+  <ol>
+    <li>
+      Build-time dependencies for Evo-wc:
+      <ul>
+        <li><a href="https://www.npmjs.com/package/fast-xml-parser">fast-xml-parser</a></li>
+        <li><a href="https://www.npmjs.com/package/glob">glob</a></li>
+        <li><a href="https://www.npmjs.com/package/html-minifier-terser">html-minifier-terser</a></li>
+      </ul>
+    </li>
+    <li>
+      Node runtime dependencies that are only for running the demo server:
+      <ul>
+        <li><a href="https://www.npmjs.com/package/express">express</a></li>
+        <li><a href="https://www.npmjs.com/package/keypress">keypress</a></li>
+        <li><a href="https://www.npmjs.com/package/micromatch">micromatch</a></li>
+        <li><a href="https://www.npmjs.com/package/node-watch">node-watch</a></li>
+      </ul>
+    </li>
+    <li>
+      Developer dependencies for developing and testing Evo-wc are:
+      <ul>
+        <li><a href="https://www.npmjs.com/package/@types/mocha">@types/mocha</a></li>
+        <li><a href="https://www.npmjs.com/package/@types/node">@types/node</a></li>
+        <li><a href="https://www.npmjs.com/package/c8">c8</a></li>
+        <li><a href="https://www.npmjs.com/package/chai">chai</a></li>
+        <li><a href="https://www.npmjs.com/package/eslint">eslint</a></li>
+        <li><a href="https://www.npmjs.com/package/esmock">esmock</a></li>
+        <li><a href="https://www.npmjs.com/package/mocha">mocha</a></li>
+        <li><a href="https://www.npmjs.com/package/nock">nock</a></li>
+      </ul>
+    </li>
+  </ol>
+</details>
+<br/>
 
-* [fast-xml-parser](fast-xml-parser-url)
-* [glob](glob-url)
-* [html-minifier-terser](html-minifier-terser-url)
 
-The runtime dependencies for running the demo server:
-
-* [express](express-url)
-* [keypress](keypress-url)
-* [micromatch](micromatch-url)
-* [node-watch](node-watch-url)
-
-
-The developer dependencies for testing Evowc are:
-
-* [chai](chai-url)
-* [eslint](eslint-url)
-* [mocha](mocha-url)
-* [nyc](nyc-url)
-* [proxyquire](proxyquire-url)
-* [sinon](sinon-url)
-
-> None of these dependencies are used at runtime by the generated components. The only code executed at runtime consists of your transpiled components and a base class that encapsulates all the common functionality shared by all of the components. Additionally, there are optional files available specifically for the Evo router.
+> None of these dependencies are used at runtime by the generated components. The only code
+executed at runtime consists of your transpiled components and a base class that encapsulates
+all the common functionality shared by all of the components. Additionally, there are optional
+files available specifically for the Evo router.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -141,14 +159,14 @@ To install and test Evo follow the steps below. `Evo init` will create a demo se
 
     # Press enter multiple times until the init has finished
 
-    # install EvoWC in your project
+    # install Evo-wc in your project
     npm install @evolvedweb/wc
     ```
 
 4. **Initialize Evo:**<br>
-  Let Evo know ceate a demo server and where your component template and the transpiled components will be placed.
+  Let Evo know create a demo server and where your component template and the transpiled components will be placed.
     ```sh
-    # Initialize EVOWC config and copy the helper files
+    # Initialize Evo-wc config and copy the helper files
     npx evowc init
 
     # Install the added repos for the demo server
@@ -164,15 +182,44 @@ To install and test Evo follow the steps below. `Evo init` will create a demo se
 
 ## Usage
 
-Evo template files are easy to create. It is recommended that you create HTML files for your code because editors handle them better than XML files.
+Creating Evo templates is straightforward. For the best compatibility and ease of use, it's advised to use HTML files for your component templates. Most code editors provide better support for HTML compared to XML.
 
-To create a new component you add a new template file into the components folder and then run `npm evowc` to transpile all of the template files.
+Here’s a step-by-step guide to creating a new component in Evo:
 
-Include the generated JavaScript file into your HTML file and add your tag into the HTML. That is it. Anything else you add will be based on the needs of your components.
+1. **Create a Template File:** Begin by adding a new HTML file in the components folder for your new component.
+
+2. **Transpile the Template:** Run the command `npm run evowc` in your terminal. This process transpiles all your template files into JavaScript files, each representing a custom element.
+
+3. **Import Custom Elements:** In your main HTML file, use the `import` statement to include the JavaScript files of your custom elements. This step is crucial for integrating the components into your application.
+
+4. **Add Element Tags:** Place the tags of your custom elements in the HTML file where you want these components to appear.
+
+And that's pretty much it! The only additional steps involve specific functionalities or features you want to embed within your components. This simple workflow highlights the ease and efficiency of using Evo for web development.
 
 You can learn more on the [Getting Started](https://www.evowc.com/get-started) page or the [Examples](https://www.evowc.com/examples) page.
 
 You can read more about how to use Evo in the [Documentation](https://www.evowc.com/docs/intro). Or review the [Frequently Asked Questions](https://www.evowc.com/faq).
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+
+## Contributing
+
+Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
+
+If you have a suggestion that would make this better, please fork the repo and create a pull request.
+
+1. Fork the Project
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Create you amazing feature
+4. Add unit testing _(90% or better coverage for the new code)_
+5. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+6. Push to the branch (`git push origin feature/AmazingFeature`)
+7. Open a Pull Request
+
+You can also open an issue with the tag "enhancement".
+
+> **Don't forget to give the project a star! Thanks again!**
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -194,46 +241,46 @@ You can read more about how to use Evo in the [Documentation](https://www.evowc.
   - ☑ All docs up to date.
   - ☑ Unit tests over 60%.
 - ☑ Release version 1.0.0
+- ☑ Get all Issues related to 1.1.0 finished
+  - ☑ Work with html-minifier-terser to define custom pre-formatted tags.
+  - ☑ Create a new logo.
+  - ☑ Unit testing over 80%.
+  - ☑ Event Handlers - Support Capture, Passive, Once.
+  - ☑ Improve WcDialogElement to handle a common busy state with aria-busy and inert attributes.
+  - ☑ Add a filter to the router.onUpdate method
+  - ☑ Add new Evo pipes: toJson, toCurrency, toDate, toDecimal, toPercent
+  - ☑ Improve the router:
+    - ☑ Bug fixes
+    - ☑ Add ability to auto-delete a routing component immediately or after a specified time of no use.
+    - ☑ Ability to send routing information to routing component through optional public method navParams method
+      - ☑ Include Query string, hash string and query object
+    - ☑ Provide an exported function to convert the query string into a query object
+  - ☑ Convert all code to ESM.
+  - ☑ Convert all tests to ESM.
+  - ☑ Bug fixes.
+  - ☑ Drop `proxyquire` for `esmock`.
+  - ☑ Drop `sinon` for `nock`.
+  - ☑ Drop `nyc` for `c8`.
+  - ☐ Add onUpdate function to allow for monitoring specific property changes.
 - ☐ Get all Issues related to 2.0.0 finished
-  - ☐ callbacks for onUpdate should be passed the current path
-  - ☐ Upgrade the router onUpdate to take a startsWith string
-  - ☐ Add auto-browser refresh when any component file auto-rebuilds
-  - ☐ Consider how to support fragments inside the template
-  - ☐ Support external JS files for the `<script>` tag
-  - ☐ Support external CSS files
-  - ☐ Support Scoped Styles: the @scope rule for non-shadow-dom elements
-  - ☐ Support form-associated custom elements
-  - ☐ Work with html-minifier-terser to define custom pre-formatted tags
-  - ☐ Need to support this.attachInternals()
+  - ☐ callbacks for onUpdate should be passed the current path.
+  - ☐ Add auto-browser refresh when any component file auto-rebuilds.
+  - ☐ Consider how to support fragments inside the template.
+  - ☐ Support external JS files for the `<script>` tag.
+  - ☐ Support external CSS files for the `<style>` tag.
+  - ☐ Support Scoped Styles: the @scope rule for non-shadow-dom elements.
+  - ☐ Support form-associated custom elements.
+  - ☐ Need to support this.attachInternals().
   - ☐ Fix browser refresh to load updated transpiled component files.
-  - ☐ Create a new logo
-  - ☐ Add onUpdate function to allow for monitoring specific property changes
-  - ☐ Add unit testing for all files that are part of the transpiler
-  - ☐ Add event binding to the `<template>` tag
-  - ☐ Event Handlers - Support Capture, Passive, Once
+  - ☐ Add unit testing for all files that are part of the transpiler.
+  - ☐ Add event binding to the `<template>` tag.
+  - ☐ Add hooks for router (BeforeUnload, BeforeLoad, AfterLoad, Guard, and possibly others).
+  - ☐ Finish EvoState for both Evo components and React. Angular support is a plus.
+  - ☐ Create simple React app with Evo integration points.
+  - ☐ Bug fixes.
 - ☐ Release version 2.0.0
 
 See the [open issues](https://github.com/EvolvedWeb/evowc/issues) for the current list of proposed features (and known issues).
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-## Contributing
-
-Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
-
-If you have a suggestion that would make this better, please fork the repo and create a pull request.
-
-1. Fork the Project
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Create you amazing feature
-4. Add unit testing _(90% or better coverage for the new code)_
-5. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-6. Push to the branch (`git push origin feature/AmazingFeature`)
-7. Open a Pull Request
-
-You can also open an issue with the tag "enhancement".
-
-> **Don't forget to give the project a star! Thanks again!**
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -263,7 +310,6 @@ Project Links:
 
 Use this space to list resources you find helpful and would like to give credit to. I've included a few of my favorites to kick things off!
 
-* [Choose an Open Source License](https://choosealicense.com)
 * [Malven's Flexbox Cheatsheet](https://flexbox.malven.co/)
 * [Malven's Grid Cheatsheet](https://grid.malven.co/)
 
@@ -282,16 +328,3 @@ Use this space to list resources you find helpful and would like to give credit 
 [license-shield]: https://img.shields.io/github/license/EvolvedWeb/evowc.svg?style=for-the-badge
 [license-url]: https://github.com/EvolvedWeb/evowc/blob/master/LICENSE
 [product-screenshot]: images/screenshot.png
-[fast-xml-parser-url]: https://www.npmjs.com/package/fast-xml-parser
-[glob-url]: https://www.npmjs.com/package/glob
-[html-minifier-terser-url]: https://www.npmjs.com/package/html-minifier-terser
-[express-url]: https://www.npmjs.com/package/express
-[keypress-url]: https://www.npmjs.com/package/keypress
-[micromatch-url]: https://www.npmjs.com/package/micromatch
-[node-watch-url]: https://www.npmjs.com/package/node-watch
-[chai-url]: https://www.npmjs.com/package/chai
-[eslint-url]: https://www.npmjs.com/package/eslint
-[mocha-url]: https://www.npmjs.com/package/mocha
-[nyc-url]: https://www.npmjs.com/package/nyc
-[proxyquire-url]: https://www.npmjs.com/package/proxyquire
-[sinon-url]: https://www.npmjs.com/package/sinon

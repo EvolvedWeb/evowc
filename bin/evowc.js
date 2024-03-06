@@ -1,18 +1,19 @@
 #! /usr/bin/env node
-/* eslit-env node:true */
-// @ts-ignore
-const fs = require('fs');
-// @ts-ignore
-const path = require('path');
+/* eslint-env node:true */
+import * as fs from 'node:fs';
+import * as path from 'node:path';
 const fsp = fs.promises;
+import { fileURLToPath } from 'node:url';
+import { evowc } from '../lib/evowc.js';
+import { getFileArrayFromGlob } from '../lib/getFileArrayFromGlob.js';
+import { initEvo } from '../lib/initEvo.js';
+import { updateEvo } from '../lib/updateEvo.js';
+import { loadJson } from '../lib/loadJson.js';
+import { getClOptions } from '../lib/getClOptions.js';
+import { watch } from '../lib/watch.js';
 
-const evowc = require('../lib/evowc.js')
-const getFileArrayFromGlob = require('../lib/getFileArrayFromGlob.js');
-const initEvo = require('../lib/initEvo.js');
-const updateEvo = require('../lib/updateEvo.js');
-const loadJson = require('../lib/loadJson.js');
-const getClOptions = require('../lib/getClOptions.js');
-const watch = require('../lib/watch.js');
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const TOTAL_TIME = '  * Total processing time';
 const FILE_OPTIONS = {
@@ -26,8 +27,8 @@ const MKDIR_OPTIONS = {
 * @typedef {Object} Options
 * @property {string} version - The version of the transpiler.
 * @property {boolean} force - If 'true' then force the building of all files.
-* @property {boolean | string | string[] } addDebug - Not implamented yet
-* @property {string} outExtname - File extention to use on the transpiled files.
+* @property {boolean | string | string[] } addDebug - Not implemented yet
+* @property {string} outExtname - File extension to use on the transpiled files.
 * @property {boolean} saveDebugJson - If 'true' then output the debug json files.
 *
 * @property {object} paths - Paths to everything on init.
@@ -40,6 +41,7 @@ const MKDIR_OPTIONS = {
 * @property {object} minify
 * @property {boolean} minify.css - Should the CSS be minified?
 * @property {boolean} minify.html - Should the HTML be minified?
+* @property {string[]} minify.noMinElements - Which HTML must not be minified?
 */
 
 function getEvoVersion() {
@@ -73,12 +75,13 @@ function getOptions(clOptions, version) {
     // The code to use addDebug is not written yet
     // valid values for addDebug:
     //   true/false - add or not to every component
-    //   'SystemDialogElement' - classname of the component to add debug code
+    //   'SystemDialogElement' - class name of the component to add debug code
     //   ['SystemDialogElement','MyComponentElement'] - Array of classnames of the components to add debug code
-    saveDebugJson: wc.saveDebugJson || false, // true - Ouput the debug JSON files
+    saveDebugJson: wc.saveDebugJson || false, // true - Output the debug JSON files
     minify: {
       css: Boolean(wc.minify?.css ?? true),
-      html: Boolean(wc.minify?.html ?? true)
+      html: Boolean(wc.minify?.html ?? true),
+      noMinElements: wc.minify?.noMinElements ?? []
     },
     outExtname: wc.outExtname || '.js', // Default File extension for output files
     paths: {
@@ -133,6 +136,7 @@ async function run(args) {
 
   if (args.length > 0) {
     /** @type Options */
+    // @ts-ignore
     const { templateRoot, componentsToBuild, componentsRoot } = options.paths;
 
     // @ts-ignore
@@ -217,6 +221,7 @@ async function run(args) {
       console.info(err);
     });
     console.info('\n');
+    process.stdout.write('\x07');
   }
 }
 

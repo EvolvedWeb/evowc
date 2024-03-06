@@ -1,4 +1,7 @@
 <component tag="home-page">
+  <script root>
+    import "./WcAElement.js"
+  </script>
   <template>
     <main>
       <section class="hero">
@@ -20,6 +23,8 @@
       </section>
     </main>
   </template>
+  <script>
+  </script>
   <style>
     :host {
       box-sizing: border-box;
@@ -148,21 +153,6 @@
         width: 35rem;
       }
     }
-
-    .sectiontion3 {
-      align-items: center;
-      background-color: var(--color-bright-2);
-      display: flex;
-      flex: 0 0 auto;
-      flex-flow: column;
-      gap: 20px;
-      height: max-content;
-      overflow: hidden;
-      pasectionng: 5rem;
-      position: relative;
-      width: 100%;
-    }
-
     .cell h3 {
       margin-bottom: .5em;
     }
@@ -170,9 +160,4 @@
       margin: 0 0 0 2rem;
     }
   </style>
-  <script root>
-    import "./WcAElement.js"
-  </script>
-  <script>
-  </script>
 </component>

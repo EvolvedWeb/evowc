@@ -12,7 +12,7 @@
   </template>
   <style>
     :host {
-      border: 1px dahsed red;
+      border: 1px dashed red;
       display: inline-block;
       height: var(--round-progress-height, 200px);
       min-height: 100px;

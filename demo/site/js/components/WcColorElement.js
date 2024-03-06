@@ -15,7 +15,7 @@ const template = `<div class=color-selector js=sel> <div class=wt></div> <div cl
 
 //************************************************************************************
 // Styles string
-const styles = `:host{--wc-color-bg:#FF0000;border:1px solid black;display:inline-grid}.color-selector{background:var(--wc-color-bg, #FF0000);height:100%;min-height:256px;min-width:256px;position:relative;width:100%}.bk{background:linear-gradient(to bottom, rgba(0,0,0,0) 0%, black 100%);height:100%;left:0;position:absolute;top:0;width:100%}.wt{background:linear-gradient(to right, white 0%, rgba(255,255,255,0) 100%);height:100%;left:0;position:absolute;top:0;width:100%}.selector{border:2px solid black;border-radius:50%;color:transparent;display:inline-block;height:3px;pointer-events:none;position:absolute;width:3px}.selctor::after{position:abs}`;
+const styles = `:host{--wc-color-bg:#FF0000;border:1px solid black;display:inline-grid}.color-selector{background:var(--wc-color-bg, #FF0000);height:100%;min-height:256px;min-width:256px;position:relative;width:100%}.bk{background:linear-gradient(to bottom, rgba(0,0,0,0) 0%, black 100%);height:100%;left:0;position:absolute;top:0;width:100%}.wt{background:linear-gradient(to right, white 0%, rgba(255,255,255,0) 100%);height:100%;left:0;position:absolute;top:0;width:100%}.selector{border:2px solid black;border-radius:50%;color:transparent;display:inline-block;height:3px;pointer-events:none;position:absolute;width:3px}`;
 
 //************************************************************************************
 // Define class WcColorElement for component <wc-color>

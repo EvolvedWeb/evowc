@@ -1,0 +1,324 @@
+<component tag="loop-test"
+  :add-button-text="str:Add"
+  :reverse-button-text="str:Reverse"
+  :sort-button-text="str:Sort"
+  :people="arr<Person>"
+  :aaa="date"
+  :title
+  :#newId="int:0"
+  :#input
+  >
+  <template>
+    <div class="main">
+      <div $for="people as person.id,personIndex" :aria.label="person.name" :attr.index="personIndex">
+        <span el="index" :text="personIndex"></span>
+        <span :text="title" :attr.title="title"></span>
+        <span :text="person.name"></span>
+        <button :text="person.name" .click="#clickItem" :data.val="person.id"></button>
+        <span :text="person.age"></span>
+        <input :value="person.name" .input="#funnyBone" />
+      </div>
+      <button .click="#reverse" :text="reverseButtonText"></button>
+      <button .click="#sort" :text="sortButtonText"></button><br />
+      <input el="myInput" :value="#input" .input="#testme:psi"/>
+      <button .click:c="#add" :text="addButtonText"></button>
+    </div>
+  </template>
+  <style>
+    :host {
+      display: block;
+      height: fit-content;
+    }
+    .main {
+      background: #E8E8E8;
+      border: 1px solid #888;
+      color: black;
+      margin: 10px;
+      padding: 10px;
+    }
+  </style>
+  <script root>
+    import { router } from '../EvoRouter.js';
+    const enCollator = new Intl.Collator('en');
+    /**
+     * @typedef {Object} Person
+     * @property {string} name - The name of the person
+     * @property {number} age - How many years the person lived
+     * @property {number | string} id - The key used when in an array for looping
+     */
+  </script>
+  <script>
+    init() {
+      // cspell: disable
+      /** @type {Person[]} */
+      const temp = [
+        { name: 'Isaac Newton', age: 84 },
+        { name: 'Wolfgang Amadeus Mozart', age: 35 },
+        { name: 'Jane Austen', age: 41 },
+        { name: 'Ludwig van Beethoven', age: 56 },
+        { name: 'Napoleon Bonaparte', age: 51 },
+        { name: 'Thomas Jefferson', age: 83 },
+        { name: 'George Washington', age: 67 },
+        { name: 'Benjamin Franklin', age: 84 },
+        { name: 'Marie Antoinette', age: 37 },
+        { name: 'Mary Wollstonecraft', age: 38 },
+        { name: 'Simón Bolívar', age: 47 },
+        { name: 'Johann Wolfgang von Goethe', age: 82 },
+        { name: 'Charles Darwin', age: 73 },
+        { name: 'Edgar Allan Poe', age: 40 },
+        { name: 'Friedrich Nietzsche', age: 55 },
+        { name: 'Karl Marx', age: 64 },
+        { name: 'Florence Nightingale', age: 90 },
+        { name: 'Charles Dickens', age: 58 },
+        { name: 'Claude Monet', age: 86 },
+        { name: 'Vincent van Gogh', age: 37 },
+        { name: 'Arthur Schopenhauer', age: 72 },
+        { name: 'Michael Faraday', age: 75 },
+        { name: 'Ada Lovelace', age: 36 },
+        /*
+        { name: 'Gustave Eiffel', age: 91 },
+        { name: 'Anton Chekhov', age: 44 },
+        { name: 'Henri Becquerel', age: 55 },
+        { name: 'Leo Tolstoy', age: 82 },
+        { name: 'Fyodor Dostoevsky', age: 59 },
+        { name: 'Alexander Hamilton', age: 49 },
+        { name: 'James Watt', age: 83 },
+        { name: 'Michael Faraday', age: 75 },
+        { name: 'John Dalton', age: 77 },
+        { name: 'Gregor Mendel', age: 61 },
+        { name: 'Louis Pasteur', age: 72 },
+        { name: 'Joseph Lister', age: 84 },
+        { name: 'Nikola Tesla', age: 86 },
+        { name: 'Alfred Nobel', age: 63 },
+        { name: 'Thomas Edison', age: 84 },
+        { name: 'Gustave Flaubert', age: 58 },
+        { name: 'Charlotte Brontë', age: 38 },
+        { name: 'Emily Brontë', age: 30 },
+        { name: 'Anne Brontë', age: 29 },
+        { name: 'Mark Twain', age: 74 },
+        { name: 'Henry David Thoreau', age: 44 },
+        { name: 'Ralph Waldo Emerson', age: 78 },
+        { name: 'Nathaniel Hawthorne', age: 59 },
+        { name: 'Edgar Allan Poe', age: 40 },
+        { name: 'Herman Melville', age: 72 },
+        { name: 'Walt Whitman', age: 72 },
+        { name: 'Frederick Douglass', age: 77 },
+        { name: 'Harriet Tubman', age: 93 },
+        { name: 'Susan B. Anthony', age: 86 },
+        { name: 'Elizabeth Cady Stanton', age: 86 },
+        { name: 'Edward Blackwell', age: 62 },
+        { name: 'Margaret Cavendish', age: 49 },
+        { name: 'Philip Stanhope', age: 58 },
+        { name: 'Catherine Montague', age: 67 },
+        { name: 'Isabella Bird', age: 73 },
+        { name: 'Jonathan Swift', age: 77 },
+        { name: 'Harriet Spencer', age: 54 },
+        { name: 'William Godwin', age: 80 },
+        { name: 'Lydia Larkin', age: 46 },
+        { name: 'Charles Lamb', age: 59 },
+        { name: 'Emily Fairfax', age: 38 },
+        { name: 'George Whitfield', age: 55 },
+        { name: 'Anne Radcliffe', age: 64 },
+        { name: 'Henry Fielding', age: 47 },
+        { name: 'Sophia Lee', age: 51 },
+        { name: 'Oliver Goldsmith', age: 45 },
+        { name: 'Matilda Gregory', age: 60 },
+        { name: 'Nathaniel Hawthorne', age: 60 },
+        { name: 'Lucas Pemberton', age: 70 },
+        { name: 'Caroline Herschel', age: 85 },
+        { name: 'Robert Sterling', age: 62 },
+        { name: 'Eliza Parsons', age: 78 },
+        { name: 'James Fenimore Cooper', age: 61 },
+        { name: 'Walter Scott', age: 61 },
+        { name: 'Maria Edgeworth', age: 81 },
+        { name: 'Maurice Moran', age: 53 },
+        { name: 'Jose Singleton', age: 92 },
+        { name: 'Michael Moore', age: 99 },
+        { name: 'Mr. Thomas Nichols Jr.', age: 46 },
+        { name: 'Timothy Hansen', age: 19 },
+        { name: 'Mrs. Samantha Smith', age: 30 },
+        { name: 'Brandon Jones', age: 65 },
+        { name: 'Heather Garcia', age: 88 },
+        { name: 'Brian Lee', age: 77 },
+        { name: 'Nicole Martinez', age: 21 },
+        { name: 'Mr. Joseph Wright DDS', age: 59 },
+        { name: 'Brittany Wilson', age: 45 },
+        { name: 'Christopher Johnson', age: 34 },
+        { name: 'Dr. Angela Harris MD', age: 38 },
+        { name: 'Ashley White', age: 72 },
+        { name: 'Patricia Thompson', age: 84 },
+        { name: 'Daniel Brown', age: 29 },
+        { name: 'Jessica Clark', age: 62 },
+        { name: 'Aaron Anderson', age: 27 },
+        { name: 'Emily Davis', age: 40 },
+        { name: 'David Martinez', age: 53 },
+        { name: 'Melissa Rodriguez', age: 48 },
+        { name: 'Kevin Garcia', age: 31 },
+        { name: 'Elizabeth Martinez', age: 25 },
+        { name: 'Michael Smith', age: 54 },
+        { name: 'Jennifer White', age: 67 },
+        { name: 'Joshua Brown', age: 85 },
+        { name: 'Amanda Johnson', age: 23 },
+        { name: 'James Wilson', age: 36 },
+        { name: 'Sarah Martin', age: 78 },
+        { name: 'Andrew Taylor', age: 42 },
+        { name: 'Jessica Thomas', age: 95 },
+        { name: 'Ryan Anderson', age: 39 },
+        { name: 'Laura Jackson', age: 50 },
+        { name: 'Brandon Williams', age: 29 },
+        { name: 'Megan Brown', age: 31 },
+        { name: 'Justin Martinez', age: 64 },
+        { name: 'Emily White', age: 87 },
+        { name: 'Matthew Johnson', age: 46 },
+        { name: 'Nicole Davis', age: 58 },
+        { name: 'Christopher Wilson', age: 75 },
+        { name: 'Elizabeth Taylor', age: 22 },
+        { name: 'Michael Brown', age: 33 },
+        { name: 'Jessica Smith', age: 41 },
+        { name: 'Daniel Williams', age: 49 },
+        { name: 'Ashley Johnson', age: 60 },
+        { name: 'Jennifer Davis', age: 90 },
+        { name: 'Joseph Wilson', age: 35 },
+        { name: 'Michelle Taylor', age: 44 },
+        { name: 'Ryan White', age: 52 },
+        { name: 'Christopher Brown', age: 68 },
+        { name: 'Sarah Johnson', age: 80 },
+        { name: 'James Davis', age: 93 },
+        { name: 'John Smith', age: 27 },
+        { name: 'Lisa White', age: 34 },
+        { name: 'Kevin Johnson', age: 47 },
+        { name: 'Elizabeth Brown', age: 56 },
+        { name: 'Matthew Wilson', age: 65 },
+        { name: 'Jessica Taylor', age: 72 },
+        { name: 'Daniel Martinez', age: 81 },
+        { name: 'Michael Jackson', age: 89 },
+        { name: 'Ashley Thomas', age: 98 },
+        { name: 'Jennifer Harris', age: 24 },
+        { name: 'Joseph Martin', age: 31 },
+        { name: 'Michelle Anderson', age: 43 },
+        { name: 'Ryan White', age: 51 },
+        { name: 'Christopher Jones', age: 63 },
+        { name: 'Elizabeth Wilson', age: 70 },
+        { name: 'Michael Taylor', age: 82 },
+        { name: 'Jessica Brown', age: 91 },
+        { name: 'Daniel Smith', age: 26 },
+        { name: 'Ashley Johnson', age: 37 },
+        { name: 'Jennifer Davis', age: 49 },
+        { name: 'Joseph Wilson', age: 55 },
+        { name: 'Michelle Taylor', age: 61 },
+        { name: 'Ryan Brown', age: 74 },
+        { name: 'Christopher Martinez', age: 83 },
+        { name: 'Elizabeth Jackson', age: 92 },
+        { name: 'Michael Thomas', age: 28 },
+        { name: 'Jessica Harris', age: 36 },
+        { name: 'Daniel Martin', age: 45 },
+        { name: 'Ashley Anderson', age: 53 },
+        { name: 'Jennifer Jones', age: 66 },
+        { name: 'Joseph Wilson', age: 71 },
+        { name: 'Michelle White', age: 85 },
+        { name: 'Ryan Smith', age: 94 },
+        { name: 'Christopher Johnson', age: 32 },
+        { name: 'Elizabeth Davis', age: 40 },
+        { name: 'Michael Wilson', age: 57 },
+        { name: 'Jessica Taylor', age: 64 },
+        { name: 'Daniel Brown', age: 78 },
+        { name: 'Ashley Martinez', age: 86 },
+        { name: 'Jennifer White', age: 97 },
+        { name: 'Joseph Smith', age: 23 },
+        { name: 'Michelle Johnson', age: 38 },
+        { name: 'Ryan Davis', age: 47 },
+        { name: 'Christopher White', age: 59 },
+        { name: 'Elizabeth Taylor', age: 69 },
+        { name: 'Michael Brown', age: 79 },
+        { name: 'Jessica Johnson', age: 88 },
+        { name: 'Daniel Wilson', age: 96 },
+        { name: 'Ashley Smith', age: 20 },
+        { name: 'Jennifer Martinez', age: 30 },
+        { name: 'Joseph Davis', age: 48 },
+        { name: 'Michelle White', age: 56 },
+        { name: 'Ryan Johnson', age: 67 },
+        { name: 'Christopher Brown', age: 73 },
+        { name: 'Elizabeth Martinez', age: 84 },
+        { name: 'Michael Wilson', age: 90 },
+        { name: 'Jessica Taylor', age: 18 },
+        { name: 'Daniel Smith', age: 29 },
+        { name: 'Ashley Johnson', age: 39 },
+        { name: 'Jennifer White', age: 50 },
+        { name: 'Joseph Brown', age: 60 },
+        { name: 'Michelle Davis', age: 75 },
+        { name: 'Ryan Wilson', age: 82 },
+        { name: 'Christopher Taylor', age: 87 },
+        { name: 'Elizabeth Brown', age: 93 },
+        { name: 'Michael Johnson', age: 25 },
+        { name: 'Jessica Martinez', age: 35 },
+        { name: 'Daniel White', age: 44 },
+        { name: 'Ashley Smith', age: 52 },
+        { name: 'Jennifer Brown', age: 68 },
+        { name: 'Joseph Wilson', age: 76 },
+        { name: 'Michelle Taylor', age: 83 },
+        { name: 'Ryan Brown', age: 91 },
+        { name: 'Christopher Martinez', age: 27 },
+        { name: 'Elizabeth Jackson', age: 33 },
+        { name: 'Michael Thomas', age: 41 },
+        { name: 'Jessica Harris', age: 58 },
+        { name: 'Daniel Martin', age: 69 },
+        { name: 'Ashley Anderson', age: 77 },
+        { name: 'Jennifer Jones', age: 86 },
+        { name: 'Joseph White', age: 94 },
+        { name: 'Michelle Smith', age: 22 },
+        { name: 'Ryan Johnson', age: 32 },
+        { name: 'Christopher Davis', age: 46 },
+        { name: 'Elizabeth Wilson', age: 54 },
+        { name: 'Michael Brown', age: 63 },
+        { name: 'Jessica Taylor', age: 71 },
+        { name: 'Daniel Martinez', age: 80 },
+        { name: 'Ashley White', age: 89 },*/
+      ];
+      // cspell: enable
+      const temp2 = structuredClone(temp.toReversed());
+      temp2.forEach(person => person.name = person.name.split('').reverse().join(''));
+      const people = [...temp/*, ...temp2*/];
+      this.people = people.map((person, id) => ({...person, id}));
+      this.#els.myInput.focus();
+    }
+    // input event handler for input field
+    #testme(event, data) {
+      //console.log('#testme');
+    }
+    #removeRouterCheck;
+    connected() {
+      this.#removeRouterCheck = router.onChange((...args) => this.#checkPath(...args));
+      this.#checkPath();
+    }
+    disconnected() {
+      if (this.#removeRouterCheck) {
+        this.#removeRouterCheck();
+        this.#removeRouterCheck = null;
+      }
+    }
+    #checkPath(...args) {
+      //console.log('#checkPath');
+      //console.log(window.location.pathname);
+    }
+    #clickItem(event, data, index, item) {
+      const temp = this.people;
+      temp.splice(index, 1);
+      this.people = temp;
+    }
+    #reverse(event, data) {
+      this.people = this.people.reverse();
+    }
+    #sort(event, data) {
+      this.people = this.people.sort((a, b) => enCollator.compare(a.name, b.name));
+    }
+    #add(event, data) {
+      const newItem = { name: this.#input, age: Math.round(Math.random() * 100), id: `k${this.#newId++}` }
+      this.people = [...this.people, newItem];
+      this.#input = '';
+      this.#els.myInput.focus();
+    }
+    #funnyBone(event, data, index, item) {
+      // console.log('#funnyBone');
+    }
+  </script>
+</component>

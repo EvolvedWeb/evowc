@@ -2,7 +2,7 @@
   :format="object:{weekday:'long',year:'numeric',month:'long',day:'numeric'}"
   :locale
   :timestamp="date:var:new Date()"
-  :#localetime>
+  :#localeTime>
   <template>
     <button .click="#setLocale" data-locale="en">EN</button>
     <button .click="#setLocale" data-locale="fr">FR</button>
@@ -10,7 +10,7 @@
     <button .click="#setLocale" data-locale="es">ES</button>
     <button .click="#setLocale" data-locale="cs">CS</button>
     <button .click="#setLocale" data-locale="ja">JA</button><br/>
-    <span :text="#localetime"></span>
+    <span :text="#localeTime"></span>
   </template>
   <script>
     update() {
@@ -18,7 +18,7 @@
         const locale = this.locale || document.documentElement.lang || navigator.language;
         const format = this.format || { month: '2-digit', day: '2-digit', year: 'numeric' };
         const formatter = new Intl.DateTimeFormat(locale, format);
-        this.#localetime = formatter.format(this.timestamp);
+        this.#localeTime = formatter.format(this.timestamp);
       }
     }
 

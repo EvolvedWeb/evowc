@@ -1,6 +1,5 @@
 <component tag="wc-loop"
   :add-button-text="str:Add"
-  :person="obj<Person>"
   :reverse-button-text="str:Reverse"
   :sort-button-text="str:Sort"
   :people="arr<Person>"
@@ -50,11 +49,7 @@
   </script>
   <script>
     init() {
-      this.person = {
-        name: 'Frank n Stein',
-        age: 987,
-        key: 'frank'
-      }
+      // cspell: disable
       /** @type {Person[]} */
       this.people = [
         { name: 'Harry Potter', age: 27, key: 1 },
@@ -161,6 +156,7 @@
         { name: 'Balin', age: 202, key: 100 }
       ];
       */
+      // cspell: enable
       this.#els.myInput.focus();
     }
     #clickItem(event, data, index, item) {

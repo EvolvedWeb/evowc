@@ -1,10 +1,13 @@
 const PORT = 23456;
-const path = require('path');
-const evowc = require('./lib/evowc.js');
-const express = require('express');
-const bodyParser = require('body-parser');
+// @ts-ignore
+import * as path from 'node:path';
+import { evowc } from './lib/evowc.js';
+import express from 'express';
+import bodyParser from 'body-parser';
+import { fileURLToPath } from 'node:url';
 
-const { allowedNodeEnvironmentFlags } = require('process');
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 app.use(express.static('static'));

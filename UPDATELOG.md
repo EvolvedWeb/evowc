@@ -1,5 +1,50 @@
 # Updates to EVO-WC
 
+
+## Version 1.1.0 - 2024-03-06
+
+* Resolves #12 - Handle "c" capture, "p" passive and "1" once for event handlers. Prevents passive & auto-calling preventDefault()
+* Resolves #24 - Added onUpdate method in base class to allow a callback to be called when a specific CPA is changed
+* Resolves #28 - New logo included. One for on dark background and one for on light backgrounds
+* Resolves #48 - Added a way to define additional element tags that should not be minified.
+* Resolves #61 - Added a filter to the router.onUpdate method
+* Resolves #62 - We now pass in relevant information about the current route.
+* Resolves #65 - EvoRouter now properly handles trailing /
+* Resolves #66 - All the source files are not ESM based.
+* Resolves #67 - Comments for a looped variable name are now accurate
+* Resolves #68 - Now looped Event Handlers use the correct variable names
+* Resolves #69 - All tests are now ESM
+* Resolves #71 - We now pass in relevant information about the current route into the public method navParams if it exists.
+* Resolves #73 - Unit tests are now over 80%
+* Resolves #74 - WcDialogElement now has a common way to handle busy, aria-busy, and inert.
+* Resolves #75 - Updated the default Evo pipes to include: toUpper, toLower, toJson, toCurrency, toDate, toDecimal, toPercent
+* Added watch to the demo/test app
+* Changed how the SystemDialogElement dialogs are loaded. The functions to open them now use ESM instead of adding them to "window"
+* Removed `console.log` lines
+* Added new logos
+* Deprecated "router.onUpdate" and renamed it to "router.onChange". "router.onUpdate" will still work until version 2.0.0
+* Updates to README.md and UPDATELOG.md
+* Changed from tsconfig.json to jsconfig.json since we use JSDOC types instead of TypeScript.
+* Cleaned up the "selected" feature of the <wc-a> element
+* Updated the RouteNotFoundElement.html file to include an SVG image.
+* Added lost of comment from conversations with chatGPT on various improvements to the routing and dialogs.
+* Added ability to remove/delete elements that are router targets when the developer adds the attribute `auto-delete` or `auto-delete="<minutes>"` to `<wc-route>` to help save memory
+* Added parseQueryParams to EvoRouter.js file to convert query params into an object.
+* Improved `Camel to Kebab` and `Kebab to Camel` routines to better handle i18n words.
+* Lots of spelling corrections and updates to cspell.json
+* Added several sections of "// cspell disable" for things that do not need to be spell checked
+* Improved support for for loops in preparation to allow sub loops.
+* Added router support for hashchange events
+* Updated chai, eslint, fast-xml-parser, mocha, and express.
+* Updated the slideshow and moved the slideshow pages into a separate file.
+* Updated several components to use `this.onUpdate` instead of a generic `update` method.
+* Updated some components to better use CSS variables.
+* Added several flavors of the logo
+* Added a common `getLocal` method in the pipes to default to the page or to the browser locale.
+* Changed from `sinon` to `nock`
+* Changed from `nyc` to `c8`
+* Changed from `proxyquire` to `esmock`
+
 ## Version 1.0.0 - 2023-11-20
 
 * Resolved #60 - Improved Docs on Evowc.com website.
@@ -17,9 +62,9 @@
 
 * Updated EvoElement.js
   * Resolves #17 - Each component now only identifies the elements that belong to that specific component. This is accomplished by each component adding, at runtime, a component ID (denoted by the `_cid` attribute) to each tag that has an `el` attribute. This ensures we only find the elements related to this component and not the child components.
-  * Modified the conditional to operate with `truthy`/`falsey` values, not just `true`/`false`.
+  * Modified the conditional to operate with `truthy`/`falsy` values, not just `true`/`false`.
   * The `attributeChangedCallback` now sets properties within a `setTimeout` to avoid infinite loops.
-  * Minor cleanup, added jsdocs types, and included `@ts-ignore`.
+  * Minor cleanup, added JSDOC types, and included `@ts-ignore`.
 * Updated WcAElement.html
   * Set `target="_blank"` if it is not already set and we are linking to an external website.
   * Adopted the use of `--wc-a-color`, `--wc-a-bgcolor`, `--wc-a-decoration`, and `--wc-a-hover-decoration`. All other values can be adjusted using `wc-a::part(a)`.
@@ -41,7 +86,7 @@
 * Resolves #19 - Added versioning that creates a folder called `Evo-1.2.3` in which the `Evo*.js` files are placed. The value for `1.2.3` will be the current version of Evo.
 * Resolves #38 - Enhanced `evowc init` functionality to facilitate the creation of a comprehensive example website with integrated routing.
 * Resolves #39 - Added `evowc update` to supply new versions of the Evo*.js files.
-* Updated all dependancies.
+* Updated all dependencies.
 * Updated version to 0.7.0
 
 ## Version 0.6.0 - 2023-09-27 - *** Breaking Changes ***
@@ -83,9 +128,9 @@
   * Specify minification or not of HTML and CSS
   * Add debug info or not - This is not supported in the code yet.
   * Ability to change the default output file extension.
-* Updated several dependancies
+* Updated several dependencies
 * Started updating the Readme and breaking it up into multiple files.
-* Added a tsconfig.json file. - Evo is not written in TypeScript, but I use its error checking with jsdocs typed
+* Added a tsconfig.json file. - Evo is not written in TypeScript, but I use its error checking with JSDOC types
 * To allow a component with just raw text and more elements I changed from
   * [...tempEl.children].forEach(el => this.#rootDom.appendChild(el)); to
   * [...tempEl.childNodes].forEach(el => this.#rootDom.appendChild(el));
@@ -105,7 +150,7 @@
 * Added code to generate JSDocs in the output source code.
 * Added code to allow a Type for arrays and Object `:list="arr<Person>"
 * Added the ability to add JSDoc types into the root script block
-* andling setting CPA properties on looped elements
+* Handling setting CPA properties on looped elements
 * Breaking out the bindings and events for loops
 * Improved names of some constants to be more accurate.
 * Dates and Objects now use the same compare routine.
@@ -147,12 +192,12 @@
 * Added support for longer and shorter type names, like `num` and `number` or `str` and `string`
 * Moved more startup data into the options object
 * Correctly update/insert styles when component moves parents
-* Updated to most recent dependancies
+* Updated to most recent dependencies
 
 ## version 0.3.0 - 2023-03-01 - *** Breaking Changes ***
 
 * Changed the conditionals from `:if` and `:switch` to `$if` and `$switch` to allow `:if` and `:switch` to be used as bindings.
-* Added ability to set attributes on the component by addint a `+` to the property definition attribute like `:+show`
+* Added ability to set attributes on the component by adding a `+` to the property definition attribute like `:+show`
 * All property definition attribute must now be lower case or lower snake-case.
 * `$if` and `$switch` can now use either the property definition attribute name or the property name. Like `$if="#dog-food"` or `$if="#dogFood"`
 * Updated README.md to match changes
@@ -170,7 +215,7 @@ Normally I would update the major version for breaking changes, but I am not rea
 
 ## Version 0.1.2 - 2023-02-13
 
-* The function `update` is now given the name of the propery that was changed just before calling `update`.
+* The function `update` is now given the name of the property that was changed just before calling `update`.
 * Updated README.md
 
 

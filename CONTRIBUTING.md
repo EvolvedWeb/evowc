@@ -26,11 +26,11 @@ If you know how to code, we welcome you to send fixes and new features, but in o
 - Push to your forked repo;
 - Make your pull request.
 
-> Evo is written in raw JavaScript and not in TypeScript, CoffeScript. Please do not submit any PRs with code other than JavaScript. We do utilize JSDocs types in the code to help editors provide quality assistance. Make sure to include JSDocs types in your PRs.
+> Evo is written in raw JavaScript and not in TypeScript, CoffeeScript. Please do not submit any PRs with code other than JavaScript. We do utilize JSDOC types in the code to help editors provide quality assistance. Make sure to include JSDocs types in your PRs.
 
 ### Developing
 
-You can create component template files in the Evo-WC project and incorporate them into yout test html file that are served in the test server. Or you can write your components in your own projects. If you are writing components inthe Evo-WC project then you can run the following command as you make changes and then refresh your browser.
+You can create component template files in the Evo-WC project and incorporate them into your test html file that are served in the test server. Or you can write your components in your own projects. If you are writing components in the Evo-WC project then you can run the following command as you make changes and then refresh your browser.
 
 ```sh
 npm build

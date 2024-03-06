@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Conmponent Tester</title>
+  <title>Component Tester</title>
   <style>
     html {
       height: 100vh;
@@ -139,9 +139,9 @@ th {
   :timestamp="date"
   :locale="string"
   :format="object:{weekday:'long',year:'numeric',month:'long',day:'numeric'}"
-  :#localetime>
+  :#localeTime>
   <template>
-    <span :text="#localetime" :style="locale"></span>
+    <span :text="#localeTime" :style="locale"></span>
   </template>
   <script>
   update() {
@@ -150,15 +150,15 @@ th {
       const format = this.format || { month: '2-digit', day: '2-digit', year: 'numeric' };
       const formatter = new Intl.DateTimeFormat(locale, format);
       const newStr = formatter.format(this.timestamp);
-      if (this.#localetime !== newStr) {
-        this.#localetime = newStr;
+      if (this.#localeTime !== newStr) {
+        this.#localeTime = newStr;
       }
     }
   }
 
   toString() {
     this.update();
-    return this.#localetime;
+    return this.#localeTime;
   }
   </${'script'}>
 </component>`;

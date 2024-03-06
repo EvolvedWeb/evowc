@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "module": "NodeNext",
+    "target": "ESNext",
+    "checkJs": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "baseUrl": ".",
+    "types": ["node","mocha"],
+    "paths": {"*": ["node_modules/*"]}
+  },
+  "include": [
+    "./bin/*.js",
+    "lib/**/*.js",
+    "./static/js/*.js",
+    "./app.js"
+  ],
+  "exclude": [ "node_modules", "**/node_modules/*" ]
+}

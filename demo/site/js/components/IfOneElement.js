@@ -11,7 +11,7 @@ const componentName = 'IfOneElement';
 
 //************************************************************************************
 // Template string
-const template = `<div>this.state is currently set to <span js=el1></span></div> <button js=el2>Toggle</button> <div class=red js=el3>TRUE - This shows if this.state is set to true. <p>Go watcha fun movie!</p> </div> <div class=blue js=el5>FALSE - If this.state is set to false then this shows. <p>Listen to an audio book.</p> </div>`;
+const template = `<div>this.state is currently set to <span js=el1></span></div> <button js=el2>Toggle</button> <div class=red js=el3>TRUE - This shows if this.state is set to true. <p>Go watch a fun movie!</p> </div> <div class=blue js=el5>FALSE - If this.state is set to false then this shows. <p>Listen to an audio book.</p> </div>`;
 
 //************************************************************************************
 // Styles string

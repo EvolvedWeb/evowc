@@ -1,0 +1,36 @@
+{
+  "all": true,
+  "cache": false,
+  "check-coverage": true,
+  "instrument": true,
+  "eager": true,
+  "per-file": false,
+  "report-dir": "coverage/mocha",
+  "extension": [".js"],
+  "require": [],
+  "exclude": [
+    "lib/**/*.mocha.js",
+    "lib/**/*.mocha-errors.js",
+    "static/js/*.mocha.js",
+    "static/js/*.mocha-errors.js",
+    "lib/watch.js"
+  ],
+  "include": [
+    "lib/**/*.js",
+    "static/js/*js"
+  ],
+  "reporter": [
+    "lcov",
+    "text-summary"
+  ],
+  "lines": 60,
+  "functions": 60,
+  "branches": 55,
+  "statements": 60,
+  "watermarks": {
+    "lines": [60, 75],
+    "functions": [60, 75],
+    "branches": [55, 75],
+    "statements": [60, 75]
+  }
+}

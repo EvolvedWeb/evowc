@@ -27,6 +27,9 @@
     wc-a:hover:not([selected]) {
       background-color: var(--inactiveHoverColor);
     }
+    wc-a::part(a) {
+      padding: 4px 8px;
+    }
     .holder {
       border-bottom: 1px solid black;
       display: flex;
@@ -39,29 +42,20 @@
   <div class="holder">
     <wc-a href="/test/one">Page 1</wc-a>
     <wc-a href="/test/two">Page 2</wc-a>
-    <wc-a href="/test/three">Page 3</wc-a>
+    <wc-a href="/test/three/">Page 3</wc-a>
     <wc-a href="/test/four">Page 4</wc-a>
+    <wc-a href="/test/five">Page 5</wc-a>
   </div>
   <wc-router>
     <wc-route href="/test/one" element="route-one" import="./RouteOneElement.js"></wc-route>
-    <wc-route href="/test/two" element="route-two" import="./RouteTwoElement.js"></wc-route>
+    <wc-route href="/test/two/" element="route-two" import="./RouteTwoElement.js" auto-delete></wc-route>
     <wc-route href="/test/three" element="route-three" import="./RouteThreeElement.js"></wc-route>
-    <wc-route href="(.*)" element="route-not-found" redirect="" import="./RouteNotFoundElement.js"></wc-route>
+    <wc-route href="/test/four/:page?" element="route-four" import="./RouteFourElement.js"></wc-route>
+    <wc-route href="(.*)" element="route-not-found" import="./RouteNotFoundElement.js" auto-delete="2"></wc-route>
   </wc-router>
-  <hr/>
-  <hr/>
-  <h-i></h-i>
-  <input type="checkbox" id="mine" />
   <script type="module">
-    import '../js/components/HIElement.js';
-    import '../js/components/WcAElement.js';
-    import '../js/components/WcRouterElement.js';
-
-    const handler = msg => e => console.log(msg, e.target.checked, e);
-    const cb = document.getElementById('mine');
-    cb.addEventListener('click', handler('click'));
-    cb.addEventListener('input', handler('input'));
-    cb.addEventListener('change', handler('change'));
+    import '/js/components/WcAElement.js';
+    import '/js/components/WcRouterElement.js';
   </script>
 </body>
 </html>

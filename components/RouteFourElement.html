@@ -1,0 +1,20 @@
+<component tag="route-four" shadow="none">
+  <template>
+    <div>
+      <wc-a href="/test/four">/test/four</wc-a>
+      <wc-a href="/test/four/">/test/four/</wc-a>
+      <wc-a href="/test/four/fish">/test/four/fish</wc-a>
+      <wc-a href="/test/four/whale/">/test/four/whale/</wc-a>
+    </div>
+    <loop-test></loop-test>
+  </template>
+  <script root>
+    import './LoopTest.js';
+  </script>
+  <script>
+    navParams(value) {
+      console.log(`navParams set to`)
+      console.log(value);
+    }
+  </script>
+</component>
