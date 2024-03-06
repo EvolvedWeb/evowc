@@ -58,7 +58,7 @@ export function setAttr(el, attr, value) {
   if (!(el instanceof HTMLElement)) {
     throw new Error('Invalid element provided to setAttr');
   }
-  if (typeof attr != 'string' || attr.length == 0) {
+  if (typeof attr != 'string' || attr.length === 0) {
     throw new Error('Invalid attr provided to setAttr');
   }
 

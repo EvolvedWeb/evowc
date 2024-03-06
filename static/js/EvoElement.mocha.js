@@ -14,6 +14,7 @@ let qsAll = [];
 
 const STYLE_QS_RE = /style\[component="(?<name>[^"]*)"\]/;
 const ELS_RE = /\[_cid="(?<cid>[^"]+)"\]/;
+// eslint-disable-next-line no-unused-vars
 function locateElElements(el, cid) {
   return [];
 }
@@ -184,9 +185,9 @@ class HTMLElement extends EventTarget {
     } while( idx !== -1)
   }
   createComment(data) {
-    const comment = new HTMLElement(data);
-    comment.data = data;
-    return comment;
+    const commentEl = new HTMLElement(data);
+    commentEl.data = data;
+    return commentEl;
   }
   createElement(type) {
     const el = new HTMLElement(type);
@@ -215,6 +216,7 @@ class HTMLElement extends EventTarget {
 // @ts-ignore
 global.HTMLElement = HTMLElement;
 
+// eslint-disable-next-line no-unused-vars
 function JSONReplacer(key, value) {
   if (key === 'parent' && value != null) {
     return '<--- recursion'; // Exclude 'parent' from JSON

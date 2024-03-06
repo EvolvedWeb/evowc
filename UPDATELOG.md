@@ -1,7 +1,7 @@
 # Updates to EVO-WC
 
 
-## Version 1.1.0 - 2024-03-??
+## Version 1.1.0 - 2024-03-06
 
 * Resolves #12 - Handle "c" capture, "p" passive and "1" once for event handlers. Prevents passive & auto-calling preventDefault()
 * Resolves #24 - Added onUpdate method in base class to allow a callback to be called when a specific CPA is changed
