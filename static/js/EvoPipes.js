@@ -58,9 +58,9 @@ export const toJson = (item) => JSON.stringify(item);
  * Example: <span :text="varName|toCurrency" data-currency="USD" data-locale="en-US"></span>
  */
 export function toCurrency(num, data) {
-  const { currency = 'USD', locale = 'en-US' } = data;
+  let { currency = 'USD', locale } = data;
   const options = { style: 'currency', currency };
-  return new Intl.NumberFormat(locale, options).format(Number(num));
+  return new Intl.NumberFormat(getLocale(locale), options).format(Number(num));
 }
 
 /**
@@ -90,14 +90,14 @@ export function toCurrency(num, data) {
  * data-time-zone="America/Los_Angeles" data-locale="en-us"></span>
  */
 export function toDate(date, data) {
-  let { dateStyle = 'short', timeZone = undefined, locale = 'en-US' } = data;
+  let { dateStyle = 'short', timeZone = undefined, locale } = data;
   date = new Date(date);
   if (!VALID_DATE_STYLES.includes(dateStyle)) {
     return toFormattedDate(date, locale, timeZone, dateStyle);
   }
   const options = { dateStyle, timeZone };
   // @ts-ignore
-  return new Intl.DateTimeFormat(locale, options).format(date)
+  return new Intl.DateTimeFormat(getLocale(locale), options).format(date)
 }
 
 /**
@@ -109,14 +109,14 @@ export function toDate(date, data) {
  * Example: <span :text="varName|toDecimal" data-locale="en-US" data-decimal-format="1.2-2"></span>
  */
 export function toDecimal(num, data) {
-  const { locale = 'en-US', decimalFormat = '1.0-3' } = data || {};
+  const { locale, decimalFormat = '1.0-3' } = data || {};
   const { minIntDigits, minFracDigits, maxFracDigits } = getDecimalSizes(decimalFormat);
   const options = {
     minimumIntegerDigits: minIntDigits || 1,
     minimumFractionDigits: minFracDigits || 0,
     maximumFractionDigits: maxFracDigits || Math.max(3, minFracDigits || 0)
   }
-  return new Intl.NumberFormat(locale, options).format(Number(num));
+  return new Intl.NumberFormat(getLocale(locale), options).format(Number(num));
 }
 
 /**
@@ -128,7 +128,7 @@ export function toDecimal(num, data) {
  * Example: <span :text="varName|toPercent" data-locale="en-US" data-decimal-format="1.0-0"></span>
  */
 export function toPercent(num, data) {
-  const { locale = 'en-US', decimalFormat = '1.0-0' } = data || {};
+  const { locale, decimalFormat = '1.0-0' } = data || {};
   const { minIntDigits, minFracDigits, maxFracDigits } = getDecimalSizes(decimalFormat);
   const options = {
     style: 'percent',
@@ -136,10 +136,14 @@ export function toPercent(num, data) {
     minimumFractionDigits: minFracDigits || 0,
     maximumFractionDigits: maxFracDigits || Math.max(0, minFracDigits || 0)
   }
-  return new Intl.NumberFormat(locale, options).format(Number(num));
+  return new Intl.NumberFormat(getLocale(locale), options).format(Number(num));
 }
 
 // Helper functions
+function getLocale(locale) {
+  return locale || document?.documentElement?.lang || navigator?.language || 'en-US';
+}
+
 /**
  * Convert a format string into a formatted Date string.
  * @param {Date} date 

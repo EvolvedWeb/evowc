@@ -355,31 +355,32 @@
   <script>
     // Private properties that are not CPAs
     #observer;
-
-    // Internal functions
-    async update({cpa}) {
-      switch(cpa) {
-        case 'css':
-          this.#cssImport = `@import "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/${this.css}.min.css";`;
-          break;
-
-        case 'lang':
-          this.#doHighlight(this.textContent);
-          break;
-
-        case 'src':
-          if(this.src !== '') {
-            const resp = await fetch(this.src);
-            this.textContent = await resp.text();
-          }
-          break;
-      }
+    init() {
+      this.onUpdate('css', this.#cssUpdate)
+      this.onUpdate('lang', this.#langUpdate)
+      this.onUpdate('src', this.#srcUpdate)
     }
 
     connected() {
       this.#doHighlight(this.textContent);
       this.#observer = new MutationObserver((...args) => this.#mutationCallback(...args));
       this.#observer.observe(this, mutationConfig);
+    }
+
+    #cssUpdate() {
+      this.#cssImport = `@import "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/${this.css}.min.css";`;
+    }
+
+    #langUpdate() {
+      this.#doHighlight(this.textContent);
+    }
+
+    async #srcUpdate() {
+      if(this.src !== '') {
+        this.textContent = '';
+        const resp = await fetch(this.src);
+        this.textContent = await resp.text();
+      }
     }
 
     #mutationCallback(mutationsList, observer) {

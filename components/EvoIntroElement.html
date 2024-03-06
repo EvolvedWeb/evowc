@@ -1,12 +1,50 @@
 <component tag="evo-intro">
+  <script root>
+    import { router } from "../EvoRouter.js";
+    import "./WcAElement.js"
+  </script>
   <template>
     <section>
-      <h1>Evo-WC</h1>
-      <h2>Evolved - Web Components</h2>
-      <h3>Without all the boilerplate</h3>
+      <h1>Evo-wc</h1>
+      <h2>Evolved Web - Web Components</h2>
+      <h3>Write what you need without all the boilerplate</h3>
     </section>
     <h4><wc-a href="/slideshow/0">Michael Collins - 08/15/2023</wc-a></h4>
   </template>
+  <script>
+    #routeUnChange = null;
+    #unAel = null;
+    connected() {
+      this.tabIndex = 0; // Allow Keyboard Events
+      this.#routeUnChange = router.onChange(() => this.#routeChanged());
+      this.#routeChanged();
+
+      // The following will be gone when we can add event listeners to the <template> tag
+      this.#unAel = ael(this, 'keydown', (evt) => this.#keyDownHandler(evt))
+    }
+
+    disconnected() {
+      if(this.#unAel) {
+        this.#unAel();
+        this.#unAel = null;
+      }
+      if (this.#routeUnChange) {
+        this.#routeUnChange();
+        this.#routeUnChange = null;
+      }
+    }
+
+    #keyDownHandler(evt) {
+      const { key } = evt;
+      if (['PageDown','ArrowDown'].includes(key)) {
+        router.navigate('/slideshow/0');
+      }
+    }
+
+    #routeChanged() {
+      this.focus();
+    }
+  </script>
   <style>
     @font-face {
       font-family: kingvoon;
@@ -15,6 +53,7 @@
     :host {
       background: black;
       bottom: 0;
+      color: #FFF;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
@@ -66,27 +105,4 @@
       --wc-a-visited-color: #FEFF2F;
     }
   </style>
-  <script root>
-    import {router} from "../EvoRouter.js";
-    import "./WcAElement.js"
-  </script>
-  <script>
-    init() {
-      this.tabIndex = 0; // Allow Keyboard Events
-      ael(this, 'keydown', (evt) => this.#keyHandler(evt))
-      router.onUpdate(() => this.#updateRoute());
-      this.#updateRoute();
-    }
-
-    #keyHandler(evt) {
-      const { key } = evt;
-      if (['PageDown','ArrowDown'].includes(key)) {
-        router.navigate('/slideshow/0');
-      }
-    }
-
-    #updateRoute() {
-      this.focus();
-    }
-</script>
 </component>

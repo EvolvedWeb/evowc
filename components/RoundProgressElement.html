@@ -1,18 +1,63 @@
+<!--
+** This component has a bug in version 1.1.0 that needs to be fixed.
+
+If only the value for the CPA `decimals` changes we do not rerender this DIV:
+<div class="text" :text="value|#toFixed">&nbsp;</div>
+
+Since the compiler does not know that `this.decimals` is used inside the
+pipe #toFixed the compiler does not update the textContent of the DIV.
+
+Yes, we can watch for the changing on the CPA `decimals`. But to get the updated
+and piped value of 'value' into the DIV we would have to set `this.value` to
+something different and then back to the correct value.
+-->
 <component tag="round-progress"
   :value="number:0"
   :decimals="int:0"
-  :line-color="string:#446688"
   :#range="string:0"
   :#moving
-  :#color-style>
+  :#colorStyle>
   <template>
     <section :attr.range="#range" :style="#colorStyle">
       <div class="solid-part"></div>
       <div class="moving-part" :style="#moving"></div>
       <div class="cover"></div>
-      <div class="text" data-fixed="3" :text="value|#toFixed">&nbsp;</div>
+      <div class="text" :text="value|#toFixed">&nbsp;</div>
     </section>
   </template>
+  <script>
+    init() {
+      this.onUpdate('value', this.#updateValue)
+    }
+    connected() {
+      const bgColor = this.#getHostBG(this);
+      this.#colorStyle = `--round-progress-default-bgcolor:${bgColor}`;
+    }
+    #updateValue() {
+      const rot = this.value * 2.70;
+      this.#range = (rot > 180) ? 2 : (rot > 90) ? 1 : 0;
+      this.#moving = `transform:rotate(${rot}deg)`;
+    }
+    #toFixed(val, data) {
+      return (+val).toFixed(this.decimals);
+    }
+    #getHostBG(el) {
+      let bgc = '#FFFFFF';
+      while(el) {
+        const { backgroundColor } = getComputedStyle(el);
+        if (backgroundColor != 'rgba(0, 0, 0, 0)') {
+          bgc = backgroundColor;
+          break;
+        }
+        el = el.parentElement;
+        if (el === document) {
+          break;
+        }
+      }
+
+      return bgc;
+    }
+  </script>
   <style>
     :host {
       display: inline-block;
@@ -39,18 +84,18 @@
       width: 100%;
     }
     .solid-part {
-      background-color: var(--round-progress-bgcolor, white);
+      background-color: var(--round-progress-bgcolor, var(--round-progress-default-bgcolor, white));
       border: 40px solid #EEE;
     }
     .moving-part {
-      border-bottom-color: var(--round-progress-color, #446688);
+      border-bottom-color: var(--round-progress-color, currentcolor);
     }
     [range="1"] .solid-part {
-      border-left-color: var(--round-progress-color, #446688);
+      border-left-color: var(--round-progress-color, currentcolor);
     }
     [range="2"] .solid-part {
-      border-top-color: var(--round-progress-color, #446688);
-      border-left-color: var(--round-progress-color, #446688);
+      border-top-color: var(--round-progress-color, currentcolor);
+      border-left-color: var(--round-progress-color, currentcolor);
     }
     .text {
       font: 36px Tahoma;
@@ -60,45 +105,9 @@
       transform: translate(-50%, -50%);
     }
     .cover {
-      border-bottom: 45px solid var(--round-progress-bgcolor, white);
+      border-bottom: 45px solid var(--round-progress-bgcolor, var(--round-progress-default-bgcolor, white));
       height: calc(100% + 1px);
       width: calc(100% + 1px);
     }
   </style>
-  <script>
-    #toFixed(val, data) {
-      return (+val).toFixed(this.decimals);
-    }
-
-    #getHostBG(el) {
-      const styles = window.getComputedStyle(el);
-      let bgColor = styles.backgroundColor;
-      if (bgColor === 'rgba(0, 0, 0, 0)') {
-        const parent = el.parentNode;
-        if (parent !== document) {
-          bgColor = this.#getHostBG(parent);
-        }
-        else {
-          bgColor = 'white';
-        }
-      }
-
-      return bgColor;
-    }
-
-    update({cpa}) {
-      switch (cpa) {
-        case 'value':
-          const rot = this.value * 2.70;
-          this.#range = (rot > 180) ? 2 : (rot > 90) ? 1 : 0;
-          this.#moving = `transform:rotate(${rot}deg)`;
-          break;
-
-        case 'lineColor':
-          const bgColor = this.#getHostBG(this);
-          this.#colorStyle = `--round-progress-color:${this.lineColor};--round-progress-bgcolor:${bgColor}`;
-          break;
-      }
-    }
-  </script>
 </component>

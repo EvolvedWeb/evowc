@@ -209,6 +209,7 @@ export const EvoElement = (baseClass = HTMLElement) => class extends baseClass {
   #componentName = '';
   #forList = {};
   #loopedEls = {};
+  #onUpdateList = {};
 
   createDom({ template='', styles='', shadowMode='open', componentName }) {
     this.#componentId = (++componentIndex).toString(36);
@@ -397,6 +398,63 @@ export const EvoElement = (baseClass = HTMLElement) => class extends baseClass {
         // an infinite loop when the property also sets the attribute.
         this[prop] = newVal;
       }, 1);
+    }
+  }
+
+  onUpdate(properties, callback) {
+    if (typeof callback !== 'function') {
+      throw new TypeError(`The callback must be a function.`)
+    }
+    if (!Array.isArray(properties)) {
+      properties = [properties];
+    }
+    properties.forEach(prop => {
+      if( typeof prop !== 'string') {
+        throw new TypeError(`The CPA (${prop}) must be a string.`)
+      }
+      this.#onUpdateList[prop] ??= [];
+      this.#onUpdateList[prop].push(callback);
+    });
+
+    return () => {
+      properties.forEach(prop => {
+        /** @type {function[]} */
+        const list = this.#onUpdateList[prop] ?? [];
+        /** @type {number} */
+        let index;
+        do {
+          index = list.findIndex(fn => fn === callback);
+          if (index !== -1) {
+            list.splice(index, 1);
+          }
+        } while(index !== -1);
+
+        if (list.length === 0) {
+          delete this.#onUpdateList[prop];
+          return;
+        }
+
+        this.#onUpdateList[prop] = list;
+      });
+    }
+  }
+  /**
+   * Call any functions that were registered in onUpdate for the specific property
+   * @param {object} [params={}] - The params set to the update method
+   * @param {string} params.cpa - The CPA name that was updated
+   * @param {any} params.oldVal - The previous value for this property
+   * @param {any} params.newVal - The new value for this property
+   * @returns {Promise<void>}
+   */
+  async processOnUpdateCallbacks(params = { cpa: null, oldVal: null, newVal: null} ) {
+    const { cpa } = params;
+    const list = this.#onUpdateList[cpa];
+    if (!list) {
+      return;
+    }
+
+    for (const func of list) {
+      await func.call(this, params);
     }
   }
 

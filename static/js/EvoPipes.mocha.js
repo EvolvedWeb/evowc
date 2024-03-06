@@ -1,7 +1,29 @@
 import { expect } from 'chai';
-import { toUpper, toLower, toJson, toCurrency, toDate, toDecimal, toPercent } from './EvoPipes.js';
+let toUpper;
+let toLower;
+let toJson;
+let toCurrency;
+let toDate;
+let toDecimal;
+let toPercent;
+
+// @ts-ignore
+global.document = {
+  documentElement: {
+    lang: null
+   }
+};
+// @ts-ignore
+global.navigator = {
+  language: 'en-US'
+};
 
 describe('EvoPipes tests', () => {
+  before(async () => {
+    const EvoPipes = await import('./EvoPipes.js');
+    ({ toUpper, toLower, toJson, toCurrency, toDate, toDecimal, toPercent } = EvoPipes);
+  });
+
   it('should handled toUpper(str)', () => {
     expect(toUpper('testing')).to.equal('TESTING');
     const source = 'áàâäãåāăąćčçćĉċèéêëēĕėęěğĝġģĥħìíîïīĩįiĳĵķĸĺļľŀłñńņňŉòóôöõøōŏőœĝŕřŗśŝşšţťŧùúûüũūŭůűųŵÿýŷźżžż';

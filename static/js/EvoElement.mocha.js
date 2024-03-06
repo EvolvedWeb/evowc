@@ -533,5 +533,91 @@ describe('EvoElement tests', () => {
         }, 10);
       });
     });
+
+    it('onUpdate/processOnUpdateCallbacks should work', async () => {
+      let thingUpdateIdx = 0
+      let thingUpdateExpected = {};
+      let testUpdateIdx = 0
+      let testUpdateExpected = {};
+      class Test extends EvoElement() {
+        init() {
+          this.remove1 = this.onUpdate('thing', this.#thingUpdate)
+          this.remove2 = this.onUpdate('thing', this.#thingUpdate2)
+          this.remove3 = this.onUpdate('test', this.#testUpdate)
+          expect(this.remove1).to.be.a('function');
+        }
+
+        #thingUpdate(params) {
+          expect(thingUpdateIdx).to.equal(0);
+          thingUpdateIdx = 1;
+          expect(params).to.eql(thingUpdateExpected)
+        }
+        #thingUpdate2(params) {
+          expect(thingUpdateIdx).to.equal(1);
+          thingUpdateIdx = 2;
+          expect(params).to.eql(thingUpdateExpected)
+        }
+        #testUpdate(params) {
+          testUpdateIdx++;
+          expect(params).to.eql(testUpdateExpected)
+        }
+      }
+
+      const test = new Test();
+      test.init();
+      thingUpdateExpected = {cpa: 'thing', oldVal: null, newVal: 'new'};
+      thingUpdateIdx = 0;
+      await test.processOnUpdateCallbacks(thingUpdateExpected);
+      expect(thingUpdateIdx).to.equal(2);
+
+      testUpdateExpected = { cpa: 'test', oldVal: 'new', newVal: 'this is a longer value' };
+      testUpdateIdx = 0;
+      await test.processOnUpdateCallbacks(testUpdateExpected);
+      expect(testUpdateIdx).to.equal(1);
+
+      thingUpdateExpected = { cpa: 'thing', oldVal: 'new', newVal: 'this is a longer value' };
+      thingUpdateIdx = 0;
+      if (typeof test.remove2 === 'function') {
+        test.remove2();
+      }
+      await test.processOnUpdateCallbacks(thingUpdateExpected);
+      expect(thingUpdateIdx).to.equal(1);
+
+      thingUpdateExpected = { cpa: 'thing', oldVal: 'new', newVal: 'this is a longer value' };
+      thingUpdateIdx = 0;
+      if (typeof test.remove1 === 'function') {
+        test.remove1();
+      }
+      await test.processOnUpdateCallbacks(thingUpdateExpected);
+      expect(thingUpdateIdx).to.equal(0);
+
+
+      testUpdateExpected = { cpa: 'test', oldVal: 'new', newVal: 'this is a longer value' };
+      testUpdateIdx = 0;
+      if (typeof test.remove3 === 'function') {
+        test.remove3();
+      }
+      await test.processOnUpdateCallbacks(testUpdateExpected);
+      expect(testUpdateIdx).to.equal(0);
+    });
+
+    it('onUpdate/processOnUpdateCallbacks should work', async () => {
+      class Test extends EvoElement() {
+        testUpdate() {
+          expect.fail('The method #testUpdate should not have been called');
+        }
+      }
+      const test = new Test();
+
+      function badCPA() {
+        test.onUpdate([1], test.testUpdate);
+      }
+      expect(badCPA).to.throw('The CPA (1) must be a string.');
+
+      function badCallback() {
+        test.onUpdate(['er'], null);
+      }
+      expect(badCallback).to.throw('The callback must be a function.');
+    });
   });
 });
