@@ -36,6 +36,11 @@
 * Improved support for for loops in preparation to allow sub loops.
 * Added router support for hashchange events
 * Updated chai, eslint, fast-xml-parser, mocha, and express.
+* Updated the slideshow and moved the slideshow pages into a separate file.
+* Updated several components to use `this.onUpdate` instead of a generic `update` method.
+* Updated some components to better use CSS variables.
+* Added several flavors of the logo
+* Added a common `getLocal` method in the pipes to default to the page or to the browser locale.
 * Changed from `sinon` to `nock`
 * Changed from `nyc` to `c8`
 * Changed from `proxyquire` to `esmock`
