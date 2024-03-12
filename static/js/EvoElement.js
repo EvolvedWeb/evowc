@@ -157,6 +157,14 @@ export function cond(el, commentEl, value, compare ) {
   }
 }
 
+export function sleep(timeout = 1) {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve();
+    }, timeout);
+  });
+}
+
 /**
  * Adds an event listener to an element with options for once, passive, and capture.
  * Returns a function to remove the event listener.
@@ -209,7 +217,8 @@ export const EvoElement = (baseClass = HTMLElement) => class extends baseClass {
   #componentName = '';
   #forList = {};
   #loopedEls = {};
-  #onUpdateList = {};
+  #onUpdateCallbackList = {};
+  #savedUpdates = {};
 
   createDom({ template='', styles='', shadowMode='open', componentName }) {
     this.#componentId = (++componentIndex).toString(36);
@@ -364,27 +373,40 @@ export const EvoElement = (baseClass = HTMLElement) => class extends baseClass {
     return event;
   }
 
-  connectedCallback() {
+  async connectedCallback() {
+    await this.#connectedOrAdopted();
+
+    // @ts-ignore
+    if(this.connected) this.connected();
+  }
+
+  async adoptedCallback() {
+    await this.#connectedOrAdopted();
+
+    // @ts-ignore
+    if(this.adopted) this.adopted();
+  }
+
+  async #connectedOrAdopted() {
     if (!this.#domAttached) {
       this.appendChild(this.#rootDom);
       this.#rootDom = this;
       this.#domAttached = true;
     }
+
     this.#insertStyles()
-    // @ts-ignore
-    if(this.update) this.update({});
-    // @ts-ignore
-    if(this.connected) this.connected();
+
+    // Process all saved CPA updates in the order received.
+    const onUpdateCallbacks = Object.values(this.#savedUpdates);
+    for (let i = 0; i < onUpdateCallbacks.length; i++) {
+      await this.callUpdate(onUpdateCallbacks[i]);
+    }
+    this.#savedUpdates = {};
   }
 
   disconnectedCallback() {
     // @ts-ignore
-    if(this.disconnected) this.disconnected();
-  }
-
-  adoptedCallback() {
-    // @ts-ignore
-    if(this.adopted) this.adopted();
+    if (this.disconnected) this.disconnected();
   }
 
   attributeChangedCallback(attr, oldVal, newVal) {
@@ -401,6 +423,11 @@ export const EvoElement = (baseClass = HTMLElement) => class extends baseClass {
     }
   }
 
+  // eslint-disable-next-line no-unused-vars
+  update(params) {
+    // Do nothing in the base class
+  }
+
   onUpdate(properties, callback) {
     if (typeof callback !== 'function') {
       throw new TypeError(`The callback must be a function.`)
@@ -412,14 +439,14 @@ export const EvoElement = (baseClass = HTMLElement) => class extends baseClass {
       if( typeof prop !== 'string') {
         throw new TypeError(`The CPA (${prop}) must be a string.`)
       }
-      this.#onUpdateList[prop] ??= [];
-      this.#onUpdateList[prop].push(callback);
+      this.#onUpdateCallbackList[prop] ??= [];
+      this.#onUpdateCallbackList[prop].push(callback);
     });
 
     return () => {
       properties.forEach(prop => {
         /** @type {function[]} */
-        const list = this.#onUpdateList[prop] ?? [];
+        const list = this.#onUpdateCallbackList[prop] ?? [];
         /** @type {number} */
         let index;
         do {
@@ -430,14 +457,15 @@ export const EvoElement = (baseClass = HTMLElement) => class extends baseClass {
         } while(index !== -1);
 
         if (list.length === 0) {
-          delete this.#onUpdateList[prop];
+          delete this.#onUpdateCallbackList[prop];
           return;
         }
 
-        this.#onUpdateList[prop] = list;
+        this.#onUpdateCallbackList[prop] = list;
       });
     }
   }
+
   /**
    * Call any functions that were registered in onUpdate for the specific property
    * @param {object} [params={}] - The params set to the update method
@@ -446,16 +474,40 @@ export const EvoElement = (baseClass = HTMLElement) => class extends baseClass {
    * @param {any} params.newVal - The new value for this property
    * @returns {Promise<void>}
    */
-  async processOnUpdateCallbacks(params = { cpa: null, oldVal: null, newVal: null} ) {
-    const { cpa } = params;
-    const list = this.#onUpdateList[cpa];
+  async callUpdate(params = { cpa: null, oldVal: null, newVal: null} ) {
+    const { cpa, newVal } = params;
+    const list = this.#onUpdateCallbackList[cpa];
     if (!list) {
+      // If there is no onUpdate handler for this CPA
+      //   then only call the update method and return.
+      if (this.isConnected) {
+        await this.update(params);
+        return;
+      }
+    }
+
+    if (this.isConnected) {
+      // If this component is connected then call on onUpdate callbacks.
+      if (list) {
+        for (const func of list) {
+          await func.call(this, params);
+        }
+      }
+
+      // And call the general update function.
+      await this.update(params);
       return;
     }
 
-    for (const func of list) {
-      await func.call(this, params);
+    // If this component is not connected then save this update object and return.
+    // If an entry for this CPA exists then change the saved `newVal` to this `newVal`
+    if (this.#savedUpdates[cpa]) {
+      this.#savedUpdates[cpa].newVal = newVal;
+      return;
     }
+
+    // Save the CPA, oldVal and newVal;
+    this.#savedUpdates[cpa] = params;
   }
 
   /**

@@ -1,64 +1,141 @@
-<component tag="wc-router" :#hide-all="bool:false">
-  <template>
-    <div el="container"></div>
-  </template>
-  <style>
-    :host {
-      display: block;
-      height: fit-content;
-      margin: 0;
-      padding: 0;
-      width: 100%;
-    }
-  </style>
+<component tag="wc-router"
+  :#useAria="bool:true"
+  :#ariaRouteName
+>
   <script root>
-    import { router } from "../EvoRouter.js";
+    import { router, parseQueryParams } from '../EvoRouter.js';
+    function sleep(timeout = 1) {
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          resolve();
+        }, timeout);
+      });
+    }
     const mutationConfig = {
       childList: true,
       subtree: true
     };
   </script>
+  <template>
+    <div $if="#useAria" aria-live="polite" :text="#ariaRouteName"></div>
+    <div el="container"></div>
+  </template>
   <script>
     #routes = [];
     #observer;
+    init() {
+      router.onChange((...args) => this.#updateRouteSelection(...args));
+      this.#processRouteTags();
+      /*
+      this.#observer = new MutationObserver((...args) => this.#mutationCallback(...args));
+      this.#observer.observe(this, mutationConfig);
+      */
+    }
 
-    #updateSelection() {
-      let found = false;
-      let unusedElements = [];
-      let okToRemove = true;
-      this.#routes.forEach(route => {
-        const show = route.re.exec(window.location.pathname);
-        if (found || !show) {
-          unusedElements.push(route.el);
-        }
-        else {
-          if(route.importFile) {
-            okToRemove = false;
-            import(route.importFile).then((...args) => {
-              delete route.importFile; // Remove this so it does not attempt to load a second time.
-              // TODO: 2023-06-20: Pass params into element.params
-              this.#els.container.append(route.el);
-
-              unusedElements.forEach(el => el.remove()); // Only hide the unused elements AFTER the one that is showing has loaded.
-            }).catch(ex => {
-              console.log(ex.stack);
-            });
-          }
-          else {
-            // TODO: 2023-06-20: Pass params into element.params
-            this.#els.container.append(route.el);
-          }
-
-          found = true;
-        }
-      });
-
-      if (okToRemove) {
-        unusedElements.forEach(el => el.remove());
+    async #sendNavParamsToRouteComponent(el, params) {
+      if (typeof el.navParams === 'function') {
+        const { pathname, search, hash } = window.location;
+        const query = parseQueryParams(search);
+        await sleep();
+        await el.navParams({ pathname, search, query, hash: hash.slice(1), params });
       }
     }
 
-    #processRoutes() {
+    #removeAndDeleteUnusedElements(unusedRoutes) {
+      unusedRoutes.forEach(route => {
+        if (!route.el) {
+          // If this route doesn't have an element then clear any pending timeout
+          if (route.deleteTimeout) {
+            clearTimeout(route.deleteTimeout);
+            route.deleteTimeout = null;
+          }
+          // And return
+          return;
+        }
+
+        // Remove the route element from the DOM
+        route.el.remove();
+
+        if (route.autoDelete === true) {
+          // This element is to be deleted right away
+          route.el = null;
+          return;
+        }
+
+        if (route.autoDelete > 0 && !route.deleteTimeout) {
+          route.deleteTimeout = setTimeout(() => {
+            route.deleteTimeout = null
+            route.el = null;
+          }, route.autoDelete);
+        }
+      });
+    }
+
+    async #updateRouteSelection() {
+      const { pathname } = window.location
+      const listOfUnusedRoutes = [];
+      let theRouteWasFound = false;
+      let theRouteToShow;
+      let paramsToSendToVisibleRoute;
+
+      this.#routes.forEach(route => {
+        if (!theRouteWasFound) {
+          const thisIsTheMatchingRoute = route.re.exec(pathname);
+          if (thisIsTheMatchingRoute) {
+            theRouteToShow = route;
+            paramsToSendToVisibleRoute = thisIsTheMatchingRoute.groups;
+            theRouteWasFound = true;
+            return;
+          }
+        }
+
+        listOfUnusedRoutes.push(route);
+      });
+
+      if (theRouteWasFound) {
+        // If this element was scheduled to be deleted then stop that scheduling
+        if (theRouteToShow.deleteTimeout) {
+          // console.log(`Delete for ${newRoute.element} canceled`);
+          clearTimeout(theRouteToShow.deleteTimeout);
+          delete theRouteToShow.deleteTimeout;
+        }
+
+        // If we need to import the file for this element then do so.
+        if (theRouteToShow.importFile) {
+          try {
+            await import(theRouteToShow.importFile); // Import the import file.
+            delete theRouteToShow.importFile; // Remove to prevent loading a second time.
+          }
+          catch (ex) {
+            console.error(`Failed to import file ${element}`)
+            console.info(ex.stack);
+          }
+        }
+
+        // If we don't currently have an element for this route then create one
+        if (!theRouteToShow.el) {
+          theRouteToShow.el = document.createElement(theRouteToShow.element);
+          if (theRouteToShow.el == null) {
+            throw new Error(`Unable to render the element "<${theRouteToShow.element}>" on "${pathname}"`);
+          }
+          await sleep();
+          // console.log(`Component ${route.element} created`);
+        }
+
+        this.#removeAndDeleteUnusedElements(listOfUnusedRoutes);
+        this.#els.container.append(theRouteToShow.el);
+        try {
+          await this.#sendNavParamsToRouteComponent(theRouteToShow.el, paramsToSendToVisibleRoute);
+        }
+
+        catch (ex) {
+          console.info('Error while trying to call navParams:');
+          console.info(ex.stack);
+        }
+      }
+    }
+
+    #processRouteTags() {
       this.#routes = [];
 
       const children = [...this.children];
@@ -67,30 +144,928 @@
           const href = el.getAttribute('href');
           const element = el.getAttribute('element');
           const importFile = el.getAttribute('import');
+          let autoDelete = el.getAttribute('auto-delete');
+          if (typeof autoDelete === 'string') {
+            autoDelete = autoDelete.trim();
+          }
+
+          if (['', '0'].includes(autoDelete)) {
+            autoDelete = true;
+          }
+          else if (!isNaN(autoDelete)) {
+            autoDelete = Number(autoDelete) * 60000;
+          }
+          else {
+            autoDelete = false;
+          }
+
           this.#routes.push({
             href,
             importFile,
             re: router.pathToRegex(href),
-            el: document.createElement(element),
+            el: null,//document.createElement(element),
             element,
+            autoDelete
           });
         }
       });
 
-      this.#updateSelection();
+      this.#updateRouteSelection();
     }
 
+    /*
     #mutationCallback(mutationsList) {
-      //console.log(mutationsList);
-      //TODO: 2023-07-03 MGC - this.#processRoutes();
+      // console.log(mutationsList);
+      //TODO: 2023-07-03 MGC - this.#processRouteTags();
       // But make sure to keep all elements that already exist
     };
-
-    init() {
-      router.onUpdate(() => this.#updateSelection());
-      this.#processRoutes();
-      this.#observer = new MutationObserver((...args) => this.#mutationCallback(...args));
-      this.#observer.observe(this, mutationConfig);
-    }
+    */
   </script>
+  <style>
+    :host {
+      display: block;
+      height: fit-content;
+      margin: 0;
+      padding: 0;
+      width: 100%;
+    }
+    [aria-live] {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      border: 0;
+    }
+  </style>
+  <!--
+    Things to add:
+    * attributes on the component
+      * base - Base URL for all of the children
+    * attributes on the wc-route
+      * preload - in the call to `this.#routes.push` use `document.createElement(element)` instead of `null`
+      * id - to be used with `addRoutes` method for `adding children`, `before` and `after`
+    * Other things
+      * Support children
+      * Better documentation
+      * `addRoutes` method
+      * `disableRoutes` method??
+      * Add Route Guards
+
+
+    Types of Angular Route Guards
+    * CanActivate: Determines if a route can be activated.
+    * CanActivateChild: Determines if children routes of a route can be activated.
+    * CanDeactivate: Determines if a route can be deactivated or if the user can navigate away from the current route.
+    * CanLoad: Determines if a module associated with a route can be loaded lazily.
+    * Resolve: Performs route data retrieval before the route is activated.
+
+    Key Concepts for Route Protection in React:
+    * Higher-Order Components (HOCs): Wrap protected components with an HOC that checks for certain conditions (like authentication) and redirects the user if those conditions are not met.
+    * Hooks: With the introduction of React Router v5.1 and the use of hooks in React, you can use the useHistory and useLocation hooks to programmatically control navigation based on your app's logic.    
+
+    Key Types of Navigation Guards in Vue:
+    * Global Guards: Apply rules globally before any route is loaded.
+      * beforeEach: Called before navigating to a new route.
+      * beforeResolve: Called just before resolving the route.
+      * afterEach: Called after navigating to a new route.
+    * Route-Specific Guards: Defined directly within route definitions.
+      * beforeEnter: Called before entering a specific route.
+    * In-Component Guards: Define guards within the components themselves.
+      * beforeRouteEnter: Called before the route that renders the component is confirmed.
+      * beforeRouteUpdate: Called when the route changes, but the same component is reused.
+      * beforeRouteLeave: Called when navigating away from the current route.
+
+    Guard ideas from chatGPT:
+    Your approach to implementing guards in your routing system through a common service file,
+    EvoRouter.js, and allowing developers to register guard handlers by name is both elegant
+    and aligns well with the goals of simplicity and minimalism inherent to vanilla JavaScript
+    and Web Components. Here are some thoughts and considerations:
+
+    Advantages
+    * Flexibility: By allowing developers to define guards with custom logic and associate them
+      with routes via names, you provide significant flexibility. Developers can tailor guards to
+      specific needs, from simple authentication checks to more complex permission validations.
+    * Reusability: Since guards are named and registered centrally, they can be reused across
+      multiple routes. This reduces redundancy and encourages a DRY (Don't Repeat Yourself)
+      approach to guard implementation.
+    * Decoupling: Associating guards with routes through attributes by name decouples the guard
+      logic from the route definition. This separation of concerns enhances maintainability and
+      makes the system more modular.
+
+    Implementation Considerations
+    * Guard Registration: Ensure the process for registering guards is straightforward and
+      documented. A simple API for registering guards, such as
+      `EvoRouter.registerGuard('authGuard', callback), would be intuitive for developers.
+    * Guard Execution Context: Consider what information guards need to make decisions and ensure
+      they receive this context as arguments. Typically, guards may need access to the current
+      route, parameters, and possibly the previous route.
+    * Asynchronous Support: Many guard operations, like fetching user permissions or checking
+      authentication status, may be asynchronous. Ensure your guard execution logic supports
+      asynchronous callbacks or promises.
+    * Fallback and Error Handling: Define a clear behavior for what happens when a guard fails
+      (e.g., navigation is blocked, a default route is loaded, or an error is logged). Providing
+      a mechanism for specifying a fallback route or error handling strategy could be beneficial.
+    * Debugging and Transparency: Offer developers tools or guidelines for debugging guard behaviors.
+      Clear error messages or hooks for logging can help diagnose issues with guard logic.
+
+    <wc-route href="/protected" element="protected-element" can-activate="authGuard"></wc-route>
+
+    // In a script where EvoRouter is accessible
+    EvoRouter.registerGuard('authGuard', async (to, from) => {
+      const isAuthenticated = await checkAuth();
+      if (!isAuthenticated) {
+        EvoRouter.navigate('/login');
+        return false; // Prevent navigation
+      }
+      return true; // Allow navigation
+    });
+
+    Integrating guard functions through a registration mechanism in your EvoRouter service, as
+    you've outlined, is a promising approach that aligns well with the simplicity and flexibility
+    of vanilla JavaScript and Web Components. Here are some thoughts on your ideas:
+
+ ** Guard Registration and Callbacks
+    The concept of registering guard callbacks with names is a robust design choice. It allows
+    developers to define and reuse specific guard logic across multiple routes, enhancing code
+    modularity and maintainability. Associating `can-activate` and `can-activate-children`
+    attributes with the names of these callbacks in the <wc-route> tags is a clear and intuitive
+    way to apply guards to routes.
+
+ ** Async Guard Execution
+    Planning for asynchronous guard functions is essential, especially for operations like fetching
+    user permissions or checking authentication status against a server. Ensuring that your routing
+    logic properly awaits these async guard checks before proceeding with navigation will be crucial.
+
+ ** Handling Guard Failures
+    Allowing developers the flexibility to programmatically redirect within guard functions offers
+    the most control, catering to complex routing logic that might depend on various conditions. However,
+    providing a guard-failed attribute for both individual <wc-route> tags and a master guard-failed on
+    the <wc-router> for default redirections is a user-friendly feature. It simplifies common use cases
+    where a universal fallback route is sufficient.
+
+    This dual approach —allowing for both in-guard redirection and declarative guard-failed attributes—
+    gives developers the option to choose the best tool for their specific scenario.
+    For the guard-failed attribute:
+
+    * On individual <wc-route>: Offers route-specific fallbacks, useful for directing users to different
+      parts of the app based on the context of the failed guard.
+    * On the <wc-router>: Serves as a default fallback, reducing redundancy when the same fallback applies
+      to multiple routes.
+
+ ** Recommendations
+    * Documentation: Clearly document how guards are registered, invoked, and how guard failures can be
+      handled. Include examples showing both programmatic redirection within guards and the use of
+      guard-failed attributes.
+    * Examples and Best Practices: Provide examples of common guard scenarios, such as authentication
+      checks, role-based access control, and async data validation.
+    * Testing and Feedback: During alpha and beta testing, gather feedback specifically on the guard
+      system's usability and flexibility. Pay attention to common patterns or pain points developers
+      encounter, which could highlight areas for further refinement or additional features.
+
+    Your approach thoughtfully balances simplicity with the flexibility needed for complex routing
+    scenarios, making it well-suited for a wide range of applications. Leveraging the existing
+    EvoRouter.js service for guard registration and execution integrates neatly with your system's
+    architecture, providing a cohesive and developer-friendly routing solution.
+
+    Using true, false, and undefined as return values from guard functions to signal different outcomes
+    is an approach that aligns well with the principle of keeping things simple for the users of your
+    library. Here's how each return value could be interpreted within your routing system:
+
+    * `true`: The route is allowed, and navigation to the route should proceed.
+    * `false`: The route is not allowed, and the default guard-failed redirection should occur.
+    * `undefined`: The guard function has handled the situation (such as performing a custom redirection),
+      so no further action is needed by the router.
+
+    Advantages
+    * Simplicity: This approach is straightforward and easy to understand. Developers can quickly grasp
+      the meaning of each return value without needing to remember specific objects, symbols, or methods.
+    * Ease of Use: It keeps the guard function signatures clean and simple. Developers don't have to deal
+      with additional parameters unless necessary for their logic.
+    * Flexibility: It allows for both simple and complex guard logic, providing developers with the option
+      to perform custom actions within the guard functions without complicating the API.
+
+    Considerations
+    * Clarity on undefined: While true and false are explicit and commonly used in JavaScript for similar
+      control flow decisions, the use of undefined to signify a handled case might be less intuitive to
+      some developers. Clear documentation and examples would be crucial to ensure this behavior is well
+      understood.
+    * Consistent Documentation: Emphasize in your documentation the significance of each return value.
+      Providing clear examples of when to return true, false, or undefined can help developers understand
+      how to implement their guard functions effectively.
+    * Error Handling: Consider how your system will handle errors or exceptions within guard functions.
+      For instance, if a guard function throws an error, how should the router respond? This consideration
+      is important for maintaining robust and predictable routing behavior.
+
+    Example Documentation Snippet
+    Guard functions can return one of three values to control navigation:
+
+    - `true`: Navigation to the route is permitted. The router will proceed to render the route's component.
+    - `false`: Navigation to the route is not permitted, and the router will redirect to the `guard-failed`
+      route, if specified. If no `guard-failed` route is specified, a default action should be taken (e.g.,
+      redirecting to a login page).
+    - `undefined`: The guard function has taken over handling (e.g., performed its own redirection). The
+      router will not perform any further action, including the default `guard-failed` redirection.
+
+    Ensure your guard functions handle all necessary logic before returning `undefined` to indicate that no
+    further action is needed by the router.
+
+    Adopting this approach offers a balance between simplicity and flexibility, allowing developers to
+    implement guard logic that fits the needs of their application while maintaining an easy-to-use and
+    understand API.
+
+    Your router already covers many essential aspects for SPA routing, including dynamic route matching,
+    component lazy loading, lifecycle management with auto-delete, and guard mechanisms for route protection.
+    However, as web applications grow in complexity, there might be additional features and capabilities that
+    could enhance your router's functionality and developer experience. Here are some suggestions:
+
+    ### 1. **Fallback Routes**
+    Beyond a generic catch-all route (`"(.*)"`), consider allowing developers to define multiple levels of
+    fallback routes. This can be useful for nested route structures or when wanting to provide more specific
+    fallbacks for different parts of an app.
+
+    ### 2. **Data Pre-fetching**
+    Integrate a mechanism for routes to define data dependencies that should be fetched before the route is
+    activated. This can improve user experience by ensuring that necessary data is available when a component
+    is rendered.
+
+    ### 3. **Named Routes**
+    Support for named routes can simplify navigation and link generation within the application. Instead of
+    relying on hardcoded paths, developers can refer to routes by name, making it easier to manage and update
+    URLs.
+
+    ### 4. **Route Parameters Validation**
+    Offer a way to validate route parameters (e.g., ensuring a parameter is a valid ID). This can enhance
+    security and reliability by preventing navigation to routes with invalid parameters.
+
+    ### 5. **Nested Views and Named Outlets**
+    For complex layouts, support for nested views and named outlets can allow more granular control over
+    where components are rendered. This is especially useful for applications with multiple viewports
+    (e.g., sidebars, modals).
+
+    ### 6. **Transition Hooks**
+    Provide hooks for animation or transition effects when navigating between routes. This can enhance the
+    user experience by allowing for smooth transitions and visual feedback during route changes.
+
+    ### 7. **Scroll Position Management**
+    Automatically save and restore scroll positions when navigating back and forth between routes. This
+    feature improves usability by ensuring users return to the same position on a page.
+
+    ### 8. **Route Metadata**
+    Allow routes to define custom metadata (e.g., page titles, SEO tags). This can facilitate dynamic document
+    title updates and improve the application's SEO friendliness.
+
+    ### 9. **Middleware Support**
+    Introduce middleware for routes to perform additional checks or transformations before a route is
+    activated or after it's deactivated. Middleware can be used for analytics, logging, authentication
+    checks, and more.
+
+    ### 10. **Integration with State Management**
+    Provide guidelines or utilities for integrating route state with global state management solutions.
+    This can help synchronize routing with application state, making it easier to manage complex app states.
+
+    ### 11. **Accessibility Features**
+    Ensure routing changes are accessible, providing features like focus management when navigating between
+    routes. This is crucial for supporting keyboard navigation and users relying on screen readers.
+
+    As you plan future enhancements, consider the specific needs of your target audience and the types of applications
+    they'll be building with your router. Prioritizing features that offer the greatest benefit to your users while aligning
+    with your goal of keeping things simple will be key to the router's success and adoption.
+
+Yes, using a pattern like `href="(.*)"` for catch-all routes and allowing developers to append `(.*)` at the end of
+specific paths for more granular control essentially covers the concept of fallback routes. This approach enables a
+flexible routing configuration that can handle both general and more specific "not found" scenarios within different
+parts of an application.
+
+To expand on this and ensure clarity:
+
+### General Fallback Route
+A general fallback route (e.g., `href="(.*)"`), often used at the bottom of your routing table, catches any navigation
+to undefined routes. This is typically used to display a generic "404 Not Found" page or redirect users to a default
+page if the URL does not match any defined routes.
+
+### Granular Fallback Routes
+Appending `(.*)` to specific paths allows for more nuanced fallbacks. This can be particularly useful in applications
+with nested routes or modular designs, where different sections of the app may have their own specific "not found" pages
+or behavior.
+
+### Examples and Considerations
+
+1. **Example of a General Fallback:**
+
+```html
+<wc-route href="(.*)" element="not-found" import="./NotFound.js"></wc-route>
+```
+This route would catch all undefined routes and could render a general "Not Found" component.
+
+2. **Example of Granular Fallback:**
+
+```html
+<wc-route href="/blog/(.*)" element="blog-not-found" import="./BlogNotFound.js"></wc-route>
+```
+In this case, any undefined route under `/blog/` would render a "Blog Not Found" component, which might provide options
+specific to the blog section of the site, such as search or a list of recent posts.
+
+### Benefits of This Approach
+- **Flexibility**: Developers can tailor the user experience based on where in the app the user encounters a "not found"
+situation.
+- **Improved User Navigation**: Offering section-specific fallbacks can make it easier for users to find their way back
+to valid content.
+- **Simplicity**: Using regex patterns keeps your routing configuration straightforward and leverages existing web
+development knowledge.
+
+### Further Enhancements
+While this regex-based approach for defining fallback routes provides a solid foundation, consider the following for
+further enhancing your routing solution:
+- **Documentation and Examples**: Ensure that the flexibility and utility of using `(.*)` for fallbacks are
+well-documented, with examples demonstrating both general and granular fallbacks.
+- **Testing and Edge Cases**: Encourage thorough testing during the alpha and beta phases to identify any potential
+issues or limitations with the regex-based approach, especially in complex applications with deeply nested routes.
+
+Your current strategy for handling fallback routes seems well thought out and should serve most routing needs
+effectively. Ensuring that these capabilities are clearly communicated and easy to use will help developers make the
+most of your routing solution.
+
+Yes, providing a feature for named routes, along with a method like `EvoRouter.navByName`, could significantly enhance
+the usability and maintainability of your routing system. Named routes allow developers to decouple their navigation
+logic from the actual URL paths, making the code more readable and easier to update. Here's a closer look at how you
+might implement and benefit from named routes:
+
+### Implementation Overview
+
+1. **Registering Named Routes**: Allow developers to define a name for each route in addition to its path. This could be
+done directly within the `<wc-route>` element or through a configuration method in `EvoRouter`.
+
+  ```html
+  <wc-route name="userProfile" href="/user/:id" element="user-profile" import="./UserProfileElement.js"></wc-route>
+  ```
+
+  Or through a JavaScript method if more suitable for your design:
+
+  ```javascript
+  EvoRouter.registerRoute('userProfile', '/user/:id', 'user-profile', './UserProfileElement.js');
+  ```
+
+  2. **Navigation by Name**: Implement a method like `EvoRouter.navByName`, which accepts a route name and optional
+  parameters to generate the corresponding URL and navigate to it.
+
+  ```javascript
+  EvoRouter.navByName('userProfile', { id: 123 });
+  ```
+
+  This method would internally look up the route by name, replace any dynamic segments in the URL with the provided
+  parameters, and then navigate to the constructed URL.
+
+  ### Benefits
+
+  - **Readability**: Code that navigates by route name is often easier to read and understand than code using hardcoded
+  URLs, especially when parameters are involved.
+  - **Maintainability**: If a route's URL changes, you only need to update the registration. All navigation calls remain
+  valid, reducing the risk of broken links.
+  - **Flexibility**: Easily support dynamic route segments by allowing parameters to be passed to `navByName`, making it
+  straightforward to construct URLs programmatically.
+
+  ### Considerations
+
+  - **Parameter Handling**: Design how you'll handle dynamic segments in URLs for named routes, especially optional
+  parameters or complex patterns.
+  - **Error Handling**: Decide how `navByName` should behave if an undefined route name is used or if required
+  parameters are missing.
+  - **Documentation and Examples**: Provide clear documentation and examples on registering named routes and using
+  `navByName`, highlighting the advantages and common use cases.
+
+  Named routes are a powerful feature that can make routing more intuitive and robust in web applications. Incorporating
+  this into your `EvoRouter` would align well with modern web development practices, offering developers a more
+  declarative and flexible way to manage navigation.
+
+  Incorporating type information directly in the route definition, as you've suggested with `<wc-route
+    href="/user/:id<number>" ...>`, is an elegant and concise way to integrate basic validation directly into your routing
+    system. This approach offers simplicity and clarity, making it immediately apparent what type of parameters are
+    expected. Here's an analysis of this method:
+  
+    ### Advantages
+  
+    - **Simplicity**: Developers can quickly define and understand route parameters and their expected types without
+    needing to refer to external validation rules or functions.
+    - **Readability**: Keeping the type information within the route definition enhances readability and maintainability,
+    as all relevant information about the route is contained in one place.
+    - **Ease of Implementation**: For primitive types (e.g., `number`, `string`), this approach allows for straightforward
+    validation logic that can be uniformly applied across routes.
+  
+    ### Considerations
+  
+    - **Primitive Types**: As noted, this method is well-suited for validating primitive types. It's straightforward to
+    check if a parameter matches expected types like `number`, `string`, or even `boolean`.
+    - **Complex Objects**: For more complex validation scenarios (e.g., specific string patterns, arrays, objects), this
+    approach might be too limited. You might still need a way to specify more detailed validation rules or reference
+    external validation functions for these cases.
+    - **Extensibility**: Consider how you might extend this system in the future to support more complex validation needs
+    without compromising the simplicity and readability of your route definitions.
+  
+    ### Implementation Ideas
+  
+    - **Parsing Route Definitions**: When processing route definitions, parse the parameter segments to extract both the
+    parameter name and the expected type. Use this information to validate parameters extracted from the URL against their
+    expected types.
+    - **Validation Logic**: Implement a validation function that checks parameters against their defined types. For
+    unrecognized types or complex validation scenarios, provide a fallback mechanism or allow specifying an external
+    validation function.
+    - **Error Handling and Feedback**: Define how your router should behave if parameter validation fails. Options include
+    redirecting to a default "error" or "not found" route, logging a warning, or emitting a custom event that developers
+    can handle.
+  
+    ### Documentation and Examples
+  
+    - Provide clear documentation on the supported types and how to specify them within route definitions.
+    - Include examples showing common use cases for primitive types and guidance on handling more complex validation
+    scenarios.
+  
+    This approach aligns well with your goal of maintaining simplicity within your router, offering a straightforward way
+    for developers to enforce basic type checks on route parameters. For more advanced validation needs, having a
+    complementary system that allows for more detailed validation rules or external functions would ensure your router
+    remains both powerful and flexible.
+
+Blending the direct type declaration in the route definition for primitives with the option to register more complex
+validation functions offers a comprehensive and flexible validation system. This dual approach caters to both
+straightforward and complex validation needs without sacrificing simplicity for the common cases.
+
+### Handling Validation Failures
+
+Adopting a strategy similar to guards for handling validation failures is a sound idea. It keeps the behavior consistent
+across different aspects of routing, making it easier for developers to understand and predict how the router behaves.
+Here’s how it could work in practice:
+
+1. **For Primitive Type Validation**: If a parameter fails to validate against its declared primitive type (as specified
+in the route definition), the router attempts to navigate to the next matching route. If no other routes match, it falls
+back to a 404 or a general "not found" route.
+
+2. **For Registered Validation Functions**: If a validation function returns `false`, the same fallback mechanism
+applies. The router checks for the next matching route, eventually defaulting to a 404 if no valid routes are found.
+
+3. **No `guard-failed` or `validate-failed` Attributes**: In cases where no specific fallback route is defined (through
+attributes like `guard-failed` or a hypothetical `validate-failed`), relying on the routing system to proceed to the
+next possible match or default to a 404 route provides a natural and user-friendly fallback mechanism.
+
+### Implementation Considerations
+
+- **Clear Documentation**: Clearly document how validation is integrated with route matching and the fallback mechanism.
+Include examples of both primitive type validation in route definitions and more complex scenarios using registered
+validation functions.
+
+- **Developer Feedback**: Provide meaningful feedback to developers during development, possibly through console
+warnings or errors when validation fails, to help identify and fix issues quickly.
+
+- **Extensibility and Maintenance**: Ensure the system is designed to allow easy extension and maintenance, especially
+as new validation scenarios or requirements emerge.
+
+- **Testing and Edge Cases**: Thoroughly test the validation and fallback mechanisms, especially edge cases where
+multiple routes might match except for validation failures, to ensure the router behaves as expected.
+
+This approach to handling route validation and failures enriches your routing system, making it robust and adaptable to
+a wide range of applications. By maintaining consistency in how guards and validations are handled, you enhance the
+developer experience, making your router both powerful and intuitive to use.
+
+
+Transition hooks in a routing system provide a powerful mechanism to hook into the lifecycle of route transitions,
+offering opportunities for developers to execute custom logic at various stages of navigation. These hooks can enhance
+the user experience, improve application performance, and offer more control over the navigation flow. Here's a deeper
+look into the value they offer and what might be needed to integrate them into your router:
+
+### Value of Transition Hooks
+
+1. **Animation and User Feedback**: Transition hooks allow for implementing animations or providing feedback to users
+during route changes. For example, you can smoothly fade out one component and fade in another, improving the perceived
+performance and user experience.
+
+2. **Data Pre-fetching and Loading States**: By hooking into the transition process before a route is activated, you can
+pre-fetch data needed for the upcoming route. This ensures that all necessary data is available before the component is
+rendered, allowing for the implementation of loading states or placeholders.
+
+3. **Conditional Navigation**: Transition hooks can be used to conditionally allow or prevent navigation based on
+application state, user permissions, or unsaved changes in a form. This is crucial for preventing data loss and ensuring
+that users meet certain criteria before accessing a route.
+
+4. **Analytics and Logging**: Hooks provide a centralized place to implement analytics tracking and logging for page
+views or navigation events, simplifying the integration of analytics into your application.
+
+### Integrating Transition Hooks into Your Router
+
+To integrate transition hooks into your routing system, consider the following steps and components:
+
+1. **Define Hook Points**: Identify the stages in your route transition process where hooks should be invoked. Common
+hook points include:
+- **Before navigation starts** (`beforeNavigate`): To conditionally prevent navigation or start pre-fetching data.
+- **Before route activation** (`beforeEnter`): To perform checks or load data before the component is rendered.
+- **After route activation** (`afterEnter`): For post-navigation logic, such as scrolling to the top of the page or
+focusing on an element.
+- **Before leaving a route** (`beforeLeave`): To check for unsaved changes or perform cleanup before navigating away.
+
+2. **Implement Hook Registration**: Allow developers to register hooks for specific routes or globally. This could be
+done through attributes in `<wc-route>` elements or via methods in `EvoRouter`.
+
+```html
+<wc-route href="/user/:id" element="user-profile" beforeEnter="preFetchUserProfile"></wc-route>
+```
+
+```javascript
+EvoRouter.beforeNavigate(globalPreFetch);
+```
+
+3. **Execute Hooks at Defined Points**: Modify your navigation logic to invoke the registered hooks at the appropriate
+stages of the route transition. Ensure that you handle asynchronous hooks correctly, waiting for them to resolve
+before proceeding with the navigation.
+
+4. **Provide Control to Hooks**: Hooks should be able to modify the navigation flow (e.g., redirecting to another
+route, preventing navigation). Pass necessary context (current route, target route, parameters) to hooks and allow
+them to return values or promises that can alter the navigation outcome.
+
+5. **Documentation and Examples**: Clearly document how to register and use transition hooks, the context provided to
+hooks, and what values/hooks can return to influence navigation. Provide examples for common use cases like data
+pre-fetching, animations, and guarding routes.
+
+By integrating transition hooks into your router, you enhance its capabilities, offering developers fine-grained
+control over navigation and the ability to create more responsive, user-friendly applications.
+
+Route metadata provides additional information about a route that can be used for various purposes, such as configuring
+navigation behavior, enhancing SEO, setting page titles, or defining access controls. Incorporating route metadata into
+your routing system can significantly increase its flexibility and utility without compromising the simplicity and
+vanilla JS goals of your project. Here's how you might approach this:
+
+### Purpose of Route Metadata
+
+1. **SEO Optimization**: Define metadata like page titles, descriptions, and keywords for each route, which can be
+dynamically applied to improve SEO.
+2. **Breadcrumb Navigation**: Store breadcrumb information in metadata to dynamically generate breadcrumb navigation
+based on the current route.
+3. **User Permissions**: Include access control information, specifying which user roles are allowed to access a route,
+aiding in the implementation of conditional navigation.
+4. **Analytics and Tracking**: Use metadata to store analytics tags or identifiers specific to routes, simplifying page
+tracking.
+
+### Implementing Route Metadata
+
+#### Extending `<wc-route>` to Accept Metadata
+
+  You could allow developers to specify metadata directly within the `<wc-route>` tags as an attribute, using a
+    JSON-like string or individual data attributes for simpler metadata.
+
+    ```html
+    <wc-route href="/about" element="about-page" import="./AboutPage.js"
+      metadata='{"title": "About Us", "description": "Learn more about us."}'></wc-route>
+    ```
+
+    Or for simpler metadata:
+
+    ```html
+    <wc-route href="/about" element="about-page" import="./AboutPage.js" data-title="About Us"
+      data-description="Learn more about us."></wc-route>
+    ```
+
+    #### Using a Configuration Object
+
+    Alternatively, metadata could be specified through a JavaScript configuration object in `EvoRouter`, especially for
+    more complex or extensive metadata requirements.
+
+    ```javascript
+    EvoRouter.configureRoute('/about', 'about-page', './AboutPage.js', {
+    metadata: {
+    title: "About Us",
+    description: "Learn more about us.",
+    // Additional metadata...
+    }
+    });
+    ```
+
+    #### Applying Metadata
+
+    - **Dynamic Page Titles and Descriptions**: Use the metadata in your router's navigation logic to dynamically update
+    the document's title and meta tags when a route is activated.
+
+    - **Access Control**: Leverage metadata for implementing guards, where access control metadata determines if
+    navigation to a route is allowed based on the user's role.
+
+    - **Breadcrumbs and Analytics**: Extract breadcrumb and analytics metadata in your application or components that
+    handle these functionalities, dynamically adjusting based on the current route.
+
+    ### Proposals Aligned with Your Goals
+
+    1. **Keep Metadata Usage Optional**: Ensure that the core routing functionality does not depend on metadata, keeping
+    it optional and flexible for developers to use as needed.
+    2. **Simple and Extensible Structure**: Design the metadata system to be simple for basic use cases but extensible
+    enough to accommodate complex scenarios without forcing developers into a rigid structure.
+    3. **Documentation and Examples**: Provide clear documentation on how to specify and use route metadata, including
+    examples for common use cases like setting page titles, SEO optimization, and implementing access controls.
+    4. **Utility Functions**: Offer utility functions or hooks in `EvoRouter` for common metadata-related tasks, such as
+    updating the document title or meta tags, to simplify their implementation.
+
+    Incorporating route metadata offers a path to enhance your routing system's capabilities, supporting a wide range of
+    additional functionalities that can enrich the user experience and application performance while adhering to your
+    goals of simplicity and leveraging vanilla JS and Web Components.
+
+Middleware support and transition hooks are both powerful concepts in web application routing, offering developers ways
+to interact with the navigation lifecycle. While they share similarities in allowing custom logic to be executed during
+route transitions, they serve different purposes and operate at different stages within the routing process. Here's a
+breakdown of their differences:
+
+Middleware Support
+Purpose and Functionality:
+
+Middleware functions are designed to be executed in sequence before the final route handler is called. They can modify
+the request, response, or application state, perform operations such as authentication checks, data loading, logging, or
+even modify the navigation flow (e.g., redirecting based on certain conditions).
+Middleware is typically used to encapsulate global logic that applies across multiple routes or the entire application,
+such as security checks, analytics, or setting up context/state that routes might depend on.
+Operation:
+
+Middleware operates on a "chain" or "pipeline" model, where each middleware function can pass control to the next
+middleware in the sequence or terminate the chain if the desired conditions are not met.
+They provide a layered architecture, allowing for reusable, modular pieces of logic that can be composed or stacked as
+needed.
+Transition Hooks
+Purpose and Functionality:
+
+Transition hooks are more specific to the lifecycle of a particular route transition. They allow developers to hook into
+specific moments before, during, or after a route transition, such as before a route is loaded (beforeEnter), before
+leaving a route (beforeLeave), or after a route has been activated (afterEnter).
+They're used for tasks directly related to the transition process, like data pre-fetching for a new route, preventing
+navigation away from a route with unsaved changes, or running animations during route transitions.
+Operation:
+
+Transition hooks are often tied to specific routes or route components, providing fine-grained control over the behavior
+of individual route transitions.
+They allow for asynchronous operations, waiting for data to load or user confirmation before continuing with the
+navigation.
+Key Differences
+Scope and Granularity: Middleware tends to operate at a broader application level or across multiple routes,
+implementing global logic. Transition hooks are more granular, tied to specific route transitions, and focus on the
+navigation lifecycle.
+Control Flow: Middleware uses a sequential chain or pipeline model, potentially altering the request/response or halting
+the chain. Transition hooks are invoked at designated lifecycle points, often allowing for asynchronous operations
+before proceeding with a transition.
+Use Cases: Middleware is ideal for global concerns like logging, authentication, and preprocessing requests. Transition
+hooks are suited for route-specific concerns like loading data specific to a destination route, managing transitions and
+animations, or confirming navigation away from a route.
+Both middleware support and transition hooks enrich a routing system, offering developers flexibility and control over
+navigation flows. The choice between using middleware, transition hooks, or both depends on the specific requirements of
+the routing logic and the level of control needed over route transitions.
+
+
+Integrating state management with a router involves creating a cohesive system where the application's state and the URL
+(or navigation state) are synchronized. This integration ensures that the application's UI and behavior are consistent
+with the browser's URL, facilitating features like bookmarking, deep linking, and browser navigation (back/forward).
+Here are some ways the router can integrate with state management, along with considerations for maintaining simplicity
+and alignment with your goals:
+
+### Ways to Integrate State Management with the Router
+
+1. **Reflecting Application State in the URL**: Ensure that significant application states, such as filters, search
+queries, or modal dialog visibility, can be represented in the URL. This might involve updating the URL based on state
+changes or updating the application state in response to URL changes.
+
+2. **State Restoration on Navigation**: When navigating back/forward, the router should help restore the application to
+the state represented by the URL. This can include loading data, opening specific components (like modals), or applying
+filters.
+
+3. **Centralized State Management for Route Data**: Use a global state management system to store and manage data
+specific to routes, such as user authentication status, permissions, or data pre-fetched for a particular route. The
+router can play a role in updating this state as part of the route transition process.
+
+4. **Synchronizing Route Parameters with Application State**: Automatically synchronize route parameters (e.g., `:id` in
+`/user/:id`) with the application state. This allows components to react to state changes without directly parsing the
+URL.
+
+### Considerations for Implementation
+
+- **Simplicity and Modularity**: Keep the integration between the router and state management simple and modular. Avoid
+tight coupling, allowing developers to choose their state management solutions or to opt-out of certain integrations.
+
+- **Documentation and Examples**: Provide clear documentation on how the router can interact with state management,
+including examples of common patterns like synchronizing route parameters with state, reflecting state changes in the
+URL, and managing route-based data loading.
+
+- **Utilities and Hooks**: Offer utility functions or hooks within your router that make it easier to connect route
+changes with state management actions. For example, a hook that fires when a route is activated could be used to trigger
+data loading.
+
+- **Consistency and Predictability**: Ensure that the router's behavior is consistent and predictable when integrated
+with state management. Developers should understand how state changes affect navigation and vice versa.
+
+### Example Scenario: Modal Dialogs and URL State
+
+For modal dialogs that should be accessible via direct URLs, you might consider the following approach:
+
+- **URL Representation**: Use query parameters or dedicated route segments to represent the visibility of a modal dialog
+in the URL.
+- **State Synchronization**: When the URL changes (due to direct navigation or manual modification), the router checks
+for the modal-related segments or parameters and triggers the opening of the corresponding modal dialog. Conversely,
+opening a modal could update the URL to reflect its state.
+- **Documentation**: Provide guidance on implementing this pattern, ensuring developers know how to link modal state
+with the URL effectively.
+
+By thoughtfully integrating state management with your routing system, you can enhance the user experience and developer
+capabilities, making applications more intuitive to navigate and manage.
+
+
+
+Ensuring accessibility in routing involves a few key considerations to make web applications navigable and usable for
+all users, including those using assistive technologies like screen readers, or those who rely on keyboard navigation.
+Here's a more detailed look at what a router needs to support accessibility:
+
+### 1. **Managing Focus on Route Changes**
+
+- **Initial Focus**: When a new route is loaded, set the focus to a logical starting point on the page, such as the main
+heading or a key element of the new content. This helps screen reader users understand where they are in the
+application.
+- **Skip Links**: Implement skip links that become visible when focused, allowing keyboard users to skip directly to the
+main content or navigation, bypassing repetitive links and content.
+
+### 2. **Updating the Document Title**
+
+- Change the document title to reflect the current page or view. This helps users with screen readers understand the
+context and purpose of the page they have navigated to. Integration with route metadata can automate this process,
+pulling title information from route definitions.
+
+### 3. **Announcing Route Changes**
+
+- Use ARIA live regions to programmatically announce route changes or page updates that occur without a full page
+reload. This informs users of screen readers about the change in content.
+- Consider a utility within your router that automatically announces the change (e.g., "Contact page loaded") when a
+route transition completes.
+
+### 4. **Ensuring Semantic HTML Structure**
+
+- While not solely the router's responsibility, encourage the use of semantic HTML in routed components. Proper use of
+headings, landmarks (like `<main>`, `<nav>`, `<aside>`), and roles helps users with assistive technologies navigate and
+understand the structure of your pages.
+
+### 5. **Restoring Scroll Position**
+
+- On navigating back and forth, restore the scroll position to where the user was previously. This is crucial for
+keyboard and screen reader users to maintain their place on the page.
+
+### 6. **Keyboard Navigation Support**
+
+- Ensure that all interactive elements added by routing (links, buttons, forms in the routed components) are fully
+accessible via keyboard, following the tab order and providing visual focus indicators.
+
+### Implementing Accessibility Features in the Router
+
+- **Focus Management API**: Provide an API or utility function within your router that routed components can use
+to manage focus, ensuring that keyboard and screen reader users are oriented correctly after navigation.
+- **Route Metadata for Accessibility**: Leverage route metadata to define accessible names or titles for each
+route, which can be used for document titles and ARIA live region announcements.
+- **Accessibility Documentation**: Offer guidelines and best practices for developers to ensure routed components
+maintain accessibility standards, including examples of semantic HTML structure, focus management, and ARIA live
+region use.
+
+Ensuring accessibility in routing is about more than just navigating from one URL to another; it's about making
+sure that the transition is perceivable, operable, and understandable for all users. By incorporating these
+accessibility features into your routing system, you help create a more inclusive web, where information and
+functionality are accessible to everyone, regardless of how they navigate the web.
+
+
+Skip links are a critical accessibility feature that allows users, especially those using screen readers or keyboards,
+to bypass repetitive content and navigate directly to the main content or other key areas of a page. This feature is
+particularly useful in web applications where navigation menus, sidebars, or other repeated blocks of content are
+present across multiple pages.
+
+### Why Skip Links Are Important
+
+- **Efficiency for Keyboard and Screen Reader Users**: Without skip links, keyboard and screen reader users may have to
+tab through or listen to the same navigation links or content repeatedly on every page before reaching the main content.
+- **Enhanced Usability**: Skip links improve the overall usability of websites for users who rely on assistive
+technologies, making web navigation quicker and more efficient.
+
+### Implementing Skip Links
+
+Skip links should be the first focusable elements on your webpage. They are usually implemented as hidden links that
+become visible when focused. Here's a basic example:
+
+#### HTML
+
+```html
+
+<body>
+  <a href="#maincontent" class="skip-link">Skip to main content</a>
+
+  <nav>
+  </nav>
+
+  <main id="maincontent">
+  </main>
+</body>
+```
+
+#### CSS
+
+```css
+.skip-link {
+position: absolute;
+top: -40px;
+left: 0;
+background: #000;
+color: white;
+padding: 8px;
+z-index: 100;
+}
+
+.skip-link:focus {
+top: 0;
+}
+```
+
+In this example, the skip link is visually hidden off-screen but becomes visible and accessible at the top of the page
+when it receives focus (e.g., when a user tabs to it). The link points to an element with the ID `maincontent`, usually
+the `<main>` tag or the primary content container of your page.
+
+### Best Practices for Skip Links
+
+- **Visibility on Focus**: Ensure skip links are easily visible when focused. High contrast and prominent positioning
+help users locate them.
+- **Early in the DOM**: Place skip links as early as possible in the HTML document, ideally right after the opening
+`<body>` tag.
+- **Clear Labeling**: Use clear and concise text for skip links, like "Skip to main content" or "Skip to
+navigation," so users understand where the link will take them.
+- **Consistent Placement**: Keep skip links in a consistent location across all pages to ensure users know where to
+find them.
+- **Test with Real Users**: Testing skip links with keyboard and screen reader users can provide valuable feedback
+to optimize their implementation and usability.
+
+Skip links are a simple yet powerful tool in making web applications more accessible. By allowing users to quickly
+navigate to the content that matters most, you enhance the user experience for everyone, particularly those relying
+on assistive technologies.
+
+
+To automatically announce route changes in a way that's accessible, especially for screen reader users, you can utilize
+ARIA live regions. An ARIA live region is an area of the page that can dynamically announce content changes without
+requiring the user to focus on the area where the change occurs. Here's how you can integrate this functionality into
+your router:
+
+### Step 1: Define an ARIA Live Region
+
+First, define an ARIA live region somewhere in your application's HTML structure. It's often placed near the top of the
+body element to ensure it's loaded early in the page lifecycle. The region should be marked with `aria-live="polite"` to
+indicate that updates to this region should be announced by screen readers at the next available opportunity, without
+interrupting the current speech.
+
+```html
+<div aria-live="polite" id="route-announcement" class="sr-only">
+  <!-- This area will be updated with route change announcements -- >
+</div>
+```
+
+The class `sr-only` is used to visually hide the content from sighted users while keeping it accessible to screen
+readers. Here's an example CSS for the `sr-only` class:
+
+```css
+.sr-only {
+position: absolute;
+width: 1px;
+height: 1px;
+padding: 0;
+margin: -1px;
+overflow: hidden;
+clip: rect(0, 0, 0, 0);
+border: 0;
+}
+```
+
+### Step 2: Update the Live Region on Route Changes
+
+Whenever a route transition completes, update the content of the live region with a message indicating the new page that
+has been loaded. This can be done by setting the inner text or inner HTML of the `#route-announcement` element.
+
+In your router's logic where the route transition completes, add code similar to this:
+
+```javascript
+function announceRouteChange(routeName) {
+  const routeAnnouncementElement = document.getElementById('route-announcement');
+  if (routeAnnouncementElement) {
+    routeAnnouncementElement.innerText = `${routeName} page loaded`;
+  }
+}
+```
+
+Call `announceRouteChange` with the appropriate route name or title every time a route successfully changes. For
+example:
+
+```javascript
+announceRouteChange('Contact');
+```
+
+### Considerations
+
+- **Timing**: Ensure announcements are made after the content of the new route has been rendered and any dynamic content
+loading has completed to ensure the announcement is timely and accurate.
+- **Customization**: Allow customization of the announcement message through route metadata, providing a default message
+format but also enabling specific routes to define their own announcements.
+
+### Conclusion
+
+By incorporating an ARIA live region and updating it with announcements on route changes, you make your single-page
+application more accessible to users relying on screen readers. This approach helps convey the dynamic nature of your
+application in a way that's perceivable to users who may not see the visual changes on the screen.
+-->
 </component>

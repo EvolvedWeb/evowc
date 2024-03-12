@@ -15,7 +15,7 @@ You can use them as is or make changes to them to suit your needs.
 * HR-like Divider *
 * Star Ranking * - Needs to dispatch change event
 * Round Progress Bar *
-* Routing * - 2023-06-05 - Initial code working just fine.
+* Routing * - 2024-03-11 - Need to add pre & post hooks
 * Spinner *
 
 * Accordion

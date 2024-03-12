@@ -1,36 +1,49 @@
 <component tag="evo-header">
+  <script root>
+    import "./WcAElement.js";
+  </script>
   <template>
     <nav>
-      <a href="index.html">Home</a>
-      <a href="get-started.html">Get Started</a>
-      <a href="docs.html">Docs</a>
-      <a href="examples.html">Examples</a>
-      <a href="faq.html">FAQ</a>
-      <div class="search-bar">
+      <wc-a href="/home">Home</a>
+      <wc-a href="/get-started">Get Started</a>
+      <wc-a href="/docs/intro" starts-with="/docs">Docs</a>
+      <wc-a href="/examples">Examples</a>
+      <wc-a href="/faq">FAQ</a>
+      <!--div class="search-bar">
         <input type="text" placeholder="Search" />
-      </div>
+      </div-->
     </nav>
   </template>
   <style>
     :host {
       background-color: var(--color-dark-2);
       color: var(--color-dark);
-      padding: 10px 30px;
+      padding: 0 20px;
     }
 
     nav {
       align-items: center;
       display: flex;
       justify-content: space-between;
+      padding-top: 10px;
     }
 
-    a {
-      color: var(--color-bright);
+    wc-a {
+      --wc-a-color: var(--color-bright);
+      padding: 10px;
+    }
+
+    wc-a[selected] {
+      --wc-a-bgcolor: var(--color-dark);
+    }
+
+    wc-a::part(a) {
       opacity: .8;
       text-decoration: none;
+      text-wrap: nowrap;
     }
 
-    a:hover {
+    wc-a::part(a):hover {
       opacity: 1;
     }
   </style>

@@ -1,5 +1,15 @@
 # Updates to EVO-WC
 
+## Version 1.1.1 - 2024-03-11
+
+* Resolves #78 - Callbacks registered through EvoElement.onUpdate are now getting called
+* Resolves #79 - Added a Deploy Prep process to make sure that all updated files are in the right place.
+* Resolves #80 - adoptedCallback now works like connectedCallback to insert DOM and styles as needed.
+* Revised how #callUpdate happens and moved it to the base class. This improves how we call this.update and any methods registered through onUpdate.
+* Updated tests to properly test the changes for #callUpdate
+* Added `npm prep` and associated code to make sure that we do everything before deploying a new version to npm.
+* Updated "@types/node" to version 20.11.26.
+
 
 ## Version 1.1.0 - 2024-03-06
 

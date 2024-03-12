@@ -1,37 +1,44 @@
-<component tag="evo-footer">
+<component tag="evo-footer"
+  :#currentYear="str:var:(new Date()).getFullYear()"
+>
+  <script root>
+    import "./WcAElement.js";
+  </script>
   <template>
     <div class="footer-cols">
-      <div>
+      <div class="footer-col">
         <h3>Resources</h3>
-        <p><a href="get-started.html" rel="noopener noreferrer">Getting Started</a></p>
-        <p><a href="https://github.com/EvolvedWeb/evowc/blob/main/README.md" target="_blank" rel="noopener noreferrer">Documentation</a></p>
-        <p><a href="examples.html">Examples</a></p>
+        <p><wc-a href="/get-started">Getting Started</a></p>
+        <p><wc-a href="/docs">Documentation</a></p>
+        <p><wc-a href="/examples">Examples</a></p>
+        <!--<p><wc-a href="/blog">Blog</a></p>-->
+        <!--<p><wc-a href="/glossary">Clossary</a></p>-->
       </div>
-      <div>
+      <div class="footer-col">
+        <h3>Community</h3>
+        <p><wc-a show-ext="1" href="https://github.com/EvolvedWeb/evowc">Github</wc-a></p>
+        <p><wc-a show-ext="1" href="https://join.slack.com/t/evo-ef36662/shared_invite/zt-23pdcq6td-~s0037B2_YN0vbHfd6G2xA">Slack</wc-a></p>
+        <!--<p><wc-a show-ext="1" href="https://">The Team</a></p>-->
+        <!--<p><wc-a show-ext="1" href="https://">Meetups</a></p>-->
+        <!--<p><wc-a show-ext="1" href="https://">Events</a></p>-->
+        <!--<p><wc-a show-ext="1" href="https://">Twitter</a></p>-->
+      </div>
+      <div class="footer-col">
         <h3>Support</h3>
-        <p><a href="faq.html" rel="noopener noreferrer">FAQ</a></p>
-        <p><a href="contact-us.html" rel="noopener noreferrer">Contact</a></p>
+        <p><wc-a href="/faq">FAQ</a></p>
+        <p><wc-a href="/contact-us">Contact</a></p>
+        <p><wc-a href="/license">License</a></p>
+          <!--<p><wc-a href="/privacy">Privacy</a></p>-->
+        <p><wc-a show-ext="1" href="https://github.com/EvolvedWeb/evowc/issues">Report Issues</a></p>
+        <!--<p><wc-a show-ext="1" href="https://stackoverflow.com/questions/tagged/evo">Stack Overflow</a></p>-->
+      </div>
+      <div class="footer-col">
+        <h3>Contributing</h3>
+        <p><wc-a show-ext="1" href="https://github.com/EvolvedWeb/evowc/blob/main/CODE_OF_CONDUCT.md">Code of Conduct</a></p>
+        <p><wc-a show-ext="1" href="https://github.com/EvolvedWeb/evowc/blob/main/CONTRIBUTING.md">Contributing</a></p>
+        <p><wc-a show-ext="1" href="https://github.com/EvolvedWeb/evowc/blob/main/UPDATELOG.md">Update Log</a></p>
       </div>
       <!--
-        // cspell: disable
-        From Angular's website footer (https://angular.io/)
-        RESOURCES                 HELP                      COMMUNITY                 LANGUAGES
-        About                     Stack Overflow            Events                    简体中文版
-        Resource listing          Join Discord              Meetups                   正體中文版
-        Press kit                 Gitter                    Twitter                   日本語版
-        Blog                      Report Issues             GitHub                    한국어
-                                  Code of Conduct           Contribute                Complete language list
-                                  Privacy Policy
-
-        From React's website footer (https://react.dev/)
-        Learn React               API Reference             Community                 More
-        Quick Start               React APIs                Code of Conduct           Blog
-        Installation              React DOM APIs            Meet the Team             React Native
-        Describing the UI                                   Docs Contributors         Privacy
-        Adding Interactivity                                Acknowledgements          Terms
-        Managing State
-        Escape Hatches
-
         From Vue's website footer (https://vuejs.org/)
         Docs                      Resources                 Help                      Official Libraries
         Guide                     Partners                  Discord Chat              Vue Router
@@ -49,17 +56,36 @@
         Newsletters               Community Guide
                                   Code of Conduct
                                   The Documentary
-      // cspell: enable
-      -->
+
+        From Angular's website footer (https://angular.io/)
+        RESOURCES                 HELP                      COMMUNITY                 LANGUAGES
+        About                     Stack Overflow            Events                    简体中文版
+        Resource listing          Join Discord              Meetups                   正體中文版
+        Press kit                 Gitter                    Twitter                   日本語版
+        Blog                      Report Issues             GitHub                    한국어
+                                  Code of Conduct           Contribute                Complete language list
+                                  Privacy Policy
+
+        From React's website footer (https://react.dev/)
+        Learn React               API Reference             Community                 More
+        Quick Start               React APIs                Code of Conduct           Blog
+        Installation              React DOM APIs            Meet the Team             React Native
+        Describing the UI                                   Docs Contributors         Privacy
+        Adding Interactivity                                Acknowledgements          Terms
+        Managing State
+        Escape Hatches
+    -->
     </div>
-    <p class="copyright">Evo-wc is <a href="https://github.com/evolvedweb/evowc" rel="noopener noreferrer">free and open source software</a>
-      released under the <a href="https://opensource.org/licenses/MIT" target="_blank" rel="noopener noreferrer">MIT License</a>
-      &mdash; Copyright © 2023 Michael Collins</p>
+    <p class="copyright">Copyright © 2023-<span :text="#currentYear"></span> Michael Collins<br/>
+      Code licensed under an <wc-a href="/license" title="License text">MIT-style License</wc-a>.
+      Documentation licensed under <wc-a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</wc-a>.
+    </p>
   </template>
   <style>
     :host {
       align-items: center;
       background-color: var(--color-bright-3);
+      box-sizing: border-box;
       display: flex;
       flex: 0 0 auto;
       flex-flow: column;
@@ -69,51 +95,71 @@
       position: relative;
       width: 100%;
     }
+    * {
+      box-sizing: border-box;
+    }
 
     .footer-cols {
-      display: flex;
-      flex: 0 0 auto;
-      flex-flow: row;
+      display: grid;
       font: bold 1.25rem Roboto, Monaco, 'Courier New', Courier, monospace;
-      gap: 3rem;
+      grid-template-columns: 1fr;
       height: max-content;
-      justify-content: space-around;
-      overflow: hidden;
-      position: relative;
       width: 100%;
     }
 
+    .footer-col {
+      margin-bottom: 2rem;
+    }
+
+    @media (min-width: 500px)  {
+      .footer-cols {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (min-width: 750px)  {
+      .footer-cols {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
+
     h3 {
-      font: Bold 1.5rem 'Arial Black', Impact, sanserif;
+      font: Bold 1rem 'Arial Black', Impact, sanserif;
       margin: 0;
       padding: 0;
       text-wrap: balance;
     }
 
-    h3, p {
+    p {
       font-size: 1rem;
+      margin: 0;
+      padding: .25rem 0;
     }
 
-    a, a:visited {
-      color: var(--color-links);
+    wc-a {
+      --wc-a-color: var(--color-links);
+    }
+
+    wc-a::part(a) {
       text-decoration: none;
     }
 
-    a:hover {
+    wc-a::part(a):hover {
       text-decoration: underline;
     }
 
     .copyright {
       background-color: var(--color-dark-2);
       color: var(--color-bright-3);
+      line-height: 2em;
       margin: 0;
       padding: 2rem 5rem 2rem;
       text-align: center;
       width: 100%;
     }
 
-    .copyright a {
-      color: var(--color-bright-2);
+    .copyright wc-a {
+      --wc-a-color: var(--color-bright-2);
     }
   </style>
 </component>

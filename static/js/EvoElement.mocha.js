@@ -1,4 +1,5 @@
 import { expect } from 'chai';
+import { sleep } from './EvoElement.js';
 let propFromAttr;
 let isObject;
 let boolFromVal;
@@ -53,6 +54,8 @@ class HTMLElement extends EventTarget {
     this.eventListeners = {};
     this._textContent = '';
     this._innerHTML = '';
+    this.isConnected = false;
+
     if (name === 'document') {
       this.body = new HTMLElement('body');
       this.appendChild(this.body);
@@ -73,6 +76,7 @@ class HTMLElement extends EventTarget {
     else {
       this.parent.children.splice(idx+1, 0, otherEl);
     }
+    otherEl.isConnected = true;
     if( otherEl.connectedCallback ) {
       otherEl.connectedCallback();
     }
@@ -95,6 +99,7 @@ class HTMLElement extends EventTarget {
     else {
       this.parent.children.splice(idx, 0, otherEl);
     }
+    otherEl.isConnected = true;
     if (otherEl.connectedCallback) {
       otherEl.connectedCallback();
     }
@@ -110,6 +115,7 @@ class HTMLElement extends EventTarget {
   append(otherEl) {
     this.children.push(otherEl);
     otherEl.parent = this;
+    otherEl.isConnected = true;
     if (otherEl.connectedCallback) {
       otherEl.connectedCallback();
     }
@@ -117,6 +123,7 @@ class HTMLElement extends EventTarget {
   appendChild(otherEl) {
     this.children.push(otherEl);
     otherEl.parent = this;
+    otherEl.isConnected = true;
     if (otherEl.connectedCallback) {
       otherEl.connectedCallback();
     }
@@ -125,6 +132,7 @@ class HTMLElement extends EventTarget {
     if (this.parent) {
       this.parent.children = this.parent.children.filter(el => el.id !== this.id);
       this.parent = null;
+      this.isConnected = false;
       if (this.disconnectedCallback) {
         this.disconnectedCallback();
       }
@@ -456,10 +464,9 @@ describe('EvoElement tests', () => {
       class Test extends EvoElement() { }
       const test = new Test();
       test.createDom({ template: '', styles: '', shadowMode: 'open', componentName: 'test-element' });
-      //console.log(JSON.stringify(test, JSONReplacer, 2));
     });
 
-    it('createDom should work with no template and with styles', () => {
+    it('createDom should work with no template and with styles', async () => {
       class Test extends EvoElement() {
         constructor() {
           super();
@@ -479,29 +486,32 @@ describe('EvoElement tests', () => {
        }
       const test = new Test();
       test.createDom({ template: '', styles: '.dog{background:red}', shadowMode: 'open', componentName: 'test-element' });
-      //console.log(JSON.stringify(test, JSONReplacer, 2));
       // @ts-ignore
-      //console.log(document.display());
-      expect(test.updateCalled).to.equal(0);
-      expect(test.connectedCalled).to.equal(0);
-      expect(test.disconnectedCalled).to.equal(0);
+      expect(test.updateCalled).to.equal(0, 'test.updateCalled');
+      expect(test.connectedCalled).to.equal(0, 'test.connectedCalled');
+      expect(test.disconnectedCalled).to.equal(0, 'test.disconnectedCalled');
 
+      await test.callUpdate({ cpa: 'dog', oldVal: null, newVal: 'woof' });
       document.body.appendChild(test);
-      expect(test.updateCalled).to.equal(1);
-      expect(test.connectedCalled).to.equal(1);
-      expect(test.disconnectedCalled).to.equal(0);
+      await sleep(100);
+      expect(test.updateCalled).to.equal(1, 'test.updateCalled');
+      expect(test.connectedCalled).to.equal(1, 'test.connectedCalled');
+      expect(test.disconnectedCalled).to.equal(0, 'test.disconnectedCalled');
 
       test.remove();
-      expect(test.updateCalled).to.equal(1);
-      expect(test.connectedCalled).to.equal(1);
-      expect(test.disconnectedCalled).to.equal(1);
+      expect(test.updateCalled).to.equal(1, 'test.updateCalled');
+      expect(test.connectedCalled).to.equal(1, 'test.connectedCalled');
+      expect(test.disconnectedCalled).to.equal(1, 'test.disconnectedCalled');
 
       document.body.appendChild(test);
-      expect(test.updateCalled).to.equal(2);
-      expect(test.connectedCalled).to.equal(2);
-      expect(test.disconnectedCalled).to.equal(1);
+      await sleep(100);
+      await test.callUpdate({ cpa: 'cow', oldVal: null, newVal: 'moo' });
+      await sleep(100);
+      expect(test.updateCalled).to.equal(2, 'test.updateCalled');
+      expect(test.connectedCalled).to.equal(2, 'test.connectedCalled');
+      expect(test.disconnectedCalled).to.equal(1, 'test.disconnectedCalled');
 
-      expect(test.shadowRoot.children.length).to.equal(1); // Make sure we didn't add a second style tag
+      expect(test.shadowRoot.children.length).to.equal(1, 'test.shadowRoot.children.length'); // Make sure we didn't add a second style tag
 
       //console.log(JSON.stringify(test, JSONReplacer, 2));
     });
@@ -536,7 +546,7 @@ describe('EvoElement tests', () => {
       });
     });
 
-    it('onUpdate/processOnUpdateCallbacks should work', async () => {
+    it('onUpdate should work', async () => {
       let thingUpdateIdx = 0
       let thingUpdateExpected = {};
       let testUpdateIdx = 0
@@ -567,14 +577,15 @@ describe('EvoElement tests', () => {
 
       const test = new Test();
       test.init();
+      test.isConnected = true;
       thingUpdateExpected = {cpa: 'thing', oldVal: null, newVal: 'new'};
       thingUpdateIdx = 0;
-      await test.processOnUpdateCallbacks(thingUpdateExpected);
+      await test.callUpdate(thingUpdateExpected);
       expect(thingUpdateIdx).to.equal(2);
 
       testUpdateExpected = { cpa: 'test', oldVal: 'new', newVal: 'this is a longer value' };
       testUpdateIdx = 0;
-      await test.processOnUpdateCallbacks(testUpdateExpected);
+      await test.callUpdate(testUpdateExpected);
       expect(testUpdateIdx).to.equal(1);
 
       thingUpdateExpected = { cpa: 'thing', oldVal: 'new', newVal: 'this is a longer value' };
@@ -582,7 +593,7 @@ describe('EvoElement tests', () => {
       if (typeof test.remove2 === 'function') {
         test.remove2();
       }
-      await test.processOnUpdateCallbacks(thingUpdateExpected);
+      await test.callUpdate(thingUpdateExpected);
       expect(thingUpdateIdx).to.equal(1);
 
       thingUpdateExpected = { cpa: 'thing', oldVal: 'new', newVal: 'this is a longer value' };
@@ -590,7 +601,7 @@ describe('EvoElement tests', () => {
       if (typeof test.remove1 === 'function') {
         test.remove1();
       }
-      await test.processOnUpdateCallbacks(thingUpdateExpected);
+      await test.callUpdate(thingUpdateExpected);
       expect(thingUpdateIdx).to.equal(0);
 
 
@@ -599,11 +610,11 @@ describe('EvoElement tests', () => {
       if (typeof test.remove3 === 'function') {
         test.remove3();
       }
-      await test.processOnUpdateCallbacks(testUpdateExpected);
+      await test.callUpdate(testUpdateExpected);
       expect(testUpdateIdx).to.equal(0);
     });
 
-    it('onUpdate/processOnUpdateCallbacks should work', async () => {
+    it('invalid onUpdate should work', async () => {
       class Test extends EvoElement() {
         testUpdate() {
           expect.fail('The method #testUpdate should not have been called');

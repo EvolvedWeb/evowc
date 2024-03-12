@@ -3,7 +3,14 @@
   :#ariaRouteName
 >
   <script root>
-    import { router, parseQueryParams } from "../EvoRouter.js";
+    import { router, parseQueryParams } from '../EvoRouter.js';
+    function sleep(timeout = 1) {
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          resolve();
+        }, timeout);
+      });
+    }
     const mutationConfig = {
       childList: true,
       subtree: true
@@ -13,30 +20,11 @@
     <div $if="#useAria" aria-live="polite" :text="#ariaRouteName"></div>
     <div el="container"></div>
   </template>
-  <style>
-    :host {
-      display: block;
-      height: fit-content;
-      margin: 0;
-      padding: 0;
-      width: 100%;
-    }
-    [aria-live] {
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      padding: 0;
-      margin: -1px;
-      overflow: hidden;
-      clip: rect(0, 0, 0, 0);
-      border: 0;
-    }
-  </style>
   <script>
     #routes = [];
     #observer;
     init() {
-      router.onChange(() => this.#updateRouteSelection());
+      router.onChange((...args) => this.#updateRouteSelection(...args));
       this.#processRouteTags();
       /*
       this.#observer = new MutationObserver((...args) => this.#mutationCallback(...args));
@@ -44,25 +32,18 @@
       */
     }
 
-    #sendNavParamsToRouteComponent(el, params) {
-      return new Promise((resolve) => {
-        if (typeof el.navParams === 'function') {
-          setTimeout(async () => {
-            const { pathname, search, hash } = window.location;
-            const query = parseQueryParams(search);
-            await el.navParams({ pathname, search, query, hash: hash.slice(1), params });
-            resolve();
-          }, 1);
-        }
-        else {
-          resolve();
-        }
-      });
+    async #sendNavParamsToRouteComponent(el, params) {
+      if (typeof el.navParams === 'function') {
+        const { pathname, search, hash } = window.location;
+        const query = parseQueryParams(search);
+        await sleep();
+        await el.navParams({ pathname, search, query, hash: hash.slice(1), params });
+      }
     }
 
     #removeAndDeleteUnusedElements(unusedRoutes) {
       unusedRoutes.forEach(route => {
-        if(!route.el) {
+        if (!route.el) {
           // If this route doesn't have an element then clear any pending timeout
           if (route.deleteTimeout) {
             clearTimeout(route.deleteTimeout);
@@ -98,7 +79,7 @@
       let paramsToSendToVisibleRoute;
 
       this.#routes.forEach(route => {
-        if(!theRouteWasFound) {
+        if (!theRouteWasFound) {
           const thisIsTheMatchingRoute = route.re.exec(pathname);
           if (thisIsTheMatchingRoute) {
             theRouteToShow = route;
@@ -125,7 +106,7 @@
             await import(theRouteToShow.importFile); // Import the import file.
             delete theRouteToShow.importFile; // Remove to prevent loading a second time.
           }
-          catch(ex) {
+          catch (ex) {
             console.error(`Failed to import file ${element}`)
             console.info(ex.stack);
           }
@@ -137,6 +118,7 @@
           if (theRouteToShow.el == null) {
             throw new Error(`Unable to render the element "<${theRouteToShow.element}>" on "${pathname}"`);
           }
+          await sleep();
           // console.log(`Component ${route.element} created`);
         }
 
@@ -146,8 +128,9 @@
           await this.#sendNavParamsToRouteComponent(theRouteToShow.el, paramsToSendToVisibleRoute);
         }
 
-        catch(ex) {
-          console.log(ex.stack);
+        catch (ex) {
+          console.info('Error while trying to call navParams:');
+          console.info(ex.stack);
         }
       }
     }
@@ -166,7 +149,7 @@
             autoDelete = autoDelete.trim();
           }
 
-          if (['','0'].includes(autoDelete)) {
+          if (['', '0'].includes(autoDelete)) {
             autoDelete = true;
           }
           else if (!isNaN(autoDelete)) {
@@ -198,6 +181,25 @@
     };
     */
   </script>
+  <style>
+    :host {
+      display: block;
+      height: fit-content;
+      margin: 0;
+      padding: 0;
+      width: 100%;
+    }
+    [aria-live] {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      border: 0;
+    }
+  </style>
   <!--
     Things to add:
     * attributes on the component

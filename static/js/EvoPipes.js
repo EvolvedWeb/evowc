@@ -140,7 +140,7 @@ export function toPercent(num, data) {
 }
 
 // Helper functions
-function getLocale(locale) {
+export function getLocale(locale) {
   return locale || document?.documentElement?.lang || navigator?.language || 'en-US';
 }
 
@@ -161,7 +161,7 @@ function getLocale(locale) {
  * "d" - 1 or 2 digit date
  * @returns {string} - Formatted date string
  */
-function toFormattedDate(date, locale, timeZone, formatStr) {
+export function toFormattedDate(date, locale, timeZone, formatStr) {
   // Convert our date format string into Intl.DateTimeFormat options
   let partsOptions = {};
   for (const [format, { key, value }] of Object.entries(DATE_OPTIONS_MAP)) {
@@ -193,7 +193,7 @@ function toFormattedDate(date, locale, timeZone, formatStr) {
 }
 
 
-function getDecimalSizes(decimalFormat) {
+export function getDecimalSizes(decimalFormat) {
   const match = decimalFormat.match(DECIMAL_SIZES_RE) ?? [];
   // eslint-disable-next-line no-unused-vars
   const [_, minIntDigits, minFracDigits, maxFracDigits] = match.map(Number);

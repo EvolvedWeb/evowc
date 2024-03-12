@@ -8,7 +8,11 @@
   :message="str:This 'is' a test:"
   :#dog-food="str:Click Me!"
   :#input
-  :#localeDate="str">
+  :#localeDate="str"
+>
+  <script root>
+    import { toUpper } from '../EvoPipes.js';
+  </script>
   <template>
     <h1 .mouseover="#mouseOverHandler">Hi</h1>
     <p data-pre="===" data-post='---' :text="message|#doSomethingPipe|^toUpper" el='dogEl'></p>
@@ -42,9 +46,6 @@
       padding: 5px 0;
     }
   </style>
-  <script root>
-    import { toUpper } from '../EvoPipes.js';
-  </script>
   <script>
     update() {
       const locale = this.locale || document.documentElement.lang || navigator.language;

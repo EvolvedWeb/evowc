@@ -258,10 +258,14 @@ You can also open an issue with the tag "enhancement".
   - ☑ Convert all code to ESM.
   - ☑ Convert all tests to ESM.
   - ☑ Bug fixes.
-  - ☑ Drop `proxyquire` for `esmock`.
-  - ☑ Drop `sinon` for `nock`.
-  - ☑ Drop `nyc` for `c8`.
-  - ☐ Add onUpdate function to allow for monitoring specific property changes.
+  - ☑ Drop `proxyquire` for `esmock`, `sinon` for `nock`, and `nyc` for `c8`.
+  - ☑ Add onUpdate function to allow for monitoring specific property changes.
+- ☑ Release version 1.1.0
+- ☑ Get all Issues related to 1.1.1 finished
+  - ☑ #78 - Callbacks registered through EvoElement.onUpdate are now getting called
+  - ☑ #79 - Added a Deploy Prep process to make sure that all updated files are in the right place.
+  - ☑ Bug fixes.
+- ☑ Release version 1.1.1
 - ☐ Get all Issues related to 2.0.0 finished
   - ☐ callbacks for onUpdate should be passed the current path.
   - ☐ Add auto-browser refresh when any component file auto-rebuilds.

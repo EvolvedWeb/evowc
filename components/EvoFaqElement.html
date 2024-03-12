@@ -39,6 +39,19 @@
       padding: .5rem 1rem 2rem;
       width: 100%;
     }
+
+    .answer wc-a {
+      --wc-a-color: var(--color-links-2);
+    }
+
+    .answer wc-a::part(a) {
+      text-decoration: none;
+    }
+
+    .answer wc-a::part(a):hover {
+      text-decoration: underline;
+    }
+
   </style>
   <script>
     // Internal functions
@@ -60,11 +73,5 @@
           break;
         }
       }
-    /*
-      events.push(ael( els.fel1, 'click', async (evt)=>{
-        await this.#toggle(evt, {...evt.target.dataset}, index, faq);
-        this.#loopItemHandler_0(els, index, faq);
-      }));
-    */
   </script>
 </component>

@@ -1,6 +1,6 @@
 {
   "name": "@evolvedweb/wc",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Evo-wc transpiler converts a template file based on HTML and XML into a raw JavaScript custom element Web Component.\nOnly write what you need!",
   "bin": {
     "evowc": "bin/evowc.js"
@@ -14,6 +14,7 @@
     "evowc1": "node ./bin/evowc.js WcLoopElement.html",
     "lint": "eslint \"lib/**/*.js\" \"bin/evowc.js\" \"static/js/*.js\"",
     "postinstall": "npm run build",
+    "prep": "node ./bin/deployPrep.js",
     "start": "node app",
     "test-mocha": "c8 --config test/.c8rc.json ./node_modules/.bin/_mocha \"lib/**/*.mocha.js\" \"static/js/*.mocha.js\"",
     "test": "npm run lint && npm run test-mocha",
@@ -41,7 +42,7 @@
   },
   "devDependencies": {
     "@types/mocha": "10.0.6",
-    "@types/node": "20.11.25",
+    "@types/node": "20.11.26",
     "c8": "9.1.0",
     "chai": "5.1.0",
     "eslint": "8.57.0",
@@ -57,12 +58,22 @@
     "test": "test"
   },
   "evo": {
+    "deploy": {
+      "files": [
+        { "src": "components", "dst": "init-files/src/components" },
+        { "src": "components", "dst": "init-files/src/public/components" },
+        { "src": "static/img", "dst": "init-files/src/public/img" }
+      ]
+    },
     "wc": {
       "addDebug": false,
       "saveDebugJson": true,
       "minify": {
         "css": true,
-        "html": true
+        "html": true,
+        "noMinElements": [
+          "highlight-code"
+        ]
       },
       "outExtname": ".js",
       "paths": {

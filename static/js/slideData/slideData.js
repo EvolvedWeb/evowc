@@ -221,7 +221,7 @@ customElements.define(tagName, MiniMumElement);</pre></code></div></div>`
     sub: "Just in case you might want to use it.",
     content: `<ul>
       <li>Evo was made public by the end of August. (v0.5.0)</li>
-      <li>Evo is currently (March 2024) on version 1.1.0</li>
+      <li>Evo is currently (March 2024) on version 1.1.1</li>
       <li>You can:
         <ul>
       <li>Install Evo from NPM</li>
