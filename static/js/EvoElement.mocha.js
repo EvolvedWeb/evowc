@@ -483,7 +483,7 @@ describe('EvoElement tests', () => {
         disconnected() {
           this.disconnectedCalled++;
         }
-       }
+      }
       const test = new Test();
       test.createDom({ template: '', styles: '.dog{background:red}', shadowMode: 'open', componentName: 'test-element' });
       // @ts-ignore
@@ -492,6 +492,7 @@ describe('EvoElement tests', () => {
       expect(test.disconnectedCalled).to.equal(0, 'test.disconnectedCalled');
 
       await test.callUpdate({ cpa: 'dog', oldVal: null, newVal: 'woof' });
+      // @ts-ignore
       document.body.appendChild(test);
       await sleep(100);
       expect(test.updateCalled).to.equal(1, 'test.updateCalled');
@@ -503,6 +504,7 @@ describe('EvoElement tests', () => {
       expect(test.connectedCalled).to.equal(1, 'test.connectedCalled');
       expect(test.disconnectedCalled).to.equal(1, 'test.disconnectedCalled');
 
+      // @ts-ignore
       document.body.appendChild(test);
       await sleep(100);
       await test.callUpdate({ cpa: 'cow', oldVal: null, newVal: 'moo' });
@@ -512,8 +514,6 @@ describe('EvoElement tests', () => {
       expect(test.disconnectedCalled).to.equal(1, 'test.disconnectedCalled');
 
       expect(test.shadowRoot.children.length).to.equal(1, 'test.shadowRoot.children.length'); // Make sure we didn't add a second style tag
-
-      //console.log(JSON.stringify(test, JSONReplacer, 2));
     });
 
     it('attributeChangedCallback should work', () => {

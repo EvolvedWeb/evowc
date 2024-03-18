@@ -21,14 +21,15 @@ app.get('/test/*', doEvoPages('test.html'));
 app.get('/slideshow', doEvoPages('slideshow.html'));
 app.get('/slideshow/*', doEvoPages('slideshow.html'));
 
-function doRedir(req, res, next) {
+// @ts-ignore
+function doRedir(req, res, next) { // eslint-disable-line no-unused-vars
   res.redir('/index.html');
 }
 
 function doEvoPages(fileName) {
+  // @ts-ignore
   return (req, res, next) => {
     const options = {
-      // @ts-ignore
       root: path.join(__dirname, 'static')
     };
 
@@ -42,13 +43,15 @@ function doEvoPages(fileName) {
   }
 }
 
-async function processComponent(req, res, next) {
+// @ts-ignore
+async function processComponent(req, res, next) { // eslint-disable-line no-unused-vars
   const content = req.body.component || ''
-  const resp = await evowc(content)
+  const resp = evowc(content)
   res.json(resp);
 }
 
-async function processLogin(req, res, next) {
+// @ts-ignore
+async function processLogin(req, res, next) { // eslint-disable-line no-unused-vars
   setTimeout(() => {
     const {username, password} = req.body;
     if (username === 'michael.collins@stgconsulting.com' && password === 'password') {

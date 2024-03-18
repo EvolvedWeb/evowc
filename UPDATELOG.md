@@ -1,5 +1,19 @@
 # Updates to EVO-WC
 
+## Version 1.1.2 - 2024-??-??
+
+* Resolves #52 - Evo now supports external CSS files in the `<style>` tag.
+* Resolves #53 - Evo now supports external JS files for the `<script>` tag.
+* Resolves #87 - Fixed the null exception that was thrown for using invalid `$switch` formatting
+* Updating to version 1.1.2
+* Updated `fast-xml-parser` to version 4.3.6
+* Updated `@types/node` to version 20.11.28
+* We now pass options into  the Component class constructor for use to load external script and style files.
+* Tags in the `<template>` can now be self closing.
+* Created `ExtStuff.html`, `ExtStuff.css`, `ExtStuffCode.js`, and `ExtStuffRoot.js` to test external loading.
+* Added the file `parseInterpolation.js` to get ready for adding interpolation to binding attribute values and to element textContent.
+* Updated test to test new code changes.
+
 ## Version 1.1.1 - 2024-03-11
 
 * Resolves #78 - Callbacks registered through EvoElement.onUpdate are now getting called
