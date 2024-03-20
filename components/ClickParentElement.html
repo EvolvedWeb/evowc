@@ -1,0 +1,26 @@
+<component tag="click-parent"
+  :#count="int:0"
+  :#bool="bool:false">
+  <template .click="#clickSelf">
+    <span :text="#count"/><br/>
+    <button .click:c="#onClick:i">Increment Count</button>
+  </template>
+  <script>
+    #onClick() {
+      this.#count++;
+      this.#bool = !this.#bool;
+    }
+    #clickSelf() {
+      alert('You clicked on the "<click-me>" element')
+    }
+  </script>
+  <style>
+    :host {
+      background-color: #FFFFAA;
+      display: block;
+      height: fit-content;
+      margin: 0 auto;
+      text-align: center;
+    }
+  </style>
+</component>

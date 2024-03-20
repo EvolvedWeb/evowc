@@ -1,6 +1,22 @@
 <component tag="route-one" shadow="none"
-  :#show-st="bool:false">
+  :#show-st="bool:false"
+>
+  <script root>
+    import './HasSwitchElement.js';
+    import './PortfolioImgElement.js';
+    import './SimpleAddressElement.js';
+    import './SpecialThingElement.js';
+    import './WcHrElement.js';
+    import './PersonProfileElement.js';
+    import './WcLoopElement.js';
+    import './ClickParentElement.js';
+  </script>
   <template>
+    <div>
+      <hr/>
+      <click-parent></click-parent>
+      <hr/>
+    </div>
     <wc-loop title="Name:"></wc-loop>
     <wc-hr style="width:500px;margin:0 auto;"></wc-hr>
     <div style="display:flex;justify-content: space-around;">
@@ -18,15 +34,6 @@
       <person-profile></person-profile>
     </div>
   </template>
-  <script root>
-    import './HasSwitchElement.js';
-    import './PortfolioImgElement.js';
-    import './SimpleAddressElement.js';
-    import './SpecialThingElement.js';
-    import './WcHrElement.js';
-    import './PersonProfileElement.js';
-    import './WcLoopElement.js';
-  </script>
   <script>
     #toggle(event, data) {
       this.#showSt = !this.#showSt;

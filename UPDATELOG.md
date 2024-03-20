@@ -2,17 +2,24 @@
 
 ## Version 1.1.2 - 2024-??-??
 
+* Resolves #18 - Added event binding (.click), attributes (:attr.show), aria attributes (:aria.label), and data attributes (:data.name) to the <template> tag.
 * Resolves #52 - Evo now supports external CSS files in the `<style>` tag.
 * Resolves #53 - Evo now supports external JS files for the `<script>` tag.
+* Resolves #76 - Added support for using adoptedStyleSheets to save memory and parsing.
 * Resolves #87 - Fixed the null exception that was thrown for using invalid `$switch` formatting
+* Resolves #92 - Setting capture .click:c is now working correctly.
 * Updating to version 1.1.2
 * Updated `fast-xml-parser` to version 4.3.6
-* Updated `@types/node` to version 20.11.28
+* Updated `@types/node` to version 20.11.30
 * We now pass options into  the Component class constructor for use to load external script and style files.
 * Tags in the `<template>` can now be self closing.
 * Created `ExtStuff.html`, `ExtStuff.css`, `ExtStuffCode.js`, and `ExtStuffRoot.js` to test external loading.
 * Added the file `parseInterpolation.js` to get ready for adding interpolation to binding attribute values and to element textContent.
 * Updated test to test new code changes.
+* Added docs for the new `createStyles` function.
+* Removed old, unused, example files.
+* Updated the Copyright dates in the LICENSE file.
+* Updated several links and layout in the README.md file.
 
 ## Version 1.1.1 - 2024-03-11
 
@@ -23,7 +30,6 @@
 * Updated tests to properly test the changes for #callUpdate
 * Added `npm prep` and associated code to make sure that we do everything before deploying a new version to npm.
 * Updated "@types/node" to version 20.11.26.
-
 
 ## Version 1.1.0 - 2024-03-06
 

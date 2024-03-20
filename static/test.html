@@ -4,6 +4,27 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Test Comp1</title>
+</head>
+<body>
+  <div class="holder">
+    <wc-a href="/test/one">Page 1</wc-a>
+    <wc-a href="/test/two">Page 2</wc-a>
+    <wc-a href="/test/three/">Page 3</wc-a>
+    <wc-a href="/test/four">Page 4</wc-a>
+    <wc-a href="/test/five">Page 5</wc-a>
+  </div>
+  <wc-router>
+    <wc-route href="/test" element="route-one" import="./RouteOneElement.js"></wc-route>
+    <wc-route href="/test/one" element="route-one" import="./RouteOneElement.js"></wc-route>
+    <wc-route href="/test/two/" element="route-two" import="./RouteTwoElement.js" auto-delete></wc-route>
+    <wc-route href="/test/three" element="route-three" import="./RouteThreeElement.js"></wc-route>
+    <wc-route href="/test/four/:page?" element="route-four" import="./RouteFourElement.js"></wc-route>
+    <wc-route href="(.*)" element="route-not-found" import="./RouteNotFoundElement.js" auto-delete="2"></wc-route>
+  </wc-router>
+  <script type="module">
+    import '/js/components/WcAElement.js';
+    import '/js/components/WcRouterElement.js';
+  </script>
   <style>
     body {
       font: 16px Tahoma;
@@ -37,25 +58,5 @@
       padding: 0 5px;
     }
   </style>
-</head>
-<body>
-  <div class="holder">
-    <wc-a href="/test/one">Page 1</wc-a>
-    <wc-a href="/test/two">Page 2</wc-a>
-    <wc-a href="/test/three/">Page 3</wc-a>
-    <wc-a href="/test/four">Page 4</wc-a>
-    <wc-a href="/test/five">Page 5</wc-a>
-  </div>
-  <wc-router>
-    <wc-route href="/test/one" element="route-one" import="./RouteOneElement.js"></wc-route>
-    <wc-route href="/test/two/" element="route-two" import="./RouteTwoElement.js" auto-delete></wc-route>
-    <wc-route href="/test/three" element="route-three" import="./RouteThreeElement.js"></wc-route>
-    <wc-route href="/test/four/:page?" element="route-four" import="./RouteFourElement.js"></wc-route>
-    <wc-route href="(.*)" element="route-not-found" import="./RouteNotFoundElement.js" auto-delete="2"></wc-route>
-  </wc-router>
-  <script type="module">
-    import '/js/components/WcAElement.js';
-    import '/js/components/WcRouterElement.js';
-  </script>
 </body>
 </html>

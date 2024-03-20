@@ -6,8 +6,8 @@
     "evowc": "bin/evowc.js"
   },
   "scripts": {
-    "build:debug": "node --inspect-brk ./bin/evowc.js -f \"**/LoopTest.html\"",
-    "build:one": "node ./bin/evowc.js -f \"**/ExtStuff.html\"",
+    "build:debug": "node --inspect-brk ./bin/evowc.js -f \"**/ClickParentElement.html\"",
+    "build:one": "node ./bin/evowc.js -f \"**/ClickParentElement.html\"",
     "build": "npm run evowc",
     "debug-mocha": "node --inspect-brk node_modules/mocha/bin/_mocha --reporter tap \"lib/**/*.mocha.js\" \"static/js/*.mocha.js\"",
     "evowc": "node ./bin/evowc.js -f \"**/*.html\"",
@@ -20,6 +20,11 @@
     "test": "npm run lint && npm run test-mocha",
     "watch": "npm run build && node ./bin/evowc.js watch"
   },
+  "pre-commit": [
+    "test",
+    "build",
+    "prep"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/evolvedweb/evowc.git"
@@ -32,6 +37,7 @@
   },
   "homepage": "https://www.evowc.com",
   "dependencies": {
+    "dompurify": "^3.0.10",
     "express": "4.18.3",
     "fast-xml-parser": "4.3.6",
     "glob": "10.3.10",
@@ -42,7 +48,7 @@
   },
   "devDependencies": {
     "@types/mocha": "10.0.6",
-    "@types/node": "20.11.28",
+    "@types/node": "20.11.30",
     "c8": "9.1.0",
     "chai": "5.1.0",
     "eslint": "8.57.0",

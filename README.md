@@ -13,14 +13,16 @@
   </a>
 
   <p align="center">
-    Create blazing fast, lightweight, native, custom elements, with minimal boilerplate and almost no runtime libraries.
-    <br />
+    Create blazing fast, lightweight, native, custom elements,<br />
+    with minimal boilerplate and<br />
+    almost no runtime libraries.<br /><br />
     <a href="https://github.com/EvolvedWeb/evowc/wiki"><strong>Explore the docs »</strong></a>
-    <br />
-    <br />
-    <a href="https://www.evowc.com/examples">View Demo</a> ·
-    <a href="https://github.com/EvolvedWeb/evowc/issues">Report Bug</a> ·
-    <a href="https://github.com/EvolvedWeb/evowc/issues">Request Feature</a>
+    <br /><br />
+    <a href="https://www.evowc.com/examples">View Demo</a>
+    ·
+    <a href="https://github.com/EvolvedWeb/evowc/issues/new?assignees=&labels=&projects=&template=bug_report.md&title=">Report Bug</a>
+    ·
+    <a href="https://github.com/EvolvedWeb/evowc/issues/new?assignees=&labels=&projects=&template=feature_request.md&title=">Request Feature</a>
   </p>
 </div>
 
