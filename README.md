@@ -13,14 +13,16 @@
   </a>
 
   <p align="center">
-    Create blazing fast, lightweight, native, custom elements, with minimal boilerplate and almost no runtime libraries.
-    <br />
+    Create blazing fast, lightweight, native, custom elements,<br />
+    with minimal boilerplate and<br />
+    almost no runtime libraries.<br /><br />
     <a href="https://github.com/EvolvedWeb/evowc/wiki"><strong>Explore the docs »</strong></a>
-    <br />
-    <br />
-    <a href="https://www.evowc.com/examples">View Demo</a> ·
-    <a href="https://github.com/EvolvedWeb/evowc/issues">Report Bug</a> ·
-    <a href="https://github.com/EvolvedWeb/evowc/issues">Request Feature</a>
+    <br /><br />
+    <a href="https://www.evowc.com/examples">View Demo</a>
+    ·
+    <a href="https://github.com/EvolvedWeb/evowc/issues/new?assignees=&labels=&projects=&template=bug_report.md&title=">Report Bug</a>
+    ·
+    <a href="https://github.com/EvolvedWeb/evowc/issues/new?assignees=&labels=&projects=&template=feature_request.md&title=">Request Feature</a>
   </p>
 </div>
 
@@ -225,64 +227,66 @@ You can also open an issue with the tag "enhancement".
 
 ## Roadmap
 
-- ☑ Release version 0.5.0
-- ☑ Fix errors and enhancements for v0.6.0
-  - ☑ Improve documentation.
-- ☑ Release version 0.6.0
-- ☑ Fix errors and enhancements for v0.7.0
-  - ☑ Increase unit tests to over 40%
-  - ☑ Add hot-transpile. Components will auto-transpile when changed in the Evo demo app.
-  - ☑ Improve demo website.
-    - ☑ Use the Evo router.
-    - ☑ Add a couple demo pages.
-    - ☑ Include several of the example components.
-- ☑ Release version 0.7.0
-- ☑ Fix all errors and enhancements for version 1.0.0
-  - ☑ All docs up to date.
-  - ☑ Unit tests over 60%.
-- ☑ Release version 1.0.0
-- ☑ Get all Issues related to 1.1.0 finished
-  - ☑ Work with html-minifier-terser to define custom pre-formatted tags.
-  - ☑ Create a new logo.
-  - ☑ Unit testing over 80%.
-  - ☑ Event Handlers - Support Capture, Passive, Once.
-  - ☑ Improve WcDialogElement to handle a common busy state with aria-busy and inert attributes.
-  - ☑ Add a filter to the router.onUpdate method
-  - ☑ Add new Evo pipes: toJson, toCurrency, toDate, toDecimal, toPercent
-  - ☑ Improve the router:
-    - ☑ Bug fixes
-    - ☑ Add ability to auto-delete a routing component immediately or after a specified time of no use.
-    - ☑ Ability to send routing information to routing component through optional public method navParams method
-      - ☑ Include Query string, hash string and query object
-    - ☑ Provide an exported function to convert the query string into a query object
-  - ☑ Convert all code to ESM.
-  - ☑ Convert all tests to ESM.
+This section will only show the current released version and anything planned for the future. Review the [UPDATELOG.md](UPDATELOG.md) for past changes
+
+- ☑ Get all Issues related to 1.1.2 finished
+  - ☑ #18 - Add event binding to the `<template>` tag.
+  - ☑ #52 - Support external CSS files for the `<style>` tag.
+  - ☑ #53 - Support external JS files for the `<script>` tag.
+  - ☑ #62 - callbacks for `onUpdate` should be passed the current path.
+  - ☑ #87 - Null exception thrown when using invalid $switch formatting
+  - ☑ Repo Updates.
   - ☑ Bug fixes.
-  - ☑ Drop `proxyquire` for `esmock`, `sinon` for `nock`, and `nyc` for `c8`.
-  - ☑ Add onUpdate function to allow for monitoring specific property changes.
-- ☑ Release version 1.1.0
-- ☑ Get all Issues related to 1.1.1 finished
-  - ☑ #78 - Callbacks registered through EvoElement.onUpdate are now getting called
-  - ☑ #79 - Added a Deploy Prep process to make sure that all updated files are in the right place.
-  - ☑ Bug fixes.
-- ☑ Release version 1.1.1
+- ☑ Release version 1.1.2
+- ☐ Get all Issues related to 1.1.3 finished
+  - ☐ #81 - Add new Evo pipe: `toRelTime`
+  - ☐ #88 - Add new Evo pipe: `sanitize`
+- ☐ Release version 1.1.3
+- ☐ Get all Issues related to 1.2.0 finished
+  - ☐ #85 - Increase Unit tests to over 85% coverage bug enhancement
+  - ☐ #89 - Support basic interpolation inside a tag. enhancement
+  - ☐ #90 - Support basic interpolation in an attribute. enhancement
+- ☐ Release version 1.2.0
+- ☐ Get all Issues related to 1.2.1 finished
+  - ☐ #91 - Support basic expressions in an event handler enhancement
+  - ☐ #93 - Support basic expressions in $if, $switch and interpolation rendering enhancement
+- ☐ Release version 1.2.1
 - ☐ Get all Issues related to 2.0.0 finished
-  - ☐ callbacks for onUpdate should be passed the current path.
-  - ☐ Add auto-browser refresh when any component file auto-rebuilds.
-  - ☐ Consider how to support fragments inside the template.
-  - ☐ Support external JS files for the `<script>` tag.
-  - ☐ Support external CSS files for the `<style>` tag.
-  - ☐ Support Scoped Styles: the @scope rule for non-shadow-dom elements.
-  - ☐ Support form-associated custom elements.
-  - ☐ Need to support this.attachInternals().
-  - ☐ Fix browser refresh to load updated transpiled component files.
-  - ☐ Add unit testing for all files that are part of the transpiler.
-  - ☐ Add event binding to the `<template>` tag.
-  - ☐ Add hooks for router (BeforeUnload, BeforeLoad, AfterLoad, Guard, and possibly others).
-  - ☐ Finish EvoState for both Evo components and React. Angular support is a plus.
-  - ☐ Create simple React app with Evo integration points.
+  - ☐ #21 - Add unit testing for all files that are part of the transpiler.
+  - ☐ #29 - Fix browser refresh to load updated transpiled component files.
+  - ☐ #41 - Need to support `this.attachInternals()`.
+  - ☐ #50 - Support form-associated custom elements.
+  - ☐ #83 - Finish `EvoState` for Evo components
+  - ☐ #85 - Unit testing over 85% coverage.
+  - ☐ Create simple **React** app with Evo integration points.
+  - ☐ Functional Tests for main components.
+  - ☐ Repo Updates.
   - ☐ Bug fixes.
 - ☐ Release version 2.0.0
+- ☐ Issues related to any future version
+  - ☐ #22 - Add VSCode plugin to improve support of the template files.
+  - ☐ #35 - Investigate code during transpile and remove unused or not-required generated code. (See #72)
+  - ☐ #37 - Protect the init and update functions. Making the private, if possible.
+  - ☐ #46 - Create a way to list all of the Components available in the repo.
+  - ☐ #47 - Add ability to auto generate mapping files
+  - ☐ #51 - Support Scoped Styles: the `@scope` rule for non-shadow-dom elements.
+  - ☐ #54 - Support **fragments** inside the template.
+  - ☐ #56 - Add auto-browser refresh when any component file auto-rebuilds.
+  - ☐ #58 - Add acceptance tests for Evowc and a simple way for all project made using Evowc.
+  - ☐ #72 - Integrate AST for compile time error checking and validation (See #35)
+  - ☐ #76 - Add support for adoptedStyleSheets
+  - ☐ #82 - Add error message output as component for transpile errors so they are visible.
+  - ☐ #84 - Add hooks for router (`BeforeUnload`, `BeforeLoad`, `AfterLoad`, `Guard`, and possibly others).
+  - ☐ #86 - Look at path-to-regexp project to replace our internal code.
+  - ☐ Add `EvoState` support for React.
+  - ☐ Add `EvoState` support for Angular.
+  - ☐ Finish online editor/tester.
+  - ☐ Support generating Server Side versions for Server Side Rendering and Hydration.
+  - ☐ Add code to generate server RPC code and calls from client.
+    - ☐ Node, Deno, .NET, PHP, Python, Rust, Java, others
+  - ☐ Repo Updates.
+  - ☐ Bug fixes.
+- ☐ Release version
 
 See the [open issues](https://github.com/EvolvedWeb/evowc/issues) for the current list of proposed features (and known issues).
 

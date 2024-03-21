@@ -166,6 +166,90 @@ export function sleep(timeout = 1) {
 }
 
 /**
+ * Dynamically applies CSS styles to web components, utilizing Constructable
+ * Stylesheets when available, and falls back to traditional <style> tags for
+ * browsers without support. It ensures styles are applied uniquely to each
+ * component based on the componentName to avoid duplication.
+ *
+ * @param {string} cssText - The CSS rules to be applied to the component.
+ * @param {string} componentName - A unique identifier for the component, used
+ *   to prevent duplicate style elements.
+ * @returns {Function} - A function that accepts a host element (typically a
+ *   shadow DOM root) and applies the CSS styles to it. This function handles
+ *   both the application of styles through Constructable Stylesheets and the
+ *   fallback method using <style> elements.
+ */
+export function createStyles(cssText, componentName) {
+  let componentSheet;
+  let isReplacing = false; // Flag to indicate that replace is processing
+  let appliedHosts = new Set(); // Keep track of all hosts where the componentSheet has been applied
+
+  if ('adoptedStyleSheets' in Document.prototype && 'replace' in CSSStyleSheet.prototype) {
+    // Constructable Stylesheets supported
+    componentSheet = new CSSStyleSheet();
+    isReplacing = true;
+    componentSheet.replace(cssText).then(() => {
+      isReplacing = false; // Update flag when replacement is successful
+      appliedHosts.clear(); // Clear the tracking list as no need to track anymore
+    }).catch(error => {
+      console.error('Error replacing styles:', error);
+      // Remove the faulty stylesheet from all applied hosts
+      appliedHosts.forEach(host => {
+        host.adoptedStyleSheets = [...host.adoptedStyleSheets].filter(sheet => sheet !== componentSheet);
+      });
+      // Reset states after removal
+      componentSheet = null;
+      isReplacing = false;
+      // Retry inserting styles as HTMLStyleElement in all affected hosts
+      appliedHosts.forEach(host => insertFallbackStyle(host));
+      // Clear the tracking list as it's no longer applicable
+      appliedHosts.clear();
+    });
+  }
+
+  // Function to insert fallback style
+  function insertFallbackStyle(host) {
+    if (!host.querySelector(`style[component="${componentName}"]`)) {
+      const styleEl = document.createElement('style');
+      styleEl.textContent = cssText;
+      styleEl.setAttribute('component', componentName);
+      host.appendChild(styleEl);
+    }
+  }
+
+  /**
+   * Applies the predefined CSS styles to the provided host element.
+   *
+   * If Constructable Stylesheets are supported and the stylesheet has been successfully
+   * created, it appends the stylesheet to the host's adoptedStyleSheets.
+   *
+   * If the replacement process fails or if Constructable Stylesheets are not supported,
+   * it adds the styles using a <style> element as a fallback mechanism.
+   *
+   * This function should be called with the host element of a web component (typically
+   * its shadow root) to apply the component-specific styles. It manages deduplication
+   * and efficient application of styles.
+   *
+   * @param {ShadowRoot|HTMLElement} host - The host element to which the styles should
+   *   be applied, usually a shadow root or any HTMLElement that may contain the component.
+   */
+  return (host) => {
+    if (componentSheet && 'adoptedStyleSheets' in host && host.adoptedStyleSheets != null) {
+      if (!host.adoptedStyleSheets.includes(componentSheet)) {
+        host.adoptedStyleSheets =[...host.adoptedStyleSheets, componentSheet];
+      }
+
+      if (isReplacing) {
+        appliedHosts.add(host); // Track where componentSheet is applied
+      }
+      return;
+    }
+
+    insertFallbackStyle(host);
+  };
+}
+
+/**
  * Adds an event listener to an element with options for once, passive, and capture.
  * Returns a function to remove the event listener.
  *
@@ -219,8 +303,9 @@ export const EvoElement = (baseClass = HTMLElement) => class extends baseClass {
   #loopedEls = {};
   #onUpdateCallbackList = {};
   #savedUpdates = {};
+  #appendStylesFn = null;
 
-  createDom({ template='', styles='', shadowMode='open', componentName }) {
+  createDom({ template='', appendStylesFn = null, shadowMode='open', componentName }) {
     this.#componentId = (++componentIndex).toString(36);
     if (shadowMode === 'none') {
       this.#usingShadow = false;
@@ -235,7 +320,7 @@ export const EvoElement = (baseClass = HTMLElement) => class extends baseClass {
     }
 
     this.#componentName = componentName;
-    this.#styles = styles;
+    this.#appendStylesFn = appendStylesFn;
     this.#insertStyles()
 
     // Add the Template to the `#rootDom`
@@ -517,15 +602,9 @@ export const EvoElement = (baseClass = HTMLElement) => class extends baseClass {
    * then CSS is placed into the <head></head>
    */
   #insertStyles() {
-    if (this.#styles) {
+    if (this.#appendStylesFn) {
       // Determine the correct place to add our styles
       // The location will be different based on if we are or are not in Shadow DOM
-      const styleEl = document.createElement('style');
-
-      // Add this component name into the component attribute
-      styleEl.setAttribute('component', this.#componentName);
-      styleEl.textContent = this.#styles;
-
       let doc;
       if (this.#usingShadow) {
         // If we are using shadow DOM then the css belongs in this shadow DOM.
@@ -546,14 +625,7 @@ export const EvoElement = (baseClass = HTMLElement) => class extends baseClass {
         }
       }
 
-      // If the CSS for the component is not in the correct place then add it.
-      // See if there is a style tag with our component name in the component attribute
-      // We use the component attribute as a way to track our CSS files.
-      // @ts-ignore
-      if (!doc.querySelector(`style[component="${this.#componentName}"]`)) {
-        // Add this style tag into the DOM
-        doc.appendChild(styleEl);
-      }
+      this.#appendStylesFn(doc);
     }
   }
 }

@@ -58,7 +58,7 @@ export const toJson = (item) => JSON.stringify(item);
  * Example: <span :text="varName|toCurrency" data-currency="USD" data-locale="en-US"></span>
  */
 export function toCurrency(num, data) {
-  let { currency = 'USD', locale } = data;
+  let { currency = 'USD', locale } = data || {};
   const options = { style: 'currency', currency };
   return new Intl.NumberFormat(getLocale(locale), options).format(Number(num));
 }
@@ -90,7 +90,7 @@ export function toCurrency(num, data) {
  * data-time-zone="America/Los_Angeles" data-locale="en-us"></span>
  */
 export function toDate(date, data) {
-  let { dateStyle = 'short', timeZone = undefined, locale } = data;
+  let { dateStyle = 'short', timeZone = undefined, locale } = data || {};
   date = new Date(date);
   if (!VALID_DATE_STYLES.includes(dateStyle)) {
     return toFormattedDate(date, locale, timeZone, dateStyle);

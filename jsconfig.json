@@ -6,14 +6,29 @@
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "baseUrl": ".",
-    "types": ["node","mocha"],
-    "paths": {"*": ["node_modules/*"]}
+    "types": [
+      "node",
+      "mocha"
+    ],
+    "paths": {
+      "*": ["node_modules/*"]
+    }
   },
   "include": [
     "./bin/*.js",
     "lib/**/*.js",
     "./static/js/*.js",
-    "./app.js"
-  ],
-  "exclude": [ "node_modules", "**/node_modules/*" ]
+    "./app.js",
+    "static/js/EvoElement.js",
+    "static/js/EvoElement.mocha.js",
+    "static/js/EvoPipes.js",
+    "static/js/EvoPipes.mocha.js",
+    "static/js/EvoRouter.js",
+    "static/js/EvoRouter.mocha.js",
+    "../evo-sanitize/EvoSanitizePipe.js",
+    "static/js/EvoState.js"  ],
+  "exclude": [
+    "node_modules",
+    "**/node_modules/*"
+  ]
 }

@@ -104,10 +104,11 @@ function getOptions(clOptions, version) {
 async function run(args) {
   // @ts-ignore
   const version = getEvoVersion();
-  console.log(`\n\x1B[93mEvo-wc v${version}\x1B[0m\n`);
+  console.info(`\n\x1B[93mEvo-wc v${version}\x1B[0m\n`);
   console.time(TOTAL_TIME);
 
   let errors = [];
+  const cwd = process.cwd();
 
   const clOptions = getClOptions(args, version);
   const options = getOptions(clOptions, version);
@@ -149,15 +150,16 @@ async function run(args) {
       try {
         beforeTime = performance.now();
         const srcName = path.join(templateRoot, componentFileName);
+        const srcPath = path.dirname(path.join(cwd, srcName));
         const extname = path.extname(componentFileName);
         const dirname = path.dirname(componentFileName);
         const tempName = path.basename(componentFileName, extname);
         const outputPath = path.join(componentsRoot, dirname);
 
-        //console.log({ srcName, extname, dirname, tempName, outputPath });
+        //console.log({ cwd, srcName, extname, dirname, tempName, outputPath });
 
         let source = fs.readFileSync(srcName, FILE_OPTIONS);
-        const { fileExt, transpile } = evowc(source, options);
+        const { fileExt, transpile } = evowc(source, { ...options, srcName, srcPath });
 
         const outExtname = fileExt || options.outExtname;
         fs.mkdirSync(outputPath, MKDIR_OPTIONS);

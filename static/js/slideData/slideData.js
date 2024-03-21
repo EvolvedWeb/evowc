@@ -140,7 +140,7 @@ customElements.define('shadow-component', ShadowComponent);
       </li>
       <li><cp>BayJS</cp> is one of the newest and was some of the inspiration for <cy>Evo</cy>.</li>
       <li>These systems all have their pros and cons but they perform all of their work at runtime in the browser.</li>
-      <li><cy>I started writing Evo in February 2023</cy></li>
+      <li><cy>I started writing Evo towards the end of January 2023</cy></li>
     </ul>`
   },
   {
