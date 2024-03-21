@@ -13,7 +13,7 @@
 * Updated fast-xml-parser to version 4.3.6
 * Updated @types/node to version 20.11.30
 * Updated express to version 4.19.1
-* We now pass options into  the Component class constructor for use to load external script and style files.
+* We now pass options into the Component class constructor for use to load external script and style files.
 * Tags in the `<template>` can now be self closing.
 * Created `ExtStuff.html`, `ExtStuff.css`, `ExtStuffCode.js`, and `ExtStuffRoot.js` to test external loading.
 * Added the file `parseInterpolation.js` to get ready for adding interpolation to binding attribute values and to element textContent.
