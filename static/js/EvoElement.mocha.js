@@ -9,7 +9,8 @@ let sameDates;
 let cond;
 let ael;
 let comment;
-let EvoElement
+let createStyles;
+let EvoElement;
 let qs = null;
 let qsAll = [];
 
@@ -223,6 +224,8 @@ class HTMLElement extends EventTarget {
 }
 // @ts-ignore
 global.HTMLElement = HTMLElement;
+// @ts-ignore
+global.Document = HTMLElement;
 
 // eslint-disable-next-line no-unused-vars
 function JSONReplacer(key, value) {
@@ -235,7 +238,7 @@ function JSONReplacer(key, value) {
 describe('EvoElement tests', () => {
   before(async () => {
     const module = await import('./EvoElement.js');
-    ({ propFromAttr, isObject, boolFromVal, setAttr, sameObjs, sameDates, cond, ael, comment, EvoElement } = module);
+    ({ propFromAttr, isObject, boolFromVal, setAttr, sameObjs, sameDates, cond, ael, createStyles, comment, EvoElement } = module);
   });
 
   beforeEach(() => {
@@ -485,7 +488,12 @@ describe('EvoElement tests', () => {
         }
       }
       const test = new Test();
-      test.createDom({ template: '', styles: '.dog{background:red}', shadowMode: 'open', componentName: 'test-element' });
+      const cssText = '.dog{background:red}';
+      const componentName = 'test-element';
+      const appendStylesFn = createStyles(cssText, componentName);
+      expect(appendStylesFn).to.be.a('function');
+
+      test.createDom({ template: '', appendStylesFn, shadowMode: 'open', componentName });
       // @ts-ignore
       expect(test.updateCalled).to.equal(0, 'test.updateCalled');
       expect(test.connectedCalled).to.equal(0, 'test.connectedCalled');
@@ -512,8 +520,8 @@ describe('EvoElement tests', () => {
       expect(test.updateCalled).to.equal(2, 'test.updateCalled');
       expect(test.connectedCalled).to.equal(2, 'test.connectedCalled');
       expect(test.disconnectedCalled).to.equal(1, 'test.disconnectedCalled');
-
-      expect(test.shadowRoot.children.length).to.equal(1, 'test.shadowRoot.children.length'); // Make sure we didn't add a second style tag
+      // Make sure we didn't add a second style tag
+      expect(test.shadowRoot.children.length).to.equal(1, 'test.shadowRoot.children.length');
     });
 
     it('attributeChangedCallback should work', () => {

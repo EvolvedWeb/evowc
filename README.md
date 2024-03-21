@@ -227,32 +227,37 @@ You can also open an issue with the tag "enhancement".
 
 ## Roadmap
 
-This section will only show the current released version and anything planned for the future.
+This section will only show the current released version and anything planned for the future. Review the [UPDATELOG.md](UPDATELOG.md) for past changes
 
-- ☑ Get all Issues related to 1.1.1 finished
-  - ☑ #78 - Callbacks registered through `EvoElement.onUpdate` are now getting called
-  - ☑ #79 - Added a **Deploy Prep** process to make sure that all updated files are in the right place.
-  - ☑ #80 - `adoptedCallback` now works like `connectedCallback` for template and styles
-  - ☑ Repo Updates.
-  - ☑ Bug fixes.
-- ☑ Release version 1.1.1
-- ☐ Get all Issues related to 1.2.0 finished
-  - ☐ #18 - Add event binding to the `<template>` tag.
+- ☑ Get all Issues related to 1.1.2 finished
+  - ☑ #18 - Add event binding to the `<template>` tag.
   - ☑ #52 - Support external CSS files for the `<style>` tag.
   - ☑ #53 - Support external JS files for the `<script>` tag.
-  - ☐ #62 - callbacks for `onUpdate` should be passed the current path.
-  - ☐ #81 - Add new Evo pipe: `toRelTime`
-  - ☐ #85 - Unit testing over 85% coverage.
+  - ☑ #62 - callbacks for `onUpdate` should be passed the current path.
   - ☑ #87 - Null exception thrown when using invalid $switch formatting
-  - ☐ Repo Updates.
-  - ☐ Bug fixes.
+  - ☑ Repo Updates.
+  - ☑ Bug fixes.
+- ☑ Release version 1.1.2
+- ☐ Get all Issues related to 1.1.3 finished
+  - ☐ #81 - Add new Evo pipe: `toRelTime`
+  - ☐ #88 - Add new Evo pipe: `sanitize`
+- ☐ Release version 1.1.3
+- ☐ Get all Issues related to 1.2.0 finished
+  - ☐ #85 - Increase Unit tests to over 85% coverage bug enhancement
+  - ☐ #89 - Support basic interpolation inside a tag. enhancement
+  - ☐ #90 - Support basic interpolation in an attribute. enhancement
 - ☐ Release version 1.2.0
+- ☐ Get all Issues related to 1.2.1 finished
+  - ☐ #91 - Support basic expressions in an event handler enhancement
+  - ☐ #93 - Support basic expressions in $if, $switch and interpolation rendering enhancement
+- ☐ Release version 1.2.1
 - ☐ Get all Issues related to 2.0.0 finished
   - ☐ #21 - Add unit testing for all files that are part of the transpiler.
   - ☐ #29 - Fix browser refresh to load updated transpiled component files.
   - ☐ #41 - Need to support `this.attachInternals()`.
   - ☐ #50 - Support form-associated custom elements.
   - ☐ #83 - Finish `EvoState` for Evo components
+  - ☐ #85 - Unit testing over 85% coverage.
   - ☐ Create simple **React** app with Evo integration points.
   - ☐ Functional Tests for main components.
   - ☐ Repo Updates.
