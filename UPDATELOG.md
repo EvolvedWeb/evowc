@@ -24,6 +24,7 @@
 * Updated several links, layout, and content in the `README.md` file.
 * Updated `UPDATELOG.md`
 * Updated `npm run prep` to include more things to do before deploy.
+* Dug through my original files and found the first data on a file was Jan 28, 2023
 
 ## Version 1.1.1 - 2024-03-11
 
