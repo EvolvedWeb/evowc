@@ -7,94 +7,6 @@
   :#css-import
   :#wasCopied="bool:false"
   >
-  <template>
-    <style :text="#cssImport"></style>
-    <pre class="hljs"><code :attr.class="lang|#codeClassName" :html="#code"></code></pre>
-    <div $if="showCopy" class="top-right">
-      <span inert class="copied" :attr.show="#wasCopied">Code Copied</span>
-      <button class="copy".click="#copyText"></button>
-    </div>
-  </template>
-  <style>
-    :host {
-      display: inline-block;
-      line-height: normal;
-      margin: 0;
-      max-width: 100%;
-      overflow: hidden;
-      padding: 0;
-      position: relative;
-      --highlight-code-font-family: Consolas, "Courier New", Courier, monospace;
-      --highlight-code-padding: 0;
-    }
-    :host([wide]) {
-      display: block;
-      width: 100%;
-      --highlight-code-padding: 20px;
-    }
-    pre.hljs {
-      max-height: 100%;
-      max-width: 100%;
-      overflow: auto;
-      margin: 0;
-      padding: 0;
-      height: 100%;
-    }
-    :host([show-copy] pre.hljs) {
-      padding-right: 30px;
-    }
-    code {
-      box-sizing: border-box;
-      display: inline-block;
-      font-family: var(--highlight-code-font-family);
-      font-weight: normal;
-      height: 100%;
-      overflow: auto;
-      padding: var(--highlight-code-padding, 20px);
-      width: 100%;
-    }
-
-    .top-right {
-      align-items: center;
-      display: flex;
-      gap: 10px;
-      justify-content: flex-end;
-      position: absolute;
-      left: 6px;
-      right: 6px;
-      top: 6px;
-      z-index: 10;
-    }
-
-    .copy {
-      background-color: transparent;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' height='24' viewBox='0 0 24 24' width='24'%3E%3Cpath d='M0 0h24v24H0z' fill='none'/%3E%3Cpath d='M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z' fill='white'/%3E%3C/svg%3E");
-      border: none;
-      color: #fff;
-      height: 24px;
-      margin: 0;
-      opacity: .5;
-      padding: 0;
-      width: 24px;
-    }
-    .copy:hover {
-      opacity: 1;
-    }
-    .copied {
-      display: inline-block;
-      border-radius: 8px;
-      font: 14px Roboto,"Helvetica Neue Light","Helvetica Neue",Helvetica,Arial,Lucida Grande,sans-serif;
-      padding: 2px 8px;
-      background-color: #eee;
-      color: #000;
-      opacity: 0;
-      transition: opacity .5s;
-    }
-    .copied[show] {
-      opacity: 1;
-      transition: opacity .25s;
-    }
-  </style>
   <script root>
     import hljs from 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/es/highlight.min.js';
     // cspell:disable
@@ -354,13 +266,22 @@
       subtree: true
     };
   </script>
+  <template>
+    <style :text="#cssImport"></style>
+    <pre class="hljs"><code :attr.class="lang|#codeClassName" :html="#code"></code></pre>
+    <div $if="showCopy" class="top-right">
+      <span inert class="copied" :attr.show="#wasCopied">Code Copied</span>
+      <button class="copy".click="#copyText"></button>
+    </div>
+  </template>
   <script>
     // Private properties that are not CPAs
     #observer;
     init() {
-      this.onUpdate('css', this.#cssUpdate)
-      this.onUpdate('lang', this.#langUpdate)
-      this.onUpdate('src', this.#srcUpdate)
+      this.onUpdate('css', this.#cssUpdate);
+      this.onUpdate('lang', this.#langUpdate);
+      this.onUpdate('src', this.#srcUpdate);
+      this.#cssUpdate();
     }
 
     connected() {
@@ -411,4 +332,82 @@
       }, 1500);
     }
   </script>
+  <style>
+    :host {
+      display: inline-block;
+      line-height: normal;
+      margin: 0;
+      max-width: 100%;
+      overflow: hidden;
+      padding: 0;
+      position: relative;
+      --highlight-code-font-family: Consolas, "Courier New", Courier, monospace;
+      --highlight-code-padding: 0;
+    }
+    :host([wide]) {
+      display: block;
+      width: 100%;
+      --highlight-code-padding: 20px;
+    }
+    pre.hljs {
+      max-height: 100%;
+      max-width: 100%;
+      overflow: auto;
+      margin: 0;
+      padding: 0;
+      height: 100%;
+    }
+    :host([show-copy] pre.hljs) {
+      padding-right: 30px;
+    }
+    code {
+      box-sizing: border-box;
+      display: inline-block;
+      font-family: var(--highlight-code-font-family);
+      font-weight: normal;
+      height: 100%;
+      overflow: auto;
+      padding: var(--highlight-code-padding, 20px);
+      width: 100%;
+    }
+    .top-right {
+      align-items: center;
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+      position: absolute;
+      left: 6px;
+      right: 6px;
+      top: 6px;
+      z-index: 10;
+    }
+    .copy {
+      background-color: transparent;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' height='24' viewBox='0 0 24 24' width='24'%3E%3Cpath d='M0 0h24v24H0z' fill='none'/%3E%3Cpath d='M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z' fill='white'/%3E%3C/svg%3E");
+      border: none;
+      color: #fff;
+      height: 24px;
+      margin: 0;
+      opacity: .5;
+      padding: 0;
+      width: 24px;
+    }
+    .copy:hover {
+      opacity: 1;
+    }
+    .copied {
+      display: inline-block;
+      border-radius: 8px;
+      font: 14px Roboto, "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, Lucida Grande, sans-serif;
+      padding: 2px 8px;
+      background-color: #eee;
+      color: #000;
+      opacity: 0;
+      transition: opacity .5s;
+    }
+    .copied[show] {
+      opacity: 1;
+      transition: opacity .25s;
+    }
+  </style>
 </component>

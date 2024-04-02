@@ -232,6 +232,9 @@ This section will only show the current released version and anything planned fo
 - ☑ Get all Issues related to 1.1.3 finished
   - ☑ #96 - Updated dependencies
   - ☑ #97 - Init and transpiler work correctly on Windows.
+  - ☑ #98 - Exception in WCAElement
+  - ☑ #99 - Exception in WCRouterElement
+  - ☑ #100 - CSS loading error HighlightCodeElement
   - ☑ Repo Updates.
   - ☑ Bug fixes.
 - ☑ Release version 1.1.3
