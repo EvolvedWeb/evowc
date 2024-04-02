@@ -1,5 +1,12 @@
 # Updates to EVO-WC
 
+## Version 1.1.3 - 2024-04-01
+
+* Resolves #96 - Updated dependencies
+* Resolves #97 - Init and transpiler work correctly on Windows.
+* Added CopyrightYearElement component
+
+
 ## Version 1.1.2 - 2024-03-21
 
 * Resolves #18 - Added event binding `.click`, attributes `:attr.show`, aria attributes

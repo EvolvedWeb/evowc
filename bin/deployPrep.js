@@ -1,8 +1,10 @@
-import { dirname, join } from 'node:path';
+import { posix as path } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { prepForDeploy } from '../lib/prepForDeploy.js';
 import { loadJson } from '../lib/loadJson.js';
-const __filename = fileURLToPath(import.meta.url);
+import { fixPath } from '../lib/fixPath.js';
+const { dirname, join } = path;
+const __filename = fixPath(fileURLToPath(import.meta.url));
 const __dirname = dirname(__filename);
 const PACKAGE_FILE_NAME = join(__dirname, '../package.json');
 
@@ -40,9 +42,10 @@ console.log(`
     * \x1b[93mnpm i\x1b[0m
     * \x1b[93mnpm run watch\x1b[0m
     * \x1b[95mBrowser to: \x1b[93mhttp://localhost:12345\x1b[0m
-  8 \x1b[95mAdd, commit and push to GIT\x1b[0m
-  9 \x1b[95mRun \x1b[93mnpm publish\x1b[0m
- 10 \x1b[95mPublish Evowc.com repo as well\x1b[0m
+  8 \x1b[95mTest evowc init on Windows\x1b[0m
+  9 \x1b[95mAdd, commit and push to GIT\x1b[0m
+ 10 \x1b[95mRun \x1b[93mnpm publish\x1b[0m
+ 11 \x1b[95mPublish Evowc.com repo as well\x1b[0m
 
 If everything passes then you can deploy.
 \x1b[91mDo not deploy if you have not followed ALL of these steps!\x1b[0m

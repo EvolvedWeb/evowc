@@ -229,19 +229,16 @@ You can also open an issue with the tag "enhancement".
 
 This section will only show the current released version and anything planned for the future. Review the [UPDATELOG.md](UPDATELOG.md) for past changes
 
-- ☑ Get all Issues related to 1.1.2 finished
-  - ☑ #18 - Add event binding to the `<template>` tag.
-  - ☑ #52 - Support external CSS files for the `<style>` tag.
-  - ☑ #53 - Support external JS files for the `<script>` tag.
-  - ☑ #62 - callbacks for `onUpdate` should be passed the current path.
-  - ☑ #87 - Null exception thrown when using invalid $switch formatting
+- ☑ Get all Issues related to 1.1.3 finished
+  - ☑ #96 - Updated dependencies
+  - ☑ #97 - Init and transpiler work correctly on Windows.
   - ☑ Repo Updates.
   - ☑ Bug fixes.
-- ☑ Release version 1.1.2
-- ☐ Get all Issues related to 1.1.3 finished
-  - ☐ #81 - Add new Evo pipe: `toRelTime`
+- ☑ Release version 1.1.3
+- ☐ Get all Issues related to 1.1.4 finished
   - ☐ #88 - Add new Evo pipe: `sanitize`
-- ☐ Release version 1.1.3
+  - ☐ #95 - Fix Update to copy over used components like WCAElement.html bug enhancement
+- ☐ Release version 1.1.4
 - ☐ Get all Issues related to 1.2.0 finished
   - ☐ #85 - Increase Unit tests to over 85% coverage bug enhancement
   - ☐ #89 - Support basic interpolation inside a tag. enhancement
@@ -256,6 +253,7 @@ This section will only show the current released version and anything planned fo
   - ☐ #29 - Fix browser refresh to load updated transpiled component files.
   - ☐ #41 - Need to support `this.attachInternals()`.
   - ☐ #50 - Support form-associated custom elements.
+  - ☐ #81 - Add new Evo pipe: `toRelTime`
   - ☐ #83 - Finish `EvoState` for Evo components
   - ☐ #85 - Unit testing over 85% coverage.
   - ☐ Create simple **React** app with Evo integration points.
@@ -278,6 +276,8 @@ This section will only show the current released version and anything planned fo
   - ☐ #82 - Add error message output as component for transpile errors so they are visible.
   - ☐ #84 - Add hooks for router (`BeforeUnload`, `BeforeLoad`, `AfterLoad`, `Guard`, and possibly others).
   - ☐ #86 - Look at path-to-regexp project to replace our internal code.
+  - ☐ #91 - Support basic expressions in an event handler enhancement
+  - ☐ #93 - Support basic expressions in $if, $switch and interpolation rendering enhancement
   - ☐ Add `EvoState` support for React.
   - ☐ Add `EvoState` support for Angular.
   - ☐ Finish online editor/tester.

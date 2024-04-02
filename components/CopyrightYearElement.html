@@ -1,0 +1,43 @@
+<component tag="copyright-year"
+  :copyright
+  :from="int:var:(new Date()).getFullYear()"
+  :target="str:_blank"
+  :href
+  :guidelines="str:Read our guidelines"
+  :#presentYear="int"
+  :#showFromYear="bool:false"
+  :#showHref="bool:false"
+>
+  <template>
+    <span :text="copyright"></span> ©️
+    <span $if="#showFromYear" class="from-year" :text="from"></span><span
+      :text="#presentYear"></span>
+    <slot></slot><a part="a" $if="#showHref" :href="href"
+      rel="noopener noreferrer" :attr.target="target" :text="guidelines"></a>
+  </template>
+  <script>
+    update() {
+      this.#showHref = !!this.href;
+    }
+    connected() {
+      this.#presentYear = (new Date()).getFullYear();
+      this.#showFromYear = this.#presentYear !== this.from;
+    }
+  </script>
+  <style>
+    :host {
+      display:inline-block;
+    }
+    .from-year::after {
+      content: "-";
+    }
+    a {
+      display: inline-block;
+      padding-inline-start: 1em;
+    }
+  </style>
+</component>
+<!--
+I wrote this after seeing a GIST and a correction here:
+https://gist.github.com/ceving/6e65886e04563ed9e6e42cc5f8d3f656
+-->

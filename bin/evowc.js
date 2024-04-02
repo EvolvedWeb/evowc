@@ -1,7 +1,7 @@
 #! /usr/bin/env node
 /* eslint-env node:true */
 import * as fs from 'node:fs';
-import * as path from 'node:path';
+import { posix as path } from 'node:path';
 const fsp = fs.promises;
 import { fileURLToPath } from 'node:url';
 import { evowc } from '../lib/evowc.js';
@@ -11,17 +11,14 @@ import { updateEvo } from '../lib/updateEvo.js';
 import { loadJson } from '../lib/loadJson.js';
 import { getClOptions } from '../lib/getClOptions.js';
 import { watch } from '../lib/watch.js';
+import { fixPath } from '../lib/fixPath.js';
 
-const __filename = fileURLToPath(import.meta.url);
+const __filename = fixPath(fileURLToPath(import.meta.url));
 const __dirname = path.dirname(__filename);
 
 const TOTAL_TIME = '  * Total processing time';
-const FILE_OPTIONS = {
-  encoding: 'utf8'
-}
-const MKDIR_OPTIONS = {
-  recursive: true
-};
+const FILE_OPTIONS = { encoding: 'utf8' };
+const MKDIR_OPTIONS = { recursive: true };
 
 /**
 * @typedef {Object} Options
@@ -85,11 +82,11 @@ function getOptions(clOptions, version) {
     },
     outExtname: wc.outExtname || '.js', // Default File extension for output files
     paths: {
-      srcRoot,
-      templateRoot,
-      publicRoot,
-      componentsRoot,
-      componentsToBuild: clOptions.command || wc.componentsToBuild || '/**/*.html'
+      srcRoot: fixPath(srcRoot),
+      templateRoot: fixPath(templateRoot),
+      publicRoot: fixPath(publicRoot),
+      componentsRoot: fixPath(componentsRoot),
+      componentsToBuild: fixPath(clOptions.command || wc.componentsToBuild || '/**/*.html')
     }
   };
 
