@@ -229,42 +229,42 @@ You can also open an issue with the tag "enhancement".
 
 This section will only show the current released version and anything planned for the future. Review the [UPDATELOG.md](UPDATELOG.md) for past changes
 
-- ☑ Get all Issues related to 1.1.3 finished
-  - ☑ #96 - Updated dependencies
+- ☑ Get all Issues related to 1.1.3 finished:
+  - ☑ #96 - Updated dependencies.
   - ☑ #97 - Init and transpiler work correctly on Windows.
-  - ☑ #98 - Exception in WCAElement
-  - ☑ #99 - Exception in WCRouterElement
-  - ☑ #100 - CSS loading error HighlightCodeElement
+  - ☑ #98 - Exception in WCAElement.
+  - ☑ #99 - Exception in WCRouterElement.
+  - ☑ #100 - CSS loading error HighlightCodeElement.
   - ☑ Repo Updates.
   - ☑ Bug fixes.
-- ☑ Release version 1.1.3
-- ☐ Get all Issues related to 1.1.4 finished
-  - ☐ #88 - Add new Evo pipe: `sanitize`
-  - ☐ #95 - Fix Update to copy over used components like WCAElement.html bug enhancement
-- ☐ Release version 1.1.4
-- ☐ Get all Issues related to 1.2.0 finished
-  - ☐ #85 - Increase Unit tests to over 85% coverage bug enhancement
-  - ☐ #89 - Support basic interpolation inside a tag. enhancement
-  - ☐ #90 - Support basic interpolation in an attribute. enhancement
-- ☐ Release version 1.2.0
-- ☐ Get all Issues related to 1.2.1 finished
-  - ☐ #91 - Support basic expressions in an event handler enhancement
-  - ☐ #93 - Support basic expressions in $if, $switch and interpolation rendering enhancement
-- ☐ Release version 1.2.1
-- ☐ Get all Issues related to 2.0.0 finished
+- ☑ Release version 1.1.3.
+- ☐ Get all Issues related to 1.1.4 finished:
+  - ☐ #88 - Add new Evo pipe: `sanitize`.
+  - ☐ #95 - Fix Update to copy over used components like WCAElement.html bug.
+- ☐ Release version 1.1.4.
+- ☐ Get all Issues related to 1.2.0 finished:
+  - ☐ #85 - Increase Unit tests to over 85% coverage bug.
+  - ☐ #89 - Support basic interpolation inside a tag.
+  - ☐ #90 - Support basic interpolation in an attribute.
+- ☐ Release version 1.2.0.
+- ☐ Get all Issues related to 1.2.1 finished:
+  - ☐ #91 - Support basic expressions in an event handler.
+  - ☐ #93 - Support basic expressions in $if, $switch and interpolation rendering.
+- ☐ Release version 1.2.1.
+- ☐ Get all Issues related to 2.0.0 finished:
   - ☐ #21 - Add unit testing for all files that are part of the transpiler.
   - ☐ #29 - Fix browser refresh to load updated transpiled component files.
   - ☐ #41 - Need to support `this.attachInternals()`.
   - ☐ #50 - Support form-associated custom elements.
-  - ☐ #81 - Add new Evo pipe: `toRelTime`
-  - ☐ #83 - Finish `EvoState` for Evo components
+  - ☐ #81 - Add new Evo pipe: `toRelTime`.
+  - ☐ #83 - Finish `EvoState` for Evo components.
   - ☐ #85 - Unit testing over 85% coverage.
   - ☐ Create simple **React** app with Evo integration points.
   - ☐ Functional Tests for main components.
   - ☐ Repo Updates.
   - ☐ Bug fixes.
-- ☐ Release version 2.0.0
-- ☐ Issues related to any future version
+- ☐ Release version 2.0.0.
+- ☐ Issues related to any future version:
   - ☐ #22 - Add VSCode plugin to improve support of the template files.
   - ☐ #35 - Investigate code during transpile and remove unused or not-required generated code. (See #72)
   - ☐ #37 - Protect the init and update functions. Making the private, if possible.
