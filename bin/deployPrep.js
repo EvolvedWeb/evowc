@@ -26,7 +26,9 @@ console.log(`
   2 \x1b[95mRun \x1b[93mnpm run test\x1b[0m
     * \x1b[95mFix any broken tests\x1b[0m
   3 \x1b[95mUpdate the version number:\x1b[0m
-    * \x1b[96mpackage.json\x1b[95m and check all other files.\x1b[0m
+    * \x1b[96mpackage.json\x1b[0m
+    * \x1b[96minit-files/src/public/index.html\x1b[0m
+    * Check all other files.
   3 \x1b[95mRun \x1b[93mnpm i\x1b[0m
   4 \x1b[95mUpdate \x1b[96mREADME.md\x1b[95m as needed.\x1b[0m
     * \x1b[95mReview \x1b[96mREADME.md\x1b[95m to make sure it displays correctly.\x1b[0m
