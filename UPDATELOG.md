@@ -1,6 +1,6 @@
 # Updates to EVO-WC
 
-## Version 1.1.3 - 2024-04-02
+## Version 1.1.3 - 2024-04-05
 
 * Resolves #96 - Updated dependencies
 * Resolves #97 - Init and transpiler work correctly on Windows.
@@ -8,6 +8,7 @@
 * Resolves #99 - Corrected exception in `WCRouterElement`
 * Resolves #100 - Corrected CSS loading error `HighlightCodeElement`
 * Added `CopyrightYearElement` component
+* Updated to eslint 9.0.0 and fixed eslint config file
 
 ## Version 1.1.2 - 2024-03-21
 
