@@ -1,12 +1,13 @@
 const PORT = 23456;
 // @ts-ignore
-import * as path from 'node:path';
+import { posix as path } from 'node:path';
 import { evowc } from './lib/evowc.js';
 import express from 'express';
 import bodyParser from 'body-parser';
 import { fileURLToPath } from 'node:url';
+import { fixPath } from './lib/fixPath.js';
 
-const __filename = fileURLToPath(import.meta.url);
+const __filename = fixPath(fileURLToPath(import.meta.url));
 const __dirname = path.dirname(__filename);
 
 const app = express();

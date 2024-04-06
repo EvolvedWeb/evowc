@@ -199,3 +199,13 @@ export function getDecimalSizes(decimalFormat) {
   const [_, minIntDigits, minFracDigits, maxFracDigits] = match.map(Number);
   return { minIntDigits, minFracDigits, maxFracDigits };
 }
+
+/*
+Relative Time pipe ideas:
+https://github.com/github/relative-time-element/blob/main/src/relative-time-element.ts
+Only make it much simpler
+
+Intl.durationFormat is coming soon
+https://devdocs.io/javascript/global_objects/intl/durationformat
+https://github.com/tc39/proposal-intl-duration-format
+*/

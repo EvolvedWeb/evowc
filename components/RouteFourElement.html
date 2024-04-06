@@ -6,10 +6,18 @@
       <wc-a href="/test/four/fish">/test/four/fish</wc-a>
       <wc-a href="/test/four/whale/">/test/four/whale/</wc-a>
     </div>
+    <br>
+    <div style="font-size: 16px;">
+    <copyright-year from="2020">Pink Frog Books</copyright-year><br><br>
+    <copyright-year from="2020" copyright="Copyright" href="https://something.com">Pink Frog Books</copyright-year><br><br>
+    <copyright-year from="2020" copyright="حقوق النشر">بينكفروجبوكس.كوم</copyright-year><br><br>
+    <copyright-year from="2020" copyright="">بينكفروجبوكس.كوم</copyright-year><br><br>
+    </div>
     <loop-test></loop-test>
   </template>
   <script root>
     import './LoopTest.js';
+    import './CopyrightYearElement.js'
   </script>
   <script>
     navParams(value) {

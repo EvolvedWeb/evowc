@@ -1,6 +1,6 @@
 {
   "name": "@evolvedweb/wc",
-  "version": "1.1.2",
+  "version": "1.1.3",
   "description": "Evo-wc transpiler converts a template file based on HTML and XML into a raw JavaScript custom element Web Component.\nOnly write what you need!",
   "bin": {
     "evowc": "bin/evowc.js"
@@ -37,9 +37,9 @@
   },
   "homepage": "https://www.evowc.com",
   "dependencies": {
-    "express": "4.19.1",
+    "express": "4.19.2",
     "fast-xml-parser": "4.3.6",
-    "glob": "10.3.10",
+    "glob": "10.3.12",
     "html-minifier-terser": "7.2.0",
     "keypress": "0.2.1",
     "micromatch": "4.0.5",
@@ -47,12 +47,12 @@
   },
   "devDependencies": {
     "@types/mocha": "10.0.6",
-    "@types/node": "20.11.30",
+    "@types/node": "20.12.5",
     "c8": "9.1.0",
     "chai": "5.1.0",
-    "eslint": "8.57.0",
+    "eslint": "9.0.0",
     "esmock": "2.6.4",
-    "mocha": "10.3.0",
+    "mocha": "10.4.0",
     "nock": "13.5.4"
   },
   "directories": {

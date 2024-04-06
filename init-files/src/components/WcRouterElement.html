@@ -26,10 +26,8 @@
     init() {
       router.onChange((...args) => this.#updateRouteSelection(...args));
       this.#processRouteTags();
-      /*
-      this.#observer = new MutationObserver((...args) => this.#mutationCallback(...args));
-      this.#observer.observe(this, mutationConfig);
-      */
+      // this.#observer = new MutationObserver((...args) => this.#mutationCallback(...args));
+      // this.#observer.observe(this, mutationConfig);
     }
 
     async #sendNavParamsToRouteComponent(el, params) {
@@ -107,7 +105,7 @@
             delete theRouteToShow.importFile; // Remove to prevent loading a second time.
           }
           catch (ex) {
-            console.error(`Failed to import file ${element}`)
+            console.error(`Failed to import file ${theRouteToShow.importFile}`)
             console.info(ex.stack);
           }
         }
@@ -136,6 +134,7 @@
     }
 
     #processRouteTags() {
+      this.#removeAndDeleteUnusedElements(this.#routes);
       this.#routes = [];
 
       const children = [...this.children];
@@ -169,17 +168,17 @@
           });
         }
       });
+      console.log(this.#routes);
 
       this.#updateRouteSelection();
     }
 
-    /*
     #mutationCallback(mutationsList) {
       // console.log(mutationsList);
-      //TODO: 2023-07-03 MGC - this.#processRouteTags();
-      // But make sure to keep all elements that already exist
+      // TODO: In the future make sure to keep all elements that already exist.
+      // In other words integrate the changes and do not replace everything
+      // this.#processRouteTags();
     };
-    */
   </script>
   <style>
     :host {
